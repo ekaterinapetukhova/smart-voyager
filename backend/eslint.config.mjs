@@ -38,7 +38,8 @@ export default tseslint.config(
       'no-useless-constructor': 'off',
       '@typescript-eslint/no-useless-constructor': 'error',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'error'
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unsafe-call': 'off',
     },
   },
 );
