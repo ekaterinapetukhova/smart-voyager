@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  surname   String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model RoutePoint {
+  id        String  @id @default(uuid())
+  latitude  Float
+  longitude Float
+  name      String?
+
+  route   Route  @relation(fields: [routeId], references: [id])
+  routeId String
+}
+
+model Route {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  mode      String
+  type      String
+
+  bestWay String?
+
+  points RoutePoint[]
+}
