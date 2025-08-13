@@ -13,6 +13,7 @@ const configSchema = z
     EMAIL_SERVER: z.string(),
     EMAIL_SERVER_PORT: z.string().transform((v) => Number(v)),
     FRONTEND_URL: z.string().url(),
+    UPLOADS_PATH: z.string(),
   })
   .transform((data) => {
     return {
@@ -30,6 +31,8 @@ const configSchema = z
       emailServerPort: data.EMAIL_SERVER_PORT,
 
       frontendUrl: data.FRONTEND_URL,
+
+      uploadsPath: data.UPLOADS_PATH,
     };
   });
 

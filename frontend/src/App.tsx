@@ -9,6 +9,7 @@ import { LoginView } from "./features/login/LoginView.tsx";
 import { RouterEnum } from "./router/router.types.ts";
 import { UserView } from "./features/user/UserView.tsx";
 import { updateUserStore, useTokenStore } from "./store/user-store.ts";
+import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ export function App() {
         <Route path={RouterEnum.Login} element={<LoginView />} />
         <Route path={RouterEnum.Verification} element={<HomeView />} />
         <Route path={RouterEnum.User} element={<UserView />} />
+        <Route path={RouterEnum.TripMates} element={<TripMatesView />} />
       </Routes>
     </QueryClientProvider>
   );

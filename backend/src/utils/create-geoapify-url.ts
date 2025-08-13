@@ -1,4 +1,4 @@
-import { config } from "src/config/config";
+import { config } from "../config/config";
 import { RouteQueryParams } from "../route/route.types";
 
 export const createGeoapifyUrl = (queryParams: RouteQueryParams): string => {

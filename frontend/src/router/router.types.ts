@@ -4,4 +4,5 @@ export enum RouterEnum {
   Login = "/login",
   Verification = "/verify-email",
   User = "/me",
+  TripMates = "/trip-mates",
 }

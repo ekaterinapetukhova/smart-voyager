@@ -27,6 +27,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
+    "@types/buffers": "^0.1.34",
     "@types/nodemailer": "^6.4.17",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",

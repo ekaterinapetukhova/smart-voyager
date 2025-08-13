@@ -8,9 +8,21 @@ import { AuthModule } from "./auth/auth.module";
 import { MailModule } from "./mail/mail.module";
 import { MeModule } from "./me/me.module";
 import { AuthMiddleware } from "./middleware/auth.middleware";
+import { TripMatesModule } from "./trip-mates/trip-mates.module";
+import { FilesModule } from "./files/files.module";
 
 @Module({
-  imports: [PrismaModule, RouteModule, UserModule, GeoapifyModule, AuthModule, MailModule, MeModule],
+  imports: [
+    PrismaModule,
+    RouteModule,
+    UserModule,
+    GeoapifyModule,
+    AuthModule,
+    MailModule,
+    MeModule,
+    TripMatesModule,
+    FilesModule,
+  ],
   controllers: [],
   providers: [ZodErrorExceptionFilter],
 })

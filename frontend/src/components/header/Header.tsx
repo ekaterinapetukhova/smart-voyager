@@ -5,9 +5,21 @@ import { useTokenStore } from "../../store/user-store.ts";
 import { Button } from "../common/Button.tsx";
 import { RouterEnum } from "../../router/router.types.ts";
 
-enum MenuItems {
-  Home = "/",
-}
+// enum MenuItems {
+//   Home = "/",
+//   TripMates = "/trip-mates",
+// }
+
+const menuItems = {
+  home: {
+    name: "Home",
+    path: RouterEnum.Home,
+  },
+  tripMates: {
+    name: "Trip Mates",
+    path: RouterEnum.TripMates,
+  },
+};
 
 enum AuthItems {
   Registration = "/registration",
@@ -18,10 +30,10 @@ export const Header = () => {
   const isAuth = !!useTokenStore((s) => s.token);
   const logout = useTokenStore((s) => s.logout);
 
-  const menuItemsList = Object.entries(MenuItems).map(([name, path]) => {
+  const menuItemsList = Object.values(menuItems).map((value) => {
     return (
-      <li key={name}>
-        <LinkTo label={name} url={path} />
+      <li key={value.name}>
+        <LinkTo label={value.name} url={value.path} />
       </li>
     );
   });
@@ -39,7 +51,7 @@ export const Header = () => {
       <Container className="flex items-center justify-between">
         <LinkTo label="Logo" url="/" img={true} src={Logo} imgClassNames="h-20" />
         <nav>
-          <ul className="flex gap-x-2">{menuItemsList}</ul>
+          <ul className="flex gap-x-5">{menuItemsList}</ul>
         </nav>
         {isAuth ? (
           <div className="flex gap-x-4">

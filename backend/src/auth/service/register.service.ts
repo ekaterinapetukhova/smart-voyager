@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { CreateUserDto } from "src/user/dto/create-user.dto";
-import { CreateUserService } from "src/user/service/create-user.service";
+import { CreateUserDto } from "../../user/dto/create-user.dto";
+import { CreateUserService } from "../../user/service/create-user.service";
 import { MailService } from "../../mail/mail.service";
 import { ConflictError } from "../../error/conflict.error";
 import { GetUserByEmailService } from "../../user/service/get-user-by-email.service";
