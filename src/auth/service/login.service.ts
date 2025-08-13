@@ -17,7 +17,13 @@ export class LoginService {
       });
     }
 
-    const match = await bcrypt.compare(password, user.password);
+    if (!user.verified) {
+      throw new UnauthorizedException({
+        errorMessage: "Please, first verify link in your mail",
+      });
+    }
+
+    const match = await bcrypt.compare(password, user.passwordHash);
 
     if (!match) {
       throw new UnauthorizedException({

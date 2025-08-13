@@ -1,4 +1,4 @@
-export class ConflictException extends Error {
+export class ConflictError extends Error {
   private code = 409;
 
   public constructor(message: string = "Conflict") {

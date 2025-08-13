@@ -1,10 +1,10 @@
 import z from "zod";
-import { createRoutePointDtoSchema } from "../../route-point/dto/create-route-point.dto";
-import { RouteMode, RouteType } from "../route.types";
+import { RouteMode, RouteType } from "@prisma/client";
+import { createRouteWaypointDtoSchema } from "./create-route-waypoint.dto";
 
 export const createRouteDtoSchema = z.object({
   name: z.string().min(1),
-  routePoints: z.array(createRoutePointDtoSchema),
+  waypoints: z.array(createRouteWaypointDtoSchema),
   mode: z.nativeEnum(RouteMode),
   type: z.nativeEnum(RouteType),
 });

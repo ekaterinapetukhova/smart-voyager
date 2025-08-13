@@ -2,21 +2,25 @@ import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/commo
 import { NextFunction, Request } from "express";
 import Jwt from "jsonwebtoken";
 import { SafeParseReturnType, z } from "zod";
+import { User } from "@prisma/client";
 import { config } from "../config/config";
 import { PrismaService } from "../prisma/prisma.service";
+
+type RequestWithUser = Request & { user: User };
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   public constructor(private readonly prisma: PrismaService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async use(req: any, _res: any, next: NextFunction): Promise<void> {
+  public async use(req: RequestWithUser, _res: any, next: NextFunction): Promise<void> {
     const token = this.extractToken(req);
 
-    if (!token)
+    if (!token) {
       throw new UnauthorizedException({
         errorMessage: "No token provided",
       });
+    }
 
     const payload = this.verifyToken(token);
 
@@ -26,9 +30,10 @@ export class AuthMiddleware implements NestMiddleware {
       },
     });
 
-    if (!user) throw new UnauthorizedException();
+    if (!user) {
+      throw new UnauthorizedException();
+    }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     req["user"] = user;
 
     next();
@@ -45,12 +50,16 @@ export class AuthMiddleware implements NestMiddleware {
 
     const validPayload = this.validatePayload(payload);
 
-    if (!validPayload.success) throw new UnauthorizedException();
+    if (!validPayload.success) {
+      throw new UnauthorizedException();
+    }
 
     return validPayload.data;
   }
 
-  private validatePayload(payload: string | Jwt.JwtPayload): SafeParseReturnType<{ id: string }, { id: string }> {
+  private validatePayload(
+    payload: string | Jwt.JwtPayload
+  ): SafeParseReturnType<string | Jwt.JwtPayload, z.output<typeof payloadSchema>> {
     const payloadSchema = z.object({
       id: z.string().uuid(),
     });

@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { RoutePoint } from "@prisma/client";
+import { User } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
-export class GetAllRoutePointService {
+export class GetAllUsersService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public execute(): Promise<RoutePoint[]> {
-    return this.prisma.routePoint.findMany();
+  public async execute(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 }

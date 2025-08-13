@@ -1,17 +1,5 @@
 import z from "zod";
-
-export enum RouteMode {
-  Drive = "drive",
-  Bus = "bus",
-  Motorcycle = "motorcycle",
-  Bicycle = "bicycle",
-  Walk = "walk",
-}
-
-export enum RouteType {
-  Balanced = "balanced",
-  Short = "short",
-}
+import { RouteMode, RouteType } from "@prisma/client";
 
 export const routeQueryParamsSchema = z.object({
   waypoints: z.string(),

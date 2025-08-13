@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { Route } from "@prisma/client";
+import { Route, User } from "@prisma/client";
+import { GetUser } from "../auth/user.decorator";
 import { CreateRouteService } from "./service/create-route.service";
 import { createRouteDtoSchema } from "./dto/create-route.dto";
 import { GetAllRoutesService } from "./service/get-all-routes.service";
@@ -12,10 +13,12 @@ export class RouteController {
   ) {}
 
   @Post()
-  public create(@Body() data: unknown): Promise<Route> {
+  public create(@Body() data: unknown, @GetUser() user: User): Promise<Route> {
     const createRouteDto = createRouteDtoSchema.parse(data);
 
-    return this.createRouteService.execute(createRouteDto);
+    console.log(user);
+
+    return this.createRouteService.execute(createRouteDto, user);
   }
 
   @Get()

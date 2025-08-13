@@ -3,7 +3,7 @@ import { Response } from "express";
 import { ZodError } from "zod";
 
 @Catch(ZodError)
-export class ZodValidationErrorFilter implements ExceptionFilter {
+export class ZodErrorExceptionFilter implements ExceptionFilter {
   public catch(exception: ZodError, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

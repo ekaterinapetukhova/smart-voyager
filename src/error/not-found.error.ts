@@ -1,4 +1,4 @@
-export class NotFoundException extends Error {
+export class NotFoundError extends Error {
   private code = 404;
 
   public constructor(message: string = "Not Found", id?: string) {
