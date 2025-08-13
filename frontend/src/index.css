@@ -1,0 +1,25 @@
+@import "tailwindcss";
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+    --color-black: #2f2f28;
+    --color-white: #efefef;
+    --color-yellow: #fbcd4b;
+    --color-red: #a01d26;
+}
+
+@theme {
+    --color-black: var(--color-black);
+    --color-white: var(--color-white);
+    --color-yellow: var(--color-yellow);
+    --color-red: var(--color-red);
+}
+
+/*body {*/
+/*    background-color: var(--color-black);*/
+/*}*/
+
+a, button, input {
+    outline: none;
+}
+
