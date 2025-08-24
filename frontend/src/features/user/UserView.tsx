@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import { LatLngBounds } from "leaflet";
 import { useUserStore } from "../../store/user-store.ts";
 import { Container } from "../../components/common/Container.tsx";
 import { Route } from "../../types/route.types.ts";
 import { authorizedFetch } from "../../utils/authorized-fetch.ts";
+import { Map } from "../../components/map/Map.tsx";
 
 export function UserView() {
   const { user } = useUserStore();
 
-  const { data } = useQuery({
+  const get = useQuery({
     queryKey: ["me/routes"],
     queryFn: async () => {
       const { get } = await authorizedFetch();
@@ -18,6 +20,7 @@ export function UserView() {
     },
   });
 
+  console.log(get);
   // function MyComponent() {
   //   const map = useMap();
   //
@@ -59,6 +62,7 @@ export function UserView() {
         <p>{user?.name}</p>
         {/*<ul>{routesList}</ul>*/}
         {/*<MyMapComponent />*/}
+        <Map initialBounds={new LatLngBounds([50.23, 19.01], [50.28, 19.06])} />
       </Container>
     </section>
   );

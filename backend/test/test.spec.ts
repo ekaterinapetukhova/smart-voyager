@@ -18,6 +18,6 @@ describe("files", () => {
 
     const buffer = await fs.readFile(imgPath);
 
-    await fileService.execute("test.jpg", buffer);
+    await fileService.execute("1", buffer);
   });
 });

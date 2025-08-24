@@ -8,8 +8,6 @@ export class GeoapifyApiClient {
     const urlSearchParams = new URLSearchParams({ ...input, apiKey: config.geoapifyKey });
     const fullUrl = `${config.geoapifyUrl}/${path}?${urlSearchParams}`;
 
-    console.log(fullUrl);
-
     const response = await fetch(fullUrl);
 
     if (!response.ok) {

@@ -1,7 +1,7 @@
 import { useTokenStore } from "../store/user-store.ts";
 import { config } from "../config/config.ts";
 
-export const authorizedFetch = async () => {
+export const authorizedFetch = () => {
   const headers = { Authorization: `Bearer ${useTokenStore.getState().token}` };
 
   const get = async (path: string) => {
@@ -22,8 +22,20 @@ export const authorizedFetch = async () => {
     });
   };
 
+  const patch = async (path: string, id: string, data: object) => {
+    return await fetch(`${config.backendUrl}/${path}/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+      headers: {
+        "content-type": "application/json",
+        ...headers,
+      },
+    });
+  };
+
   return {
     get,
     post,
+    patch,
   };
 };

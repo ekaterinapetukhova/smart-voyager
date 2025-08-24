@@ -1,14 +1,21 @@
 interface ButtonProps {
   label: string;
+  type?: "submit";
   icon?: string;
   onClick?: () => void;
-  type?: "button" | "submit";
+  classNames?: string;
 }
 
 export const Button = (props: ButtonProps) => {
   return (
-    <button className="cursor-pointer border px-2" onClick={props.onClick}>
-      {props.label}
-    </button>
+    <div>
+      <button
+        type={props.type ?? "button"}
+        className={["cursor-pointer border px-2", props.classNames ?? ""].join(" ")}
+        onClick={props.onClick}
+      >
+        {props.label}
+      </button>
+    </div>
   );
 };

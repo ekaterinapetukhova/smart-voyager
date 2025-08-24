@@ -14,7 +14,7 @@ export enum RouteType {
   Short = "short",
 }
 
-export interface GeoapifyRoutesApiClientOutput {
+export interface NrGeoapifyRoutesApiClientOutput {
   type: string;
   features: Feature[];
 }
@@ -66,42 +66,48 @@ export const routeSchema = z.object({
   waypoints: z.array(routePointSchema),
   mode: z.nativeEnum(RouteMode),
   type: z.nativeEnum(RouteType),
-  geojson: z.array(
-    z.object({
-      type: z.string(),
-      properties: z.object({
-        mode: z.string(),
-        waypoints: z.array(
-          z.object({
-            location: z.array(z.number()),
-            original_index: z.number(),
-          })
-        ),
-        distance: z.number(),
-        time: z.number(),
-        legs: z.array(
-          z.object({
-            distance: z.number(),
-            time: z.number(),
-            steps: z.array(
-              z.object({
-                from_index: z.number(),
-                to_index: z.number(),
-                distance: z.number(),
-                time: z.number(),
-                instruction: z.object({
-                  text: z.string(),
-                }),
-              })
-            ),
-          })
-        ),
-      }),
-      geometry: z.object({
-        coordinates: z.array(z.array(z.array(z.number()))),
-      }),
-    })
-  ),
+  geojson: z.object({
+    type: z.string(),
+    features: z.array(
+      z.object({
+        type: z.string(),
+        properties: z.object({
+          mode: z.string(),
+          waypoints: z.array(
+            z.object({
+              location: z.tuple([z.number(), z.number()]),
+              original_index: z.number().int().min(0),
+            })
+          ),
+          units: z.string(),
+          distance: z.number().min(0),
+          distance_units: z.string(),
+          time: z.number().min(0),
+          legs: z.array(
+            z.object({
+              distance: z.number().min(0),
+              time: z.number().min(0),
+              steps: z.array(
+                z.object({
+                  from_index: z.number().int().min(0),
+                  to_index: z.number().int().min(0),
+                  distance: z.number().min(0),
+                  time: z.number().min(0),
+                  instruction: z.object({
+                    text: z.string().min(1),
+                  }),
+                })
+              ),
+            })
+          ),
+        }),
+        geometry: z.object({
+          type: z.string(),
+          coordinates: z.array(z.array(z.tuple([z.number(), z.number()])).min(2)).min(1),
+        }),
+      })
+    ),
+  }),
 });
 
 export type Route = z.output<typeof routeSchema>;

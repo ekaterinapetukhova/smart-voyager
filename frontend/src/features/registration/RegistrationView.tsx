@@ -16,18 +16,22 @@ export function RegistrationView() {
     if (!response.ok) {
       throw new Error("Failed to add user");
     }
-
-    localStorage.setItem("emailToken", JSON.stringify(response.body));
   };
 
   return (
     <div className="container mx-auto px-4 flex flex-col items-center">
       <Title title="Registration" />
-      <Form<ValidRegistration>
+      <Form
         buttonText="Sign Up"
-        fields={{ name: "", surname: "", email: "", password: "" }}
+        fields={{
+          name: { value: "", type: "text" },
+          surname: { value: "", type: "text" },
+          email: { value: "", type: "text" },
+          birthDate: { value: "", type: "date" },
+          password: { value: "", type: "password" },
+        }}
         checkValidation={validRegistrationSchema.parse}
-        sendRequest={sendRequest}
+        sendRequest={(data) => sendRequest({ ...data, birthDate: new Date(data.birthDate) })}
       ></Form>
     </div>
   );

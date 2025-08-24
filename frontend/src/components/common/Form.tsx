@@ -1,24 +1,34 @@
+import * as React from "react";
 import { FormEvent, useState } from "react";
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import * as React from "react";
 import { FormField } from "./FormField";
 import { Button } from "./Button.tsx";
 
-interface Form<T> {
+interface InputProp {
+  value?: string | Date;
+  type: "text" | "date" | "password" | "file";
+}
+
+export interface FormProps<T extends Record<string, InputProp>> {
   fields: T;
-  checkValidation: (data: T) => void;
-  sendRequest: (data: T) => Promise<unknown>;
+  checkValidation: (data: Record<keyof T, string>) => void;
+  sendRequest: (data: Record<keyof T, string>) => Promise<unknown>;
   buttonText: string;
 }
 
-export function Form<T extends object>({ fields, checkValidation, sendRequest, buttonText }: Form<T>) {
-  const [formData, setFormData] = useState(fields);
-
+export function Form<T extends Record<string, InputProp>>({
+  fields,
+  checkValidation,
+  sendRequest,
+  buttonText,
+}: FormProps<T>) {
+  const [formData, setFormData] = useState<Record<keyof T, string>>(
+    Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, v.value])) as Record<keyof T, string>
+  );
   const [formErrors, setFormErrors] = useState("");
-
-  const [errors, setErrors] = useState(fields);
+  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -26,8 +36,16 @@ export function Form<T extends object>({ fields, checkValidation, sendRequest, b
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
+  const handleInputFileChange = async (fileList: FileList) => {
+    const buffer = await fileList[0].arrayBuffer();
+
+    setFormData((prevFormData) => ({ ...prevFormData, avatar: buffer }));
+
+    console.log(formData);
+  };
+
   function validateForm() {
-    setErrors(fields);
+    setErrors({});
     setFormErrors("");
 
     try {
@@ -35,6 +53,7 @@ export function Form<T extends object>({ fields, checkValidation, sendRequest, b
 
       return true;
     } catch (err) {
+      console.log(err);
       if (err instanceof ZodError) {
         err.errors.forEach((zodError) => {
           setErrors((prevError) => ({
@@ -55,7 +74,7 @@ export function Form<T extends object>({ fields, checkValidation, sendRequest, b
     },
     onError: (err) => {
       if (err instanceof ZodError) {
-        setErrors((prevErrorData) => ({ ...prevErrorData, password: err.message }));
+        setErrors((prev) => ({ ...prev, password: err.message }) as Partial<Record<keyof T, string>>);
       } else if (err instanceof Error) {
         setFormErrors(err.message);
       }
@@ -70,26 +89,36 @@ export function Form<T extends object>({ fields, checkValidation, sendRequest, b
     }
   }
 
-  const formFields = Object.keys(fields).map((item) => {
-    const fieldKey = item as keyof T;
+  const formFields = Object.entries(fields).map(([k, v]) => {
+    const fieldKey = k as keyof T;
 
     return (
       <FormField
-        key={fieldKey.toString()}
-        label={item[0].toUpperCase() + item.slice(1)}
-        id={item}
-        type={item === "password" ? "password" : "text"}
-        name={item}
-        value={formData[fieldKey] as string}
-        onChange={handleChange}
-        errors={errors[fieldKey] as string}
+        key={k}
+        label={k[0].toUpperCase() + k.slice(1)}
+        id={k}
+        type={v.type}
+        name={k}
+        {...(v.type === "file" ? {} : { value: formData[fieldKey] as string })}
+        onChange={(e) => {
+          console.log(e);
+
+          if (v.type === "file" && e.target.files) {
+            void handleInputFileChange(e.target.files);
+          } else {
+            handleChange(e);
+          }
+        }}
+        errors={errors[fieldKey]!}
       ></FormField>
     );
   });
 
   return (
-    <form className="flex flex-col gap-y-6 w-80" onSubmit={submit}>
-      {formFields}
+    <form className="flex flex-col gap-y-6 w-xl" onSubmit={submit}>
+      <div className={["grid gap-y-4", formFields.length > 5 ? "grid-cols-2 gap-x-10" : ""].join(" ")}>
+        {formFields}
+      </div>
       {formErrors && <span className="text-red">{formErrors}</span>}
       <Button type="submit" label={buttonText} />
     </form>

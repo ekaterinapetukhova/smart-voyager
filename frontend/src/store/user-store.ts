@@ -9,11 +9,17 @@ interface AuthStore {
   logout: () => void;
 }
 
-interface User {
+export interface User {
   id: string;
   name: string;
   surname: string;
   email: string;
+  birthDate: Date;
+  country: string | undefined;
+  city: string | undefined;
+  languages: string | undefined;
+  description: string | undefined;
+  avatar: string | undefined;
 }
 
 interface UserStore {
@@ -57,7 +63,7 @@ export async function updateUserStore() {
   if (decodedToken.exp && Date.now() >= decodedToken.exp * 1000) {
     useTokenStore.getState().logout();
   } else {
-    const { get } = await authorizedFetch();
+    const { get } = authorizedFetch();
 
     const response = await get("me");
 

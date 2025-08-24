@@ -1,6 +1,8 @@
 import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import { useCallback, useRef, useState } from "react";
-import L, { LatLngBounds, LatLngExpression } from "leaflet";
+import { ReactElement, useCallback, useRef, useState } from "react";
+import L, { LatLng, LatLngBounds } from "leaflet";
+import { GeoJSON } from "geojson";
+import { renderToString } from "react-dom/server";
 import { Button } from "../common/Button.tsx";
 import { TextInput } from "../common/TextInput.tsx";
 import { RoutePoint } from "../../types/route-point.types.ts";
@@ -8,22 +10,45 @@ import { useRoute } from "../../hooks/use-route.ts";
 import { getPlaceName } from "../../utils/get-place-name.ts";
 import { Filter, OverpassElement, usePOIs } from "../../hooks/use-poi.ts";
 import { RouteMode, RouteType } from "../../types/route.types.ts";
-// import { config } from "../../config/config.ts";
+// import { geojson } from "../../geojson.ts";
 
 const filters: Filter[] = [
-  { key: "restaurants", label: "Restaurants", query: 'node["amenity"="restaurant"]' },
+  {
+    key: "restaurants",
+    label: "Restaurants",
+    query: 'node["amenity"="restaurant"]',
+  },
   { key: "hotels", label: "Hotels", query: 'node["tourism"="hotel"]' },
-  { key: "pharmacies", label: "Pharmacies", query: 'node["amenity"="pharmacy"]' },
-  { key: "transit", label: "Transit Stations", query: 'node["public_transport"="station"]' },
+  {
+    key: "pharmacies",
+    label: "Pharmacies",
+    query: 'node["amenity"="pharmacy"]',
+  },
+  {
+    key: "transit",
+    label: "Transit Stations",
+    query: 'node["public_transport"="station"]',
+  },
 ];
 
-export const Map = () => {
+export interface Map2Marker {
+  position: LatLng;
+  popup?: ReactElement;
+  popupOpen?: boolean;
+}
+
+export interface Map2Props {
+  initialBounds: LatLngBounds;
+  markers?: Map2Marker[];
+  geojson?: GeoJSON;
+}
+
+export const Map = (props: Map2Props) => {
   const [routePoints, setRoutePoints] = useState<RoutePoint[]>([]);
   const [routeName, setRouteName] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   const [fetchTrigger, setFetchTrigger] = useState(false);
-  const [bbox, setBbox] = useState("50.23,19.01,50.28,19.06");
-  const [startPoint] = useState<LatLngExpression>([50.25841, 19.02754]);
+  const [bbox, setBbox] = useState(props.initialBounds.toBBoxString());
   const [pois, setPois] = useState<OverpassElement[]>([]);
   const [routeMode, setRouteMode] = useState<RouteMode>(RouteMode.Drive);
   const [routeType, setRouteType] = useState<RouteType>(RouteType.Balanced);
@@ -34,13 +59,12 @@ export const Map = () => {
   const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
 
   const mapRef = useRef<L.Map | null>(null);
-  const requestIdRef = useRef<string | null>(null);
 
   const setNewBbox = useCallback(() => {
     if (!mapRef.current) return;
 
     const bounds: LatLngBounds = mapRef.current.getBounds();
-    const newBbox = `${bounds.getSouth().toString()},${bounds.getWest().toString()},${bounds.getNorth().toString()},${bounds.getEast().toString()}`;
+    const newBbox = bounds.toBBoxString();
 
     setBbox((prev) => {
       if (prev === newBbox) return prev;
@@ -48,6 +72,38 @@ export const Map = () => {
       return newBbox;
     });
   }, []);
+
+  const geoJsonAdded = useRef(false);
+  const addGeoJson = useCallback((map: L.Map) => {
+    if (geoJsonAdded.current || !props.geojson) {
+      return;
+    }
+    L.geoJSON(props.geojson, {
+      style: {
+        color: "#FF2222",
+        weight: 5,
+        opacity: 1.0,
+      },
+    }).addTo(map);
+    geoJsonAdded.current = true;
+  }, []); // maybe dep on geojson but needs to remove old one
+
+  const markersAdded = useRef(false);
+  const addMarkers = useCallback((map: L.Map) => {
+    if (markersAdded.current || !props.markers || props.markers.length === 0) {
+      return;
+    }
+    for (const marker of props.markers) {
+      const instance = L.marker(marker.position).addTo(map);
+      if (marker.popup) {
+        const popup = instance.bindPopup(renderToString(marker.popup));
+        if (marker.popupOpen) {
+          popup.openPopup();
+        }
+      }
+    }
+    markersAdded.current = true;
+  }, []); // maybe dep on markers but needs to remove old one
 
   const MapEvents = () => {
     const map = useMapEvents({
@@ -94,6 +150,9 @@ export const Map = () => {
       },
     });
 
+    addGeoJson(map);
+    addMarkers(map);
+
     return null;
   };
 
@@ -122,8 +181,6 @@ export const Map = () => {
 
   const handleShowPOIs = () => {
     if (selectedKeys.length > 0) {
-      requestIdRef.current = Date.now().toString();
-
       setFetchTrigger((prev) => !prev);
     }
   };
@@ -271,8 +328,8 @@ export const Map = () => {
         </div>
       </div>
 
-      <div className="h-[500px] w-full">
-        <MapContainer className="h-full" center={startPoint} zoom={13} scrollWheelZoom>
+      <div className="h-[500px] w-full relative z-0">
+        <MapContainer className="h-full" center={props.initialBounds.getCenter()} zoom={13} scrollWheelZoom>
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

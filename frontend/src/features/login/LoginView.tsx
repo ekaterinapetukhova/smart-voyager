@@ -3,6 +3,7 @@ import { authAndStoreToken } from "../../utils/auth-and-save-token";
 import { ValidLogin, validLoginSchema } from "../../validation/auth.validation";
 import { Form } from "../../components/common/Form";
 import { Title } from "../../components/common/Title";
+import { Container } from "../../components/common/Container.tsx";
 
 export function LoginView() {
   const login = useTokenStore((s) => s.login);
@@ -14,14 +15,17 @@ export function LoginView() {
   };
 
   return (
-    <div className="container mx-auto px-4 flex flex-col items-center">
+    <Container className="flex flex-col items-center">
       <Title title="Login" />
-      <Form<ValidLogin>
+      <Form
         buttonText="Sign In"
-        fields={{ email: "", password: "" }}
+        fields={{
+          email: { value: "", type: "text" },
+          password: { value: "", type: "password" },
+        }}
         checkValidation={validLoginSchema.parse}
         sendRequest={submit}
       ></Form>
-    </div>
+    </Container>
   );
 }

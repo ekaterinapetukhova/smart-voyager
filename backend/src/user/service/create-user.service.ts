@@ -16,6 +16,7 @@ export class CreateUserService {
         name: data.name,
         surname: data.surname,
         email: data.email,
+        birthDate: new Date(data.birthDate),
         passwordHash: hash,
       },
     });

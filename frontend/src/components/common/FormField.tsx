@@ -5,7 +5,7 @@ interface FormField {
   id: string;
   type: string;
   name: string;
-  value: string;
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errors: string;
 }

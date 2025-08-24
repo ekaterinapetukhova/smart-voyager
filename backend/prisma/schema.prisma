@@ -13,12 +13,24 @@ model User {
   name         String
   surname      String
   email        String   @unique
+  birthDate    DateTime
   passwordHash String
   createdAt    DateTime @default(now())
 
   verified Boolean @default(false)
 
+  country     String?
+  city        String?
+  languages   String?
+  description String?
+
   Route Route[]
+
+  Chat   Chat?   @relation(fields: [chatId], references: [id])
+  chatId String?
+
+  chatMessageRecipient ChatMessage[] @relation(name: "chatMessageRecipient")
+  chatMessageSender    ChatMessage[] @relation(name: "chatMessageSender")
 }
 
 model RouteWaypoint {
@@ -59,4 +71,28 @@ model Route {
 
   user   User?   @relation(fields: [userId], references: [id])
   userId String?
+}
+
+model Chat {
+  id String @id @default(uuid())
+
+  members User[]
+
+  ChatMessage ChatMessage[]
+}
+
+model ChatMessage {
+  id String @id @default(uuid())
+
+  recipient   User   @relation(fields: [recipientId], references: [id], name: "chatMessageRecipient")
+  recipientId String
+
+  sender   User   @relation(fields: [senderId], references: [id], name: "chatMessageSender")
+  senderId String
+
+  content   String
+  createdAt DateTime @default(now())
+
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  chatId String
 }
