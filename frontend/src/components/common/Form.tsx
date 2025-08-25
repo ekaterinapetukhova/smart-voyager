@@ -5,17 +5,24 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { FormField } from "./FormField";
 import { Button } from "./Button.tsx";
+import { FormRadioField } from "./FormRadioField.tsx";
 
-interface InputProp {
+export interface InputProp {
   value?: string | Date;
-  type: "text" | "date" | "password" | "file";
+  options?: string[];
+  type: "text" | "date" | "password" | "file" | "radio";
 }
+
+export type FormValues<T extends Record<string, InputProp>> = {
+  [K in keyof T]: T[K]["value"];
+};
 
 export interface FormProps<T extends Record<string, InputProp>> {
   fields: T;
-  checkValidation: (data: Record<keyof T, string>) => void;
-  sendRequest: (data: Record<keyof T, string>) => Promise<unknown>;
+  checkValidation: (data: FormValues<T>) => void;
+  sendRequest: (data: FormValues<T>) => Promise<unknown>;
   buttonText: string;
+  formClassNames?: string;
 }
 
 export function Form<T extends Record<string, InputProp>>({
@@ -23,9 +30,10 @@ export function Form<T extends Record<string, InputProp>>({
   checkValidation,
   sendRequest,
   buttonText,
+  formClassNames,
 }: FormProps<T>) {
-  const [formData, setFormData] = useState<Record<keyof T, string>>(
-    Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, v.value])) as Record<keyof T, string>
+  const [formData, setFormData] = useState<FormValues<T>>(
+    Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, v.value])) as FormValues<T>
   );
   const [formErrors, setFormErrors] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
@@ -92,6 +100,19 @@ export function Form<T extends Record<string, InputProp>>({
   const formFields = Object.entries(fields).map(([k, v]) => {
     const fieldKey = k as keyof T;
 
+    if (v.type === "radio" && v.options) {
+      return (
+        <FormRadioField
+          label={k[0].toUpperCase() + k.slice(1)}
+          options={v.options}
+          onChange={(option) => {
+            setFormData((prev) => ({ ...prev, [fieldKey]: option }));
+          }}
+          value={formData[fieldKey] as string}
+        />
+      );
+    }
+
     return (
       <FormField
         key={k}
@@ -115,8 +136,8 @@ export function Form<T extends Record<string, InputProp>>({
   });
 
   return (
-    <form className="flex flex-col gap-y-6 w-xl" onSubmit={submit}>
-      <div className={["grid gap-y-4", formFields.length > 5 ? "grid-cols-2 gap-x-10" : ""].join(" ")}>
+    <form className={["flex flex-col gap-y-6 w-xl", formClassNames ?? ""].join(" ")} onSubmit={submit}>
+      <div className={["grid gap-y-4 w-full", formFields.length > 5 ? "grid-cols-2 gap-x-10" : ""].join(" ")}>
         {formFields}
       </div>
       {formErrors && <span className="text-red">{formErrors}</span>}

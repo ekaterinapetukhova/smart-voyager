@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../common/Button.tsx";
 import { LinkTo } from "../common/LinkTo.tsx";
 import { RouterEnum } from "../../router/router.types.ts";
@@ -26,6 +27,8 @@ export function UserProfileDropdown() {
     }
   }, [user]);
 
+  const navigate = useNavigate();
+
   const userProfileItems: Record<string, UserProfileItems> = {
     routes: {
       label: "Routes",
@@ -41,7 +44,10 @@ export function UserProfileDropdown() {
     },
     logout: {
       label: "Logout",
-      onClick: logout,
+      onClick: () => {
+        logout();
+        void navigate(RouterEnum.Index);
+      },
     },
   };
 

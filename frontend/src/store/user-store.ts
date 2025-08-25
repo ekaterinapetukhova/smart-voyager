@@ -9,12 +9,18 @@ interface AuthStore {
   logout: () => void;
 }
 
+export enum Gender {
+  Male = "male",
+  Female = "female",
+}
+
 export interface User {
   id: string;
   name: string;
   surname: string;
   email: string;
   birthDate: Date;
+  gender: Gender;
   country: string | undefined;
   city: string | undefined;
   languages: string | undefined;

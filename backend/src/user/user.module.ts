@@ -20,6 +20,12 @@ import { UpdateUserInformationService } from "./service/update-user-information.
     UpdateUserInformationService,
   ],
   imports: [PrismaModule, FilesModule],
-  exports: [GetUserByEmailService, CreateUserService, UpdateUserVerifiedStatusService, GetUserByEmailService],
+  exports: [
+    GetUserByEmailService,
+    CreateUserService,
+    UpdateUserVerifiedStatusService,
+    GetUserByEmailService,
+    GetAllUsersService,
+  ],
 })
 export class UserModule {}

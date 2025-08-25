@@ -1,4 +1,5 @@
 import z from "zod";
+import { Gender } from "@prisma/client";
 
 export const updateUserDtoSchema = z
   .object({
@@ -7,6 +8,7 @@ export const updateUserDtoSchema = z
     email: z.string().trim(),
     birthDate: z.coerce.date(),
     password: z.string().trim(),
+    gender: z.nativeEnum(Gender),
     country: z.string().trim(),
     city: z.string().trim(),
     languages: z.string().trim(),

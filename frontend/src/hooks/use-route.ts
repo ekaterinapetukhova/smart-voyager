@@ -11,7 +11,7 @@ export const useRoute = () => {
   const getAll = useQuery({
     queryKey: [QUERY_KEY],
     queryFn: async () => {
-      const { get } = await authorizedFetch();
+      const { get } = authorizedFetch();
 
       const response = await get(PATH);
 
@@ -21,7 +21,7 @@ export const useRoute = () => {
 
   const add = useMutation({
     mutationFn: async (route: Omit<Route, "id" | "createdAt" | "geojson">) => {
-      const { post } = await authorizedFetch();
+      const { post } = authorizedFetch();
 
       const response = await post(PATH, route);
 

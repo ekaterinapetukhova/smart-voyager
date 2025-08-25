@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Gender {
+  female
+  male
+}
+
 model User {
   id String @id @default(uuid())
 
@@ -16,13 +21,16 @@ model User {
   birthDate    DateTime
   passwordHash String
   createdAt    DateTime @default(now())
+  gender       Gender
 
   verified Boolean @default(false)
 
-  country     String?
-  city        String?
-  languages   String?
-  description String?
+  shouldBeVisible Boolean?
+  avatar          String?
+  country         String?
+  city            String?
+  languages       String?
+  description     String?
 
   Route Route[]
 

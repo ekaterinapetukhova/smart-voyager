@@ -10,6 +10,7 @@ import { MeModule } from "./me/me.module";
 import { AuthMiddleware } from "./middleware/auth.middleware";
 import { TripMatesModule } from "./trip-mates/trip-mates.module";
 import { FilesModule } from "./files/files.module";
+import { ChatModule } from "./chat/chat.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { FilesModule } from "./files/files.module";
     MeModule,
     TripMatesModule,
     FilesModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [ZodErrorExceptionFilter],

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Gender } from "../store/user-store.ts";
 
 export const validUserUpdateSchema = z
   .object({
@@ -15,6 +16,7 @@ export const validUserUpdateSchema = z
     languages: z.string().min(1),
     description: z.string().min(1),
     avatar: z.string().base64(),
+    gender: z.nativeEnum(Gender),
   })
   .partial();
 

@@ -12,7 +12,7 @@ interface FormField {
 
 export function FormField(props: FormField) {
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex flex-col gap-y-2 w-full">
       <label htmlFor={props.id}>{props.label}</label>
       <input
         id={props.id}
@@ -20,7 +20,7 @@ export function FormField(props: FormField) {
         name={props.name}
         value={props.value}
         onChange={props.onChange}
-        className="h-8 px-2 text-sm border-b border-black bg-transparent"
+        className="h-8 px-2 text-sm border-b border-black bg-transparent w-full"
       />
       {props.errors && <span className="text-red">{props.errors}</span>}
     </div>
