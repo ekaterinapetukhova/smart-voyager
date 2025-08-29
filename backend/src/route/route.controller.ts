@@ -16,8 +16,6 @@ export class RouteController {
   public create(@Body() data: unknown, @GetUser() user: User): Promise<Route> {
     const createRouteDto = createRouteDtoSchema.parse(data);
 
-    console.log(user);
-
     return this.createRouteService.execute(createRouteDto, user);
   }
 

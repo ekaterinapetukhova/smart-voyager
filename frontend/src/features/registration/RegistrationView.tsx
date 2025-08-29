@@ -2,7 +2,7 @@ import { Form } from "../../components/common/Form";
 import { ValidRegistration, validRegistrationSchema } from "../../validation/auth.validation";
 import { config } from "../../config/config.ts";
 import { Title } from "../../components/common/Title.tsx";
-import { Gender } from "../../store/user-store.ts";
+import { Gender } from "../../types/user.types.ts";
 
 export function RegistrationView() {
   const sendRequest = async (data: ValidRegistration) => {

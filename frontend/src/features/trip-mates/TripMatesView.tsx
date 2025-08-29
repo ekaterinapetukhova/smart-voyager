@@ -5,14 +5,14 @@ import { Button } from "../../components/common/Button.tsx";
 import { Popup } from "../../components/common/Popup.tsx";
 import { Form } from "../../components/common/Form.tsx";
 import { validChatMessageSchema } from "../../validation/chat.validation.ts";
+import { useChat } from "../../hooks/use-chat.ts";
 
 export function TripMatesView() {
   const { data: tripMates } = useTripMates();
+  const { askForChat } = useChat();
 
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTripMateId, setSelectedTripMateId] = useState<string | null>(null);
-
-  const askForChatRequest = (tripMateId: string) => {};
 
   const tripMatesList = tripMates?.map((tripMate) => {
     return (
@@ -24,7 +24,7 @@ export function TripMatesView() {
           label="Ask for Chat"
           onClick={() => {
             setShowPopup(true);
-            setSelectedTripMateId(tripMate.id);
+            setSelectedTripMateId(tripMate.id as string);
           }}
         />
       </li>
@@ -45,10 +45,10 @@ export function TripMatesView() {
         >
           <Form
             fields={{
-              message: { value: "", type: "text" },
+              content: { value: "", type: "text" },
             }}
             checkValidation={validChatMessageSchema.parse}
-            sendRequest={askForChatRequest}
+            sendRequest={(data) => askForChat({ recipientId: selectedTripMateId, content: data.content })}
             buttonText="Send"
             formClassNames="items-center w-full"
           />

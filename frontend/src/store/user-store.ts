@@ -2,30 +2,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import * as jose from "jose";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
+import { User } from "../types/user.types.ts";
 
 interface AuthStore {
   token: string | null;
   login: (token: string) => void;
   logout: () => void;
-}
-
-export enum Gender {
-  Male = "male",
-  Female = "female",
-}
-
-export interface User {
-  id: string;
-  name: string;
-  surname: string;
-  email: string;
-  birthDate: Date;
-  gender: Gender;
-  country: string | undefined;
-  city: string | undefined;
-  languages: string | undefined;
-  description: string | undefined;
-  avatar: string | undefined;
 }
 
 interface UserStore {

@@ -1,5 +1,5 @@
 import z from "zod";
-import { Gender } from "../store/user-store.ts";
+import { Gender } from "../types/user.types.ts";
 
 export const validRegistrationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),

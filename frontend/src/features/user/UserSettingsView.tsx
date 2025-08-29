@@ -2,8 +2,9 @@ import { Container } from "../../components/common/Container.tsx";
 import { Title } from "../../components/common/Title.tsx";
 import { Form, InputProp, FormValues } from "../../components/common/Form.tsx";
 import { ValidUpdateUser, validUserUpdateSchema } from "../../validation/update-user.validation.ts";
-import { Gender, useUserStore } from "../../store/user-store.ts";
+import { useUserStore } from "../../store/user-store.ts";
 import { authorizedFetch } from "../../utils/authorized-fetch.ts";
+import { Gender } from "../../types/user.types.ts";
 
 export function UserSettingsView() {
   const { user } = useUserStore();
@@ -32,13 +33,13 @@ export function UserSettingsView() {
         return;
       }
 
-      if (key === "birthDate" && value instanceof Date) {
+      if (key === "birthDate") {
         updatedData.birthDate = value.toISOString();
         return;
       }
 
       if (value !== "" && value !== undefined) {
-        updatedData[key as Exclude<keyof ValidUpdateUser, "avatar" | "gender" | "birthDate">] = value as string;
+        updatedData[key as Exclude<keyof ValidUpdateUser, "avatar" | "gender" | "birthDate">] = value;
       }
     });
 
