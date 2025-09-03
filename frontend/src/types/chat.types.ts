@@ -7,6 +7,7 @@ export const chatMessageSchema = z.object({
   recipientId: z.string().uuid(),
   content: z.string(),
   createdAt: z.string().datetime(),
+  chatId: z.string().uuid(),
 });
 
 export type ChatMessage = z.output<typeof chatMessageSchema>;

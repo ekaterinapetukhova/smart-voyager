@@ -1,6 +1,6 @@
 import { Container } from "../../components/common/Container.tsx";
 import { Title } from "../../components/common/Title.tsx";
-import { Form, InputProp, FormValues } from "../../components/common/Form.tsx";
+import { Form, FormValues } from "../../components/common/Form.tsx";
 import { ValidUpdateUser, validUserUpdateSchema } from "../../validation/update-user.validation.ts";
 import { useUserStore } from "../../store/user-store.ts";
 import { authorizedFetch } from "../../utils/authorized-fetch.ts";

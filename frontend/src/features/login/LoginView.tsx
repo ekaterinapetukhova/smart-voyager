@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useTokenStore } from "../../store/user-store";
 import { authAndStoreToken } from "../../utils/auth-and-save-token";
 import { ValidLogin, validLoginSchema } from "../../validation/auth.validation";
@@ -7,6 +8,8 @@ import { Container } from "../../components/common/Container.tsx";
 
 export function LoginView() {
   const login = useTokenStore((s) => s.login);
+
+  const navigate = useNavigate();
 
   const submit = async (data: ValidLogin) => {
     const token = await authAndStoreToken(data);
@@ -25,6 +28,9 @@ export function LoginView() {
         }}
         checkValidation={validLoginSchema.parse}
         sendRequest={submit}
+        onSuccess={() => {
+          void navigate("/");
+        }}
       ></Form>
     </Container>
   );

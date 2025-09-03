@@ -12,7 +12,7 @@ import { IndexView } from "./components/IndexView.tsx";
 import { Header } from "./components/header/Header.tsx";
 import { UserSettingsView } from "./features/user/UserSettingsView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
-import { ChatView } from "./features/chat/ChatView.tsx";
+import { CommonChatView } from "./features/chat/CommonChatView.tsx";
 
 const queryClient = new QueryClient();
 
@@ -52,7 +52,7 @@ export function App() {
         <Route path={RouterEnum.User} element={<UserView />} />
         <Route path={RouterEnum.TripMates} element={<TripMatesView />} />
         <Route path={RouterEnum.UserRoutes} element={<UserView />} />
-        <Route path={RouterEnum.UserChats} element={<ChatView />} />
+        <Route path={RouterEnum.UserChats} element={<CommonChatView />} />
         <Route path={RouterEnum.UserSettings} element={<UserSettingsView />} />
         <Route path={RouterEnum.NotFound} element={<NotFoundView />} />
       </Routes>

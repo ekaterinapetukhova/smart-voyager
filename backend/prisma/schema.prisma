@@ -34,11 +34,10 @@ model User {
 
   Route Route[]
 
-  Chat   Chat?   @relation(fields: [chatId], references: [id])
-  chatId String?
-
   chatMessageRecipient ChatMessage[] @relation(name: "chatMessageRecipient")
   chatMessageSender    ChatMessage[] @relation(name: "chatMessageSender")
+
+  Chat Chat[] @relation(name: "chatMembers")
 }
 
 model RouteWaypoint {
@@ -84,9 +83,9 @@ model Route {
 model Chat {
   id String @id @default(uuid())
 
-  members User[]
+  members User[] @relation(name: "chatMembers")
 
-  ChatMessage ChatMessage[]
+  chatMessage ChatMessage[]
 }
 
 model ChatMessage {

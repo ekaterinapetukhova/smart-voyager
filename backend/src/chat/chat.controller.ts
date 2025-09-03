@@ -18,9 +18,8 @@ export class ChatController {
 
   @Post()
   public async create(@GetUser() user: User, @Body() data: unknown): Promise<Chat> {
-    console.log(data);
     const createChatMessageDto = createChatMessageDtoSchema.parse(data);
-    console.log(createChatMessageDto);
+
     return this.createChatService.execute(user.id, createChatMessageDto.recipientId, createChatMessageDto.content);
   }
 

@@ -51,6 +51,9 @@ export function TripMatesView() {
             sendRequest={(data) => askForChat({ recipientId: selectedTripMateId, content: data.content })}
             buttonText="Send"
             formClassNames="items-center w-full"
+            onSuccess={() => {
+              setShowPopup(false);
+            }}
           />
         </Popup>
       )}

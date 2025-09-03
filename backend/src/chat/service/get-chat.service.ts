@@ -13,7 +13,7 @@ export class GetChatService {
       },
       include: {
         members: true,
-        ChatMessage: true,
+        chatMessage: true,
       },
     });
   }

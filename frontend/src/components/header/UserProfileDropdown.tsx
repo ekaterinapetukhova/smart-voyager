@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../common/Button.tsx";
 import { LinkTo } from "../common/LinkTo.tsx";
 import { RouterEnum } from "../../router/router.types.ts";
 import { useTokenStore, useUserStore } from "../../store/user-store.ts";
 
-import UserAvatar from "/user-avatar.jpg";
+import { Avatar } from "../common/Avatar.tsx";
 
 interface UserProfileItems {
   label: string;
@@ -19,13 +19,6 @@ export function UserProfileDropdown() {
   const logout = useTokenStore((s) => s.logout);
 
   const [showDropdown, setShowDropdown] = useState(false);
-  const [avatar, setAvatar] = useState(UserAvatar);
-
-  useEffect(() => {
-    if (user?.avatar) {
-      setAvatar(`data:image/jpeg;base64,${user.avatar}`);
-    }
-  }, [user]);
 
   const navigate = useNavigate();
 
@@ -72,9 +65,7 @@ export function UserProfileDropdown() {
         }}
       >
         <span className="font-medium">{user?.name}</span>
-        <div className="rounded-full overflow-hidden border size-10">
-          <img className="w-full h-full object-cover scale-120" src={avatar} alt="User Avatar" />
-        </div>
+        <Avatar src={user?.avatar} className="size-10" />
       </div>
 
       {showDropdown && (

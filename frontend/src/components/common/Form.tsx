@@ -2,7 +2,6 @@ import * as React from "react";
 import { FormEvent, useState } from "react";
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { FormField } from "./FormField";
 import { Button } from "./Button.tsx";
 import { FormRadioField } from "./FormRadioField.tsx";
@@ -23,6 +22,7 @@ export interface FormProps<T extends Record<string, InputProp>> {
   sendRequest: (data: FormValues<T>) => Promise<unknown>;
   buttonText: string;
   formClassNames?: string;
+  onSuccess?: () => void;
 }
 
 export function Form<T extends Record<string, InputProp>>({
@@ -31,6 +31,7 @@ export function Form<T extends Record<string, InputProp>>({
   sendRequest,
   buttonText,
   formClassNames,
+  onSuccess,
 }: FormProps<T>) {
   const [formData, setFormData] = useState<FormValues<T>>(
     Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, v.value])) as FormValues<T>
@@ -73,12 +74,12 @@ export function Form<T extends Record<string, InputProp>>({
     }
   }
 
-  const navigate = useNavigate();
-
   const { mutate } = useMutation({
     mutationFn: (data: typeof formData) => sendRequest(data),
-    onSuccess: async () => {
-      await navigate("/");
+    onSuccess: () => {
+      if (onSuccess) {
+        onSuccess();
+      }
     },
     onError: (err) => {
       if (err instanceof ZodError) {
@@ -89,8 +90,8 @@ export function Form<T extends Record<string, InputProp>>({
     },
   });
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function submit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
     if (validateForm()) {
       mutate(formData);
@@ -122,8 +123,6 @@ export function Form<T extends Record<string, InputProp>>({
         name={k}
         {...(v.type === "file" ? {} : { value: formData[fieldKey] as string })}
         onChange={(e) => {
-          console.log(e);
-
           if (v.type === "file" && e.target.files) {
             void handleInputFileChange(e.target.files);
           } else {

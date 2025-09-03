@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
-import { Chat } from "../types/chat.types.ts";
+import { Chat, ChatMessage } from "../types/chat.types.ts";
 import { ValidChatMessage } from "../validation/chat.validation.ts";
 
 const PATH = "chat";
@@ -21,27 +21,32 @@ export const useChat = () => {
     refetchIntervalInBackground: true,
   });
 
-  const add = useMutation({
+  const sendRequest = useMutation({
     mutationFn: async (data: ValidChatMessage & { recipientId: string }) => {
       const { post } = authorizedFetch();
 
       const response = await post(PATH, data);
-
-      console.log(response);
 
       return (await response.json()) as Chat;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [PATH] }),
   });
 
-  // const remove = useMutation({
-  //   mutationFn: deleteRoutePoint,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["routePoint"] }),
-  // });
+  const sendNewMessage = useMutation({
+    mutationFn: async (data: ValidChatMessage & { recipientId: string; chatId: string }) => {
+      const { post } = authorizedFetch();
+
+      const response = await post(`${PATH}/${data.chatId}/message`, data);
+
+      return (await response.json()) as ChatMessage;
+    },
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: [PATH] }),
+  });
 
   return {
     ...getAll,
-    askForChat: add.mutateAsync,
+    askForChat: sendRequest.mutateAsync,
+    sendMessage: sendNewMessage.mutateAsync,
     // deletePoint: remove.mutateAsync,
   };
 };
