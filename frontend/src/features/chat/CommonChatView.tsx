@@ -15,7 +15,13 @@ export function CommonChatView() {
   const [selectedMember, setSelectedMember] = useState<User | null>(null);
 
   const chatMembers = chats?.map((chat: Chat) => {
-    const member = chat.members.filter((m) => m.id !== user?.id);
+    const member = chat.members.find((m) => m.id !== user?.id);
+
+    if (!member) {
+      return null;
+    }
+
+    console.log(member.avatar);
 
     const lastMessage = chat.chatMessage[chat.chatMessage.length - 1];
 
@@ -25,12 +31,12 @@ export function CommonChatView() {
         className="w-full flex gap-x-4 items-center cursor-pointer hover:contrast-25"
         onClick={() => {
           setSelectedChat(chat);
-          setSelectedMember(member[0]);
+          setSelectedMember(member);
         }}
       >
-        <Avatar src={member[0]?.avatar} className="size-14" />
+        <Avatar src={member.avatar} className="size-14 rounded-full" />
         <div className="flex flex-col">
-          <span>{member[0]?.name}</span>
+          <span>{member.name}</span>
           <span className="truncate">{lastMessage.content}</span>
         </div>
       </li>

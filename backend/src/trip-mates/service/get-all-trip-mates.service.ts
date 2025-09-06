@@ -11,12 +11,12 @@ export class GetAllTripMatesService {
   ) {}
 
   public async execute(userId: string): Promise<User[]> {
-    const users = await this.getAllUsersService.execute();
+    const tripMates = await this.getAllUsersService.execute();
 
-    for (const user of users) {
-      user.avatar = await this.getFileService.execute(user.id);
+    for (const tripMate of tripMates) {
+      tripMate.avatar = await this.getFileService.execute(tripMate.id);
     }
 
-    return users.filter((user) => userId !== user.id);
+    return tripMates.filter((tripMate) => userId !== tripMate.id);
   }
 }

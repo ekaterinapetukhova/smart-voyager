@@ -1,9 +1,11 @@
 import { z } from "zod";
+import { Gender } from "@prisma/client";
 
 export const getMeDtoSchema = z.object({
   id: z.string().uuid(),
   name: z.string().trim(),
   surname: z.string().trim(),
+  gender: z.nativeEnum(Gender),
   email: z.string().trim().email(),
   birthDate: z.coerce.date(),
   country: z.string().trim().nullish(),

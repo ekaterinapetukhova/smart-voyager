@@ -15,6 +15,7 @@ export class GetMeService {
       name: user.name,
       surname: user.surname,
       email: user.email,
+      gender: user.gender,
       birthDate: user.birthDate,
       country: user.country,
       city: user.city,

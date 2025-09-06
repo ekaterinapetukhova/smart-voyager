@@ -27,7 +27,7 @@ export function ChatWithUser(props: ChatWithUserProps) {
 
   return (
     <>
-      <ul className="w-full overflow-y-auto grow" ref={messagesContainerRef}>
+      <ul className="w-full overflow-y-auto grow flex flex-col gap-y-6" ref={messagesContainerRef}>
         {chat?.chatMessage.map((message) => <Message key={message.id} message={message} />)}
       </ul>
       <Form
@@ -48,6 +48,7 @@ export function ChatWithUser(props: ChatWithUserProps) {
         }}
         buttonText="Send"
         formClassNames="items-center w-full flex-row"
+        hideLabel={true}
       />
     </>
   );

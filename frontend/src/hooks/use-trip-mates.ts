@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
-import { User } from "../store/user-store.ts";
+import { User } from "../types/user.types.ts";
 
 export const useTripMates = () => {
   const PATH = "trip-mates";

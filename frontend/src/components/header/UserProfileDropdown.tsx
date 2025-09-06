@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../common/Button.tsx";
 import { LinkTo } from "../common/LinkTo.tsx";
 import { RouterEnum } from "../../router/router.types.ts";
-import { useTokenStore, useUserStore } from "../../store/user-store.ts";
+import { updateUserStore, useTokenStore, useUserStore } from "../../store/user-store.ts";
 
 import { Avatar } from "../common/Avatar.tsx";
 
@@ -21,6 +21,10 @@ export function UserProfileDropdown() {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    void updateUserStore();
+  }, []);
 
   const userProfileItems: Record<string, UserProfileItems> = {
     routes: {
@@ -65,7 +69,7 @@ export function UserProfileDropdown() {
         }}
       >
         <span className="font-medium">{user?.name}</span>
-        <Avatar src={user?.avatar} className="size-10" />
+        <Avatar src={user?.avatar} className="size-10 rounded-full" />
       </div>
 
       {showDropdown && (

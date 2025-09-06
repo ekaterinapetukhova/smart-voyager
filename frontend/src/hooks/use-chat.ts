@@ -68,3 +68,17 @@ export const useChatById = (chatId: string) => {
     refetchIntervalInBackground: true,
   });
 };
+
+export const useChatByMembers = (receiverId: string) => {
+  return useQuery({
+    queryKey: [PATH, receiverId],
+    queryFn: async () => {
+      const { get } = authorizedFetch();
+      const response = await get(`${PATH}/${receiverId}`);
+
+      if (!response.ok) throw new Error("Failed to fetch chat");
+
+      return (await response.json()) as Chat;
+    },
+  });
+};

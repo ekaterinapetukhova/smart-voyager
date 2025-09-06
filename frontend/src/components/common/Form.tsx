@@ -4,10 +4,9 @@ import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
 import { FormField } from "./FormField";
 import { Button } from "./Button.tsx";
-import { FormRadioField } from "./FormRadioField.tsx";
 
 export interface InputProp {
-  value?: string | Date;
+  value?: string;
   options?: string[];
   type: "text" | "date" | "password" | "file" | "radio";
 }
@@ -23,18 +22,12 @@ export interface FormProps<T extends Record<string, InputProp>> {
   buttonText: string;
   formClassNames?: string;
   onSuccess?: () => void;
+  hideLabel?: boolean;
 }
 
-export function Form<T extends Record<string, InputProp>>({
-  fields,
-  checkValidation,
-  sendRequest,
-  buttonText,
-  formClassNames,
-  onSuccess,
-}: FormProps<T>) {
+export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
   const [formData, setFormData] = useState<FormValues<T>>(
-    Object.fromEntries(Object.entries(fields).map(([k, v]) => [k, v.value])) as FormValues<T>
+    Object.fromEntries(Object.entries(props.fields).map(([k, v]) => [k, v.value])) as FormValues<T>
   );
   const [formErrors, setFormErrors] = useState("");
   const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
@@ -49,8 +42,6 @@ export function Form<T extends Record<string, InputProp>>({
     const buffer = await fileList[0].arrayBuffer();
 
     setFormData((prevFormData) => ({ ...prevFormData, avatar: buffer }));
-
-    console.log(formData);
   };
 
   function validateForm() {
@@ -58,11 +49,10 @@ export function Form<T extends Record<string, InputProp>>({
     setFormErrors("");
 
     try {
-      checkValidation(formData);
+      props.checkValidation(formData);
 
       return true;
     } catch (err) {
-      console.log(err);
       if (err instanceof ZodError) {
         err.errors.forEach((zodError) => {
           setErrors((prevError) => ({
@@ -71,14 +61,16 @@ export function Form<T extends Record<string, InputProp>>({
           }));
         });
       }
+
+      return false;
     }
   }
 
   const { mutate } = useMutation({
-    mutationFn: (data: typeof formData) => sendRequest(data),
+    mutationFn: (data: typeof formData) => props.sendRequest(data),
     onSuccess: () => {
-      if (onSuccess) {
-        onSuccess();
+      if (props.onSuccess) {
+        props.onSuccess();
       }
     },
     onError: (err) => {
@@ -98,49 +90,35 @@ export function Form<T extends Record<string, InputProp>>({
     }
   }
 
-  const formFields = Object.entries(fields).map(([k, v]) => {
-    const fieldKey = k as keyof T;
-
-    if (v.type === "radio" && v.options) {
-      return (
-        <FormRadioField
-          label={k[0].toUpperCase() + k.slice(1)}
-          options={v.options}
-          onChange={(option) => {
-            setFormData((prev) => ({ ...prev, [fieldKey]: option }));
-          }}
-          value={formData[fieldKey] as string}
-        />
-      );
-    }
-
+  const formFields = Object.entries(props.fields).map(([key, value]) => {
     return (
       <FormField
-        key={k}
-        label={k[0].toUpperCase() + k.slice(1)}
-        id={k}
-        type={v.type}
-        name={k}
-        {...(v.type === "file" ? {} : { value: formData[fieldKey] as string })}
+        key={key}
+        {...(props.hideLabel ? {} : { label: key[0].toUpperCase() + key.slice(1) })}
+        id={key}
+        type={value.type}
+        name={key}
+        value={formData[key]}
+        options={value.options}
         onChange={(e) => {
-          if (v.type === "file" && e.target.files) {
+          if (value.type === "file" && e.target.files) {
             void handleInputFileChange(e.target.files);
           } else {
             handleChange(e);
           }
         }}
-        errors={errors[fieldKey]!}
+        errors={errors[key]}
       ></FormField>
     );
   });
 
   return (
-    <form className={["flex flex-col gap-y-6 w-xl", formClassNames ?? ""].join(" ")} onSubmit={submit}>
+    <form className={["flex flex-col gap-y-6 w-xl", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
       <div className={["grid gap-y-4 w-full", formFields.length > 5 ? "grid-cols-2 gap-x-10" : ""].join(" ")}>
         {formFields}
       </div>
       {formErrors && <span className="text-red">{formErrors}</span>}
-      <Button type="submit" label={buttonText} />
+      <Button type="submit" label={props.buttonText} />
     </form>
   );
 }
