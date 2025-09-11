@@ -4,7 +4,6 @@ import { Gender } from "../types/user.types.ts";
 export const validUserUpdateSchema = z
   .object({
     name: z.string().min(1, { message: "Name is required" }),
-    surname: z.string().min(1, { message: "Surname is required" }),
     email: z.string().email({ message: "Invalid email address" }),
     birthDate: z.string().datetime(),
     password: z

@@ -4,7 +4,6 @@ import { Gender } from "@prisma/client";
 export const updateUserDtoSchema = z
   .object({
     name: z.string().trim(),
-    surname: z.string().trim(),
     email: z.string().trim(),
     birthDate: z.coerce.date(),
     password: z.string().trim(),

@@ -4,6 +4,7 @@ import { ValidRegistration, validRegistrationSchema } from "../../validation/aut
 import { config } from "../../config/config.ts";
 import { Title } from "../../components/common/Title.tsx";
 import { Gender } from "../../types/user.types.ts";
+import { Container } from "../../components/common/Container.tsx";
 
 export function RegistrationView() {
   const navigate = useNavigate();
@@ -23,15 +24,16 @@ export function RegistrationView() {
   };
 
   return (
-    <div className="container mx-auto px-4 flex flex-col items-center">
-      <Title title="Registration" />
+    <Container childrenContainerClassNames="justify-center gap-x-20" withBg={true}>
+      <Title>
+        From Dreaming to Traveling – <span className="text-accent italic block font-bold">Start Now</span>
+      </Title>
       <Form
-        buttonText="Sign Up"
+        buttonText="Let's start!"
         fields={{
           name: { value: "", type: "text" },
-          surname: { value: "", type: "text" },
           email: { value: "", type: "text" },
-          birthDate: { value: "", type: "date" },
+          birthDate: { value: new Date().toISOString(), type: "date", label: "Date of birth" },
           gender: {
             value: Gender.Male,
             options: [Gender.Male, Gender.Female],
@@ -50,6 +52,6 @@ export function RegistrationView() {
           void navigate("/");
         }}
       ></Form>
-    </div>
+    </Container>
   );
 }

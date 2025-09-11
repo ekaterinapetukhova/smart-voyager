@@ -1,26 +1,41 @@
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
 import { config } from "../config/config.ts";
+import { RouteCategories } from "../types/route.types.ts";
 
-export interface Filter {
-  key: string;
-  label: string;
-  query: string;
+// export interface Filter {
+//   key: string;
+//   label: string;
+//   query: string;
+// }
+//
+// export interface OverpassElement {
+//   type: string;
+//   id: number;
+//   lat?: number;
+//   lon?: number;
+//   tags?: Record<string, string>;
+// }
+//
+interface GeoapifyFeature {
+  type: string;
+  properties: object;
+  geometry: {
+    type: string;
+    coordinates: [number, number];
+  };
 }
 
-export interface OverpassElement {
+interface GeoapifyResponse {
   type: string;
-  id: number;
-  lat?: number;
-  lon?: number;
-  tags?: Record<string, string>;
+  features: GeoapifyFeature[];
 }
 
 export const usePOIs = (
-  selectedFilters: Filter[],
+  category: RouteCategories[],
   bbox: string,
   fetchTrigger: boolean,
-  setPois: React.Dispatch<React.SetStateAction<OverpassElement[]>>
+  setPois: React.Dispatch<React.SetStateAction<GeoapifyFeature[]>>
 ) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +43,7 @@ export const usePOIs = (
   const lastFetchRef = useRef(fetchTrigger);
 
   useEffect(() => {
-    if (lastFetchRef.current === fetchTrigger || selectedFilters.length === 0) {
+    if (lastFetchRef.current === fetchTrigger) {
       return;
     }
 
@@ -45,24 +60,17 @@ export const usePOIs = (
           throw new Error("Invalid bbox format");
         }
 
-        const query = `
-          [out:json][timeout:25];
-          (
-            ${selectedFilters.map((f) => `${f.query}(${bbox});`).join("\n")}
-          );
-          out body;
-        `;
+        const url = `${config.geoapifyPlacesApiUrl}?apiKey=${config.geoapifyKey}&categories=${category}&filter=rect:${bbox}`;
 
-        const fullUrl = `${config.overPassUrl}?data=${encodeURIComponent(query)}}`;
+        const response = await fetch(url);
 
-        const response = await fetch(fullUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        });
+        if (!response.ok) {
+          throw new Error("Geoapify request failed");
+        }
 
-        const { elements } = (await response.json()) as { elements: OverpassElement[] };
+        const data: GeoapifyResponse = await response.json();
 
-        setPois(elements);
+        setPois(data.features);
       } catch (e) {
         console.error("Error fetching POIs:", e);
         setError("Failed to load POIs");
@@ -72,7 +80,7 @@ export const usePOIs = (
     };
 
     void fetchPOIs();
-  }, [selectedFilters, bbox, fetchTrigger, setPois]);
+  }, [category, bbox, fetchTrigger, setPois]);
 
   return { loading, error };
 };

@@ -1,25 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400..700&display=swap');
 @import "tailwindcss";
 @import 'leaflet/dist/leaflet.css';
 
 :root {
-    --color-black: #2f2f28;
-    --color-white: #ffffff;
-    --color-yellow: #fbcd4b;
-    --color-red: #a01d26;
+    --background: #07060C;
+    --button-primary: #FF09EE;
+    --button-primary-hover: #00F4FC;
+    --text: #F8F6F9;
+    --accent: #F5EB03;
+    --error: #FF1744;
 }
 
 @theme {
-    --color-black: var(--color-black);
-    --color-white: var(--color-white);
-    --color-yellow: var(--color-yellow);
-    --color-red: var(--color-red);
+    --color-background: var(--background);
+    --color-button-primary: var(--button-primary);
+    --color-button-primary-hover: var(--button-primary-hover);
+    --color-text: var(--text);
+    --color-accent: var(--accent);
+    --color-error: var(--error);
 }
 
-/*body {*/
-/*    background-color: var(--color-black);*/
-/*}*/
+body {
+    background-color: var(--background);
+    font-family: "Kode Mono", monospace;
+    font-optical-sizing: auto;
+}
 
 a, button, input {
     outline: none;
+}
+
+[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
 }
 

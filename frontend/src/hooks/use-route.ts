@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Route } from "../types/route.types.ts";
+import { CreatedRoute, Route } from "../types/route.types.ts";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
 
 export const useRoute = () => {
@@ -20,7 +20,7 @@ export const useRoute = () => {
   });
 
   const add = useMutation({
-    mutationFn: async (route: Omit<Route, "id" | "createdAt" | "geojson">) => {
+    mutationFn: async (route: CreatedRoute) => {
       const { post } = authorizedFetch();
 
       const response = await post(PATH, route);

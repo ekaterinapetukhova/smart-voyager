@@ -24,7 +24,7 @@ export function ChatWithUser(props: ChatWithUserProps) {
   useEffect(() => {
     scrollToBottom();
   }, [chat?.chatMessage]);
-
+  
   return (
     <>
       <ul className="w-full overflow-y-auto grow flex flex-col gap-y-6" ref={messagesContainerRef}>
@@ -48,7 +48,7 @@ export function ChatWithUser(props: ChatWithUserProps) {
         }}
         buttonText="Send"
         formClassNames="items-center w-full flex-row"
-        hideLabel={true}
+        hiddenLabel={true}
       />
     </>
   );

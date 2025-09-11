@@ -14,6 +14,22 @@ export enum RouteType {
   Short = "short",
 }
 
+export enum RouteCategories {
+  Accommodation = "accommodation",
+  Activity = "activity",
+  Commercial = "commercial",
+  Catering = "catering",
+  Entertainment = "entertainment",
+  Healthcare = "healthcare",
+  Highway = "highway",
+  Natural = "natural",
+  Parking = "parking",
+  Pet = "pet",
+  Camping = "camping",
+  Beach = "beach",
+  Sport = "sport",
+}
+
 export interface NrGeoapifyRoutesApiClientOutput {
   type: string;
   features: Feature[];
@@ -111,3 +127,5 @@ export const routeSchema = z.object({
 });
 
 export type Route = z.output<typeof routeSchema>;
+
+export type CreatedRoute = Omit<Route, "id" | "createdAt" | "geojson">;

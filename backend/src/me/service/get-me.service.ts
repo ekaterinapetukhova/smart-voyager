@@ -13,7 +13,6 @@ export class GetMeService {
     return {
       id: user.id,
       name: user.name,
-      surname: user.surname,
       email: user.email,
       gender: user.gender,
       birthDate: user.birthDate,

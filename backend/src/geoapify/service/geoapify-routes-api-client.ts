@@ -3,8 +3,8 @@ import { GeoapifyApiClient } from "./geoapify-api-client";
 
 export interface GeoapifyRoutesApiClientInput {
   waypoints: string;
-  mode: "drive" | "transit" | "bicycle" | "walk";
-  type: "balanced" | "short";
+  mode: "drive" | "transit" | "bicycle" | "walk" | undefined;
+  type: "balanced" | "short" | undefined;
 }
 
 export interface GeoapifyRoutesApiClientOutput {

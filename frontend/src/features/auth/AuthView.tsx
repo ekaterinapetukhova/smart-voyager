@@ -1,5 +1,7 @@
 import { LinkTo } from "../../components/common/LinkTo.tsx";
 import { RouterEnum } from "../../router/router.types.ts";
+import { Logo } from "../../components/logo/Logo.tsx";
+import { Container } from "../../components/common/Container.tsx";
 
 export function AuthView() {
   const authItems = {
@@ -10,14 +12,19 @@ export function AuthView() {
   const authItemsList = Object.values(authItems).map(({ name, path }) => {
     return (
       <li key={name}>
-        <LinkTo label={name} url={path} />
+        <LinkTo type="button" label={name} url={path} />
       </li>
     );
   });
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <ul className="flex flex-col items-center">{authItemsList}</ul>
-    </div>
+    <Container childrenContainerClassNames="flex-col pt-10 pb-20" withBg={true}>
+      <Logo />
+      <p className="text-text font-medium text-center w-3/4 text-xl grow">
+        Create personalized trips, explore smart routes powered by AI, and connect with travel buddies who share your
+        vibe. Easily edit your journeys, track your budget, and turn every idea into a real adventure.
+      </p>
+      <ul className="flex flex-col gap-y-5 w-52 ">{authItemsList}</ul>
+    </Container>
   );
 }

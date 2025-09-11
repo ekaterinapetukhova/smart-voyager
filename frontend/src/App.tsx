@@ -1,4 +1,5 @@
 import "./App.css";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -8,11 +9,11 @@ import { RouterEnum } from "./router/router.types.ts";
 import { UserView } from "./features/user/UserView.tsx";
 import { updateUserStore, useTokenStore } from "./store/user-store.ts";
 import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
-import { IndexView } from "./components/IndexView.tsx";
-import { Header } from "./components/header/Header.tsx";
+import { IndexView } from "./features/index/IndexView.tsx";
 import { UserSettingsView } from "./features/user/UserSettingsView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
 import { CommonChatView } from "./features/chat/CommonChatView.tsx";
+import { Sidebar } from "./components/sidebar/Sidebar.tsx";
 
 const queryClient = new QueryClient();
 
@@ -43,19 +44,21 @@ export function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {isAuth && <Header />}
-      <Routes>
-        <Route path={RouterEnum.Index} element={<IndexView />} />
-        <Route path={RouterEnum.Registration} element={<RegistrationView />} />
-        <Route path={RouterEnum.Login} element={<LoginView />} />
-        <Route path={RouterEnum.Verification} element={<IndexView />} />
-        <Route path={RouterEnum.User} element={<UserView />} />
-        <Route path={RouterEnum.TripMates} element={<TripMatesView />} />
-        <Route path={RouterEnum.UserRoutes} element={<UserView />} />
-        <Route path={RouterEnum.UserChats} element={<CommonChatView />} />
-        <Route path={RouterEnum.UserSettings} element={<UserSettingsView />} />
-        <Route path={RouterEnum.NotFound} element={<NotFoundView />} />
-      </Routes>
+      <div className="flex h-screen overflow-y-auto lg:overflow-hidden">
+        {isAuth && <Sidebar />}
+        <Routes>
+          <Route path={RouterEnum.Index} element={<IndexView />} />
+          <Route path={RouterEnum.Registration} element={<RegistrationView />} />
+          <Route path={RouterEnum.Login} element={<LoginView />} />
+          <Route path={RouterEnum.Verification} element={<IndexView />} />
+          <Route path={RouterEnum.User} element={<UserView />} />
+          <Route path={RouterEnum.TripMates} element={<TripMatesView />} />
+          <Route path={RouterEnum.UserRoutes} element={<UserView />} />
+          <Route path={RouterEnum.Chats} element={<CommonChatView />} />
+          <Route path={RouterEnum.UserSettings} element={<UserSettingsView />} />
+          <Route path={RouterEnum.NotFound} element={<NotFoundView />} />
+        </Routes>
+      </div>
     </QueryClientProvider>
   );
 }

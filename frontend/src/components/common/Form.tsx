@@ -9,6 +9,7 @@ export interface InputProp {
   value?: string;
   options?: string[];
   type: "text" | "date" | "password" | "file" | "radio";
+  label?: string;
 }
 
 export type FormValues<T extends Record<string, InputProp>> = {
@@ -22,7 +23,7 @@ export interface FormProps<T extends Record<string, InputProp>> {
   buttonText: string;
   formClassNames?: string;
   onSuccess?: () => void;
-  hideLabel?: boolean;
+  hiddenLabel?: boolean;
 }
 
 export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
@@ -94,7 +95,7 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
     return (
       <FormField
         key={key}
-        {...(props.hideLabel ? {} : { label: key[0].toUpperCase() + key.slice(1) })}
+        {...(props.hiddenLabel ? {} : { label: value.label ?? key[0].toUpperCase() + key.slice(1) })}
         id={key}
         type={value.type}
         name={key}
@@ -113,12 +114,12 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
   });
 
   return (
-    <form className={["flex flex-col gap-y-6 w-xl", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
-      <div className={["grid gap-y-4 w-full", formFields.length > 5 ? "grid-cols-2 gap-x-10" : ""].join(" ")}>
-        {formFields}
+    <form className={["flex flex-col w-1/4", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
+      <div className="flex flex-col gap-y-5 w-full">{formFields}</div>
+      {formErrors && <span className="text-error text-xs mt-4">{formErrors}</span>}
+      <div className="w-2/3 mx-auto mt-10">
+        <Button type="submit" label={props.buttonText} />
       </div>
-      {formErrors && <span className="text-red">{formErrors}</span>}
-      <Button type="submit" label={props.buttonText} />
     </form>
   );
 }

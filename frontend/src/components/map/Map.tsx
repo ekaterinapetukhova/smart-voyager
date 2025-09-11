@@ -9,27 +9,38 @@ import { RoutePoint } from "../../types/route-point.types.ts";
 import { useRoute } from "../../hooks/use-route.ts";
 import { getPlaceName } from "../../utils/get-place-name.ts";
 import { Filter, OverpassElement, usePOIs } from "../../hooks/use-poi.ts";
-import { RouteMode, RouteType } from "../../types/route.types.ts";
+import { CreatedRoute, RouteCategories, RouteMode, RouteType } from "../../types/route.types.ts";
 // import { geojson } from "../../geojson.ts";
 
-const filters: Filter[] = [
-  {
-    key: "restaurants",
-    label: "Restaurants",
-    query: 'node["amenity"="restaurant"]',
-  },
-  { key: "hotels", label: "Hotels", query: 'node["tourism"="hotel"]' },
-  {
-    key: "pharmacies",
-    label: "Pharmacies",
-    query: 'node["amenity"="pharmacy"]',
-  },
-  {
-    key: "transit",
-    label: "Transit Stations",
-    query: 'node["public_transport"="station"]',
-  },
-];
+// const filters: Filter[] = [
+//   {
+//     key: "restaurants",
+//     label: "Restaurants",
+//     query: 'node["amenity"="restaurant"]',
+//   },
+//   { key: "hotels", label: "Hotels", query: 'node["tourism"="hotel"]' },
+//   {
+//     key: "pharmacies",
+//     label: "Pharmacies",
+//     query: 'node["amenity"="pharmacy"]',
+//   },
+//   {
+//     key: "transit",
+//     label: "Transit Stations",
+//     query: 'node["public_transport"="station"]',
+//   },
+// ];
+
+export interface GeoapifyPOI {
+  id: string;
+  properties: {
+    name: string;
+    category: string;
+  };
+  geometry: {
+    coordinates: [number, number]; // [lon, lat]
+  };
+}
 
 export interface Map2Marker {
   position: LatLng;
@@ -46,38 +57,42 @@ export interface Map2Props {
 export const Map = (props: Map2Props) => {
   const [routePoints, setRoutePoints] = useState<RoutePoint[]>([]);
   const [routeName, setRouteName] = useState("");
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const [fetchTrigger, setFetchTrigger] = useState(false);
-  const [bbox, setBbox] = useState(props.initialBounds.toBBoxString());
-  const [pois, setPois] = useState<OverpassElement[]>([]);
-  const [routeMode, setRouteMode] = useState<RouteMode>(RouteMode.Drive);
-  const [routeType, setRouteType] = useState<RouteType>(RouteType.Balanced);
+  // const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  // const [fetchTrigger, setFetchTrigger] = useState(false);
+  // const [bbox, setBbox] = useState(props.initialBounds.toBBoxString());
+  // const [pois, setPois] = useState<GeoapifyPOI[]>([]);
+  // const [routeMode, setRouteMode] = useState<RouteMode>(RouteMode.Drive);
+  // const [routeType, setRouteType] = useState<RouteType>(RouteType.Balanced);
 
-  const selectedFilters = filters.filter((filter) => selectedKeys.includes(filter.key));
+  // const filters = Object.values(RouteCategories);
+  //
+  // const selectedFilters = filters.filter((filter) => selectedKeys.includes(filter));
 
   const { addRoute } = useRoute();
-  const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
+  // const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
 
   const mapRef = useRef<L.Map | null>(null);
 
-  const setNewBbox = useCallback(() => {
-    if (!mapRef.current) return;
-
-    const bounds: LatLngBounds = mapRef.current.getBounds();
-    const newBbox = bounds.toBBoxString();
-
-    setBbox((prev) => {
-      if (prev === newBbox) return prev;
-
-      return newBbox;
-    });
-  }, []);
+  // const setNewBbox = useCallback(() => {
+  //   if (!mapRef.current) return;
+  //
+  //   const bounds: LatLngBounds = mapRef.current.getBounds();
+  //   const newBbox = bounds.toBBoxString();
+  //
+  //   setBbox((prev) => {
+  //     if (prev === newBbox) return prev;
+  //
+  //     return newBbox;
+  //   });
+  // }, []);
 
   const geoJsonAdded = useRef(false);
+
   const addGeoJson = useCallback((map: L.Map) => {
     if (geoJsonAdded.current || !props.geojson) {
       return;
     }
+
     L.geoJSON(props.geojson, {
       style: {
         color: "#FF2222",
@@ -85,23 +100,29 @@ export const Map = (props: Map2Props) => {
         opacity: 1.0,
       },
     }).addTo(map);
+
     geoJsonAdded.current = true;
   }, []); // maybe dep on geojson but needs to remove old one
 
   const markersAdded = useRef(false);
+
   const addMarkers = useCallback((map: L.Map) => {
     if (markersAdded.current || !props.markers || props.markers.length === 0) {
       return;
     }
+
     for (const marker of props.markers) {
       const instance = L.marker(marker.position).addTo(map);
+
       if (marker.popup) {
         const popup = instance.bindPopup(renderToString(marker.popup));
+
         if (marker.popupOpen) {
           popup.openPopup();
         }
       }
     }
+
     markersAdded.current = true;
   }, []); // maybe dep on markers but needs to remove old one
 
@@ -142,12 +163,12 @@ export const Map = (props: Map2Props) => {
           };
         })();
       },
-      moveend: () => {
-        setNewBbox();
-      },
-      zoomend: () => {
-        setNewBbox();
-      },
+      // moveend: () => {
+      //   setNewBbox();
+      // },
+      // zoomend: () => {
+      //   setNewBbox();
+      // },
     });
 
     addGeoJson(map);
@@ -167,29 +188,29 @@ export const Map = (props: Map2Props) => {
     ]);
   };
 
-  const toggleFilter = (key: string) => {
-    setSelectedKeys((prev) => {
-      const updated = prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key];
-
-      if (!updated.length) {
-        setPois([]);
-      }
-
-      return updated;
-    });
-  };
-
-  const handleShowPOIs = () => {
-    if (selectedKeys.length > 0) {
-      setFetchTrigger((prev) => !prev);
-    }
-  };
+  // const toggleFilter = (key: string) => {
+  //   setSelectedKeys((prev) => {
+  //     const updated = prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key];
+  //
+  //     if (!updated.length) {
+  //       setPois([]);
+  //     }
+  //
+  //     return updated;
+  //   });
+  // };
+  //
+  // const handleShowPOIs = () => {
+  //   if (selectedKeys.length > 0) {
+  //     setFetchTrigger((prev) => !prev);
+  //   }
+  // };
 
   const saveRoute = async () => {
-    const route = {
+    const route: CreatedRoute = {
       name: routeName,
-      mode: routeMode,
-      type: routeType,
+      mode: RouteMode.Drive,
+      type: RouteType.Balanced,
       waypoints: routePoints,
     };
 
@@ -228,90 +249,92 @@ export const Map = (props: Map2Props) => {
     </>
   );
 
-  const FilteredPoints = () => (
-    <>
-      {pois.map((poi) => {
-        if (!poi.lat || !poi.lon) return null;
+  // const FilteredPoints = () => (
+  //   <>
+  //     {pois.map((poi) => {
+  //       if (!poi.lat || !poi.lon) return null;
+  //
+  //       console.log(poi);
+  //
+  //       return (
+  //         <Marker key={poi.id} position={[poi.lat, poi.lon]}>
+  //           <Popup>
+  //             <p>{poi.tags?.name}</p>
+  //             <Button
+  //               label="Add point"
+  //               onClick={() => {
+  //                 const newRoutePoint: RoutePoint = {
+  //                   name: poi.tags?.name,
+  //                   latitude: poi.lat!,
+  //                   longitude: poi.lon!,
+  //                 };
+  //
+  //                 addRoutePoint(newRoutePoint);
+  //               }}
+  //             />
+  //           </Popup>
+  //         </Marker>
+  //       );
+  //     })}
+  //   </>
+  // );
 
-        return (
-          <Marker key={poi.id} position={[poi.lat, poi.lon]}>
-            <Popup>
-              <p>{poi.tags?.name}</p>
-              <Button
-                label="Add point"
-                onClick={() => {
-                  const newRoutePoint: RoutePoint = {
-                    name: poi.tags?.name,
-                    latitude: poi.lat!,
-                    longitude: poi.lon!,
-                  };
-
-                  addRoutePoint(newRoutePoint);
-                }}
-              />
-            </Popup>
-          </Marker>
-        );
-      })}
-    </>
-  );
-
-  const modes = Object.values(RouteMode);
-
-  const types = Object.values(RouteType);
+  // const modes = Object.values(RouteMode);
+  //
+  // const types = Object.values(RouteType);
 
   return (
-    <div>
+    <div className="w-full">
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-4">
           <div className="flex gap-2 items-center">
-            {filters.map((filter) => (
-              <label key={filter.key} className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={selectedKeys.includes(filter.key)}
-                  onChange={() => {
-                    toggleFilter(filter.key);
-                  }}
-                />
-                {filter.label}
-              </label>
-            ))}
-            <Button label={loading ? "Loading" : "Show places"} onClick={handleShowPOIs} />
+            {/*{filters.map((filter) => (*/}
+            {/*  <label key={filter} className="flex items-center gap-1">*/}
+            {/*    <input*/}
+            {/*      type="checkbox"*/}
+            {/*      checked={selectedKeys.includes(filter)}*/}
+            {/*      onChange={() => {*/}
+            {/*        toggleFilter(filter);*/}
+            {/*      }}*/}
+            {/*    />*/}
+            {/*    {filter}*/}
+            {/*  </label>*/}
+            {/*))}*/}
+            {/*<Button label={loading ? "Loading" : "Show places"} onClick={handleShowPOIs} />*/}
           </div>
 
           <div className="flex gap-2 items-center">
-            {modes.map((mode) => (
-              <label key={mode} className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  value={routeMode}
-                  name="routeMode"
-                  checked={routeMode === mode}
-                  onChange={() => {
-                    setRouteMode(mode);
-                  }}
-                />
-                {mode[0].toUpperCase() + mode.slice(1)}
-              </label>
-            ))}
+            {/*{modes.map((mode) => (*/}
+            {/*  <label key={mode} className="flex items-center gap-1">*/}
+            {/*    <input*/}
+            {/*      type="radio"*/}
+            {/*      value={routeMode}*/}
+            {/*      name="routeMode"*/}
+            {/*      checked={routeMode === mode}*/}
+            {/*      onChange={() => {*/}
+            {/*        setRouteMode(mode);*/}
+            {/*      }}*/}
+            {/*    />*/}
+            {/*    {mode[0].toUpperCase() + mode.slice(1)}*/}
+            {/*  </label>*/}
+            {/*))}*/}
           </div>
 
           <div className="flex gap-2 items-center">
-            {types.map((type) => (
-              <label key={type} className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  value={routeType}
-                  name="routeType"
-                  checked={routeType === type}
-                  onChange={() => {
-                    setRouteType(type);
-                  }}
-                />
-                {type[0].toUpperCase() + type.slice(1)}
-              </label>
-            ))}
+            {/*{types.map((type) => (*/}
+            {/*  <label key={type} className="flex items-center gap-1">*/}
+            {/*    <input*/}
+            {/*      type="radio"*/}
+            {/*      value={routeType}*/}
+            {/*      name="routeType"*/}
+            {/*      checked={routeType === type}*/}
+            {/*      onChange={() => {*/}
+            {/*        setRouteType(type);*/}
+            {/*      }}*/}
+            {/*    />*/}
+            {/*    {type[0].toUpperCase() + type.slice(1)}*/}
+            {/*  </label>*/}
+            {/*))}*/}
           </div>
         </div>
 
@@ -335,7 +358,7 @@ export const Map = (props: Map2Props) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MapEvents />
-          <FilteredPoints />
+          {/*<FilteredPoints />*/}
           <NewRouteOverlay />
         </MapContainer>
       </div>

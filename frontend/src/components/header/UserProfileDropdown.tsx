@@ -31,10 +31,6 @@ export function UserProfileDropdown() {
       label: "Routes",
       path: RouterEnum.UserRoutes,
     },
-    chats: {
-      label: "Chats",
-      path: RouterEnum.UserChats,
-    },
     settings: {
       label: "Settings",
       path: RouterEnum.UserSettings,

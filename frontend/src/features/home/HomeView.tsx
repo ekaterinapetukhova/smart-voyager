@@ -17,10 +17,8 @@ export const HomeView = () => {
   // ];
 
   return (
-    <section>
-      <Container>
-        <Map initialBounds={new LatLngBounds([50.23, 19.01], [50.28, 19.06])} />
-      </Container>
-    </section>
+    <Container withBg={true}>
+      <Map initialBounds={new LatLngBounds([50.23, 19.01], [50.28, 19.06])} />
+    </Container>
   );
 };

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 
 interface FormFieldProps {
   label?: string;
@@ -12,48 +13,71 @@ interface FormFieldProps {
 }
 
 export function FormField(props: FormFieldProps) {
+  const [focused, setFocused] = useState(false);
+
   let field: React.ReactNode;
 
   if (props.type === "radio" && props.options) {
     field = (
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-5 mt-4">
         {props.options.map((option) => (
-          <label key={option} className="flex items-center gap-x-2">
+          <label key={option} className="flex items-center gap-x-2 text-xl cursor-pointer has-checked:text-accent">
             <input
               type="radio"
               name={props.name}
               value={option}
               checked={props.value === option}
               onChange={props.onChange}
+              className="hidden"
             />
-            {option}
+            {option[0].toUpperCase() + option.slice(1)}
           </label>
         ))}
       </div>
     );
   } else {
     field = (
-      <input
-        id={props.id}
-        name={props.name}
-        type={props.type}
-        {...(props.type !== "file"
-          ? {
-              value:
-                props.type === "date" && props.value ? new Date(props.value).toISOString().split("T")[0] : props.value,
-            }
-          : {})}
-        onChange={props.onChange}
-        className="h-8 px-2 text-sm border-b border-black bg-transparent w-full"
-      />
+      <div className="relative group">
+        <input
+          onFocus={() => {
+            setFocused(true);
+          }}
+          onBlur={() => {
+            setFocused(false);
+          }}
+          id={props.id}
+          name={props.name}
+          type={props.type}
+          {...(props.type !== "file"
+            ? {
+                value:
+                  props.type === "date" && props.value
+                    ? new Date(props.value).toISOString().split("T")[0]
+                    : props.value,
+              }
+            : {})}
+          onChange={props.onChange}
+          className={["h-12 py-4 w-full text-xl border-b-2", props.errors ? "border-error" : "border-text"].join(" ")}
+        />
+        <span
+          className={[
+            "absolute bottom-0 left-0 h-0.5 transition-all ease-out duration-300 bg-accent",
+            focused ? "w-full" : "w-0",
+          ].join(" ")}
+        ></span>
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-y-2 w-full">
-      {props.label && <label htmlFor={props.id}>{props.label}</label>}
+    <div className="flex flex-col w-full text-text">
+      {props.label && (
+        <label className="text-2xl font-bold" htmlFor={props.id}>
+          {props.label}
+        </label>
+      )}
       {field}
-      {props.errors && <span className="text-red">{props.errors}</span>}
+      {props.errors && <span className="text-error text-xs mt-1.5">{props.errors}</span>}
     </div>
   );
 }

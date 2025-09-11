@@ -14,7 +14,6 @@ export function UserSettingsView() {
 
   const fields = {
     name: { value: user.name, type: "text" },
-    surname: { value: user.surname, type: "text" },
     email: { value: user.email, type: "text" },
     birthDate: { value: user.birthDate, type: "date" },
     password: { value: "", type: "password" },

@@ -13,6 +13,7 @@ export class GeoapifyApiClient {
     if (!response.ok) {
       console.error(await response.text());
       console.error(response.statusText);
+
       throw new ServerError("GeoapifyApiClient failed");
     }
 

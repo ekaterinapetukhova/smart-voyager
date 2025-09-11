@@ -18,10 +18,12 @@ export function LoginView() {
   };
 
   return (
-    <Container className="flex flex-col items-center">
-      <Title title="Login" />
+    <Container childrenContainerClassNames="justify-center gap-x-20" withBg={true}>
+      <Title>
+        Unlock Your <span className="text-accent italic font-bold">Next</span> Adventure
+      </Title>
       <Form
-        buttonText="Sign In"
+        buttonText="Log in"
         fields={{
           email: { value: "", type: "text" },
           password: { value: "", type: "password" },
