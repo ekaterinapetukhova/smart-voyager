@@ -3,11 +3,11 @@ import { Gender } from "../types/user.types.ts";
 
 export const validRegistrationSchema = z.object({
   name: z.string().min(1, { message: "Please, enter your name" }),
-  email: z
-    .string()
-    .email({ message: "Invalid email format, try again" })
-    .min(1, { message: "Please, enter your email" }),
-  birthDate: z.coerce.date({ message: "Enter your birth date, bro" }).refine(
+  email: z.email({
+    pattern: z.regexes.email,
+    message: "Invalid email format, try again",
+  }),
+  birthDate: z.iso.date({ message: "Enter your birth date, bro" }).refine(
     (v) => {
       const currentDate = new Date();
       const userDate = new Date(v);
@@ -25,20 +25,18 @@ export const validRegistrationSchema = z.object({
     },
     { message: "Sorry, bro, but you must be older than 18" }
   ),
-  gender: z.nativeEnum(Gender),
+  gender: z.enum(Gender),
   password: z
     .string()
     .min(8, { message: "Must be 8 or more characters long" })
     .max(20, { message: "Must be 20 or fewer characters long" }),
+  avatar: z.base64().refine((v) => !!v, { message: "Add your photo, please" }),
 });
 
 export type ValidRegistration = z.output<typeof validRegistrationSchema>;
 
 export const validLoginSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "Invalid email format, try again" })
-    .min(1, { message: "Please, enter your email" }),
+  email: z.email({ pattern: z.regexes.email, message: "Invalid email format, try again" }),
   password: z.string().min(1, { message: "Please, enter your password" }),
 });
 

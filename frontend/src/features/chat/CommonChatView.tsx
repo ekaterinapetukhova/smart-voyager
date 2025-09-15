@@ -44,17 +44,13 @@ export function CommonChatView() {
   });
 
   return (
-    <section>
-      <Container>
-        <div className="w-full flex">
-          <ul className="w-1/4 flex flex-col gap-y-4">{chatMembers}</ul>
-          <div className="w-full flex flex-col gap-y-2 h-[80vh] scroll-smooth">
-            {selectedChat && selectedMember && (
-              <ChatWithUser chatId={selectedChat.id} recipientId={selectedMember.id} />
-            )}
-          </div>
+    <Container>
+      <div className="w-full flex">
+        <ul className="w-1/4 flex flex-col gap-y-4">{chatMembers}</ul>
+        <div className="w-full flex flex-col gap-y-2 h-[80vh] scroll-smooth">
+          {selectedChat && selectedMember && <ChatWithUser chatId={selectedChat.id} recipientId={selectedMember.id} />}
         </div>
-      </Container>
-    </section>
+      </div>
+    </Container>
   );
 }

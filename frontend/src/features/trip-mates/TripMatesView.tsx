@@ -28,7 +28,7 @@ export function TripMatesView() {
   });
 
   return (
-    <section>
+    <>
       <Container>
         <ul className="grid grid-cols-[repeat(auto-fit,_10rem)] gap-4">{tripMatesList}</ul>
       </Container>
@@ -53,6 +53,6 @@ export function TripMatesView() {
           />
         </Popup>
       )}
-    </section>
+    </>
   );
 }

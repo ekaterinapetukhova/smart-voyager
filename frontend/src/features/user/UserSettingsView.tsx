@@ -1,14 +1,21 @@
+import { useNavigate } from "react-router-dom";
 import { Container } from "../../components/common/Container.tsx";
 import { Title } from "../../components/common/Title.tsx";
 import { Form, FormValues, InputProp } from "../../components/common/Form.tsx";
 import { ValidUpdateUser, validUserUpdateSchema } from "../../validation/update-user.validation.ts";
-import { updateUserStore, useUserStore } from "../../store/user-store.ts";
+import { updateUserStore, useTokenStore, useUserStore } from "../../store/user-store.ts";
 import { authorizedFetch } from "../../utils/authorized-fetch.ts";
 import { Gender } from "../../types/user.types.ts";
+import { Button } from "../../components/common/Button.tsx";
+import { RouterEnum } from "../../types/router.types.ts";
 
 export function UserSettingsView() {
   const { user } = useUserStore();
   const { patch } = authorizedFetch();
+
+  const logout = useTokenStore((s) => s.logout);
+
+  const navigate = useNavigate();
 
   if (!user) return null;
 
@@ -65,19 +72,24 @@ export function UserSettingsView() {
   };
 
   return (
-    <section>
-      <Container className="flex flex-col items-center">
-        <Title title="Settings" />
-        <Form
-          buttonText="Update"
-          fields={fields}
-          checkValidation={(data) => validUserUpdateSchema.parse(prepareUpdatedData(data))}
-          sendRequest={(data) => sendRequest(prepareUpdatedData(data))}
-          onSuccess={() => {
-            void updateUserStore();
-          }}
-        />
-      </Container>
-    </section>
+    <Container childrenContainerClassNames="overflow-auto">
+      <Title>Settings</Title>
+      <Form
+        buttonText="Update"
+        fields={fields}
+        checkValidation={(data) => validUserUpdateSchema.parse(prepareUpdatedData(data))}
+        sendRequest={(data) => sendRequest(prepareUpdatedData(data))}
+        onSuccess={() => {
+          void updateUserStore();
+        }}
+      />
+      <Button
+        onClick={() => {
+          logout();
+          void navigate(RouterEnum.Auth);
+        }}
+        label="Log out"
+      />
+    </Container>
   );
 }

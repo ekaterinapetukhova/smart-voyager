@@ -1,5 +1,5 @@
 import { LinkTo } from "../../components/common/LinkTo.tsx";
-import { RouterEnum } from "../../router/router.types.ts";
+import { RouterEnum } from "../../types/router.types.ts";
 import { Logo } from "../../components/logo/Logo.tsx";
 import { Container } from "../../components/common/Container.tsx";
 
@@ -18,7 +18,7 @@ export function AuthView() {
   });
 
   return (
-    <Container childrenContainerClassNames="flex-col pt-10 pb-20" withBg={true}>
+    <Container childrenContainerClassNames="flex-col pt-10 pb-20">
       <Logo />
       <p className="text-text font-medium text-center w-3/4 text-xl grow">
         Create personalized trips, explore smart routes powered by AI, and connect with travel buddies who share your

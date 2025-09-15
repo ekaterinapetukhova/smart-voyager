@@ -8,7 +8,7 @@ export class ZodErrorExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    const errors = exception.errors.map((error) => {
+    const errors = exception.issues.map((error) => {
       return {
         path: error.path.toString(),
         statusCode: error.code,

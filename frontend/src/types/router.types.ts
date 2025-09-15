@@ -1,5 +1,6 @@
 export enum RouterEnum {
-  Index = "/",
+  Auth = "/auth",
+  Trips = "/trips",
   Registration = "/registration",
   Login = "/login",
   Verification = "/verify-email",

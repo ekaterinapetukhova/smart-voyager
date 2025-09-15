@@ -21,11 +21,11 @@ model User {
   passwordHash String
   createdAt    DateTime @default(now())
   gender       Gender
+  avatar       String
 
   verified Boolean @default(false)
 
   shouldBeVisible Boolean?
-  avatar          String?
   country         String?
   city            String?
   languages       String?

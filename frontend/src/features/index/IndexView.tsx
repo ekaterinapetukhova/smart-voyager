@@ -1,5 +1,5 @@
 import { useTokenStore } from "../../store/user-store.ts";
-import { HomeView } from "../home/HomeView.tsx";
+import { TripView } from "../trip/TripView.tsx";
 import { AuthView } from "../auth/AuthView.tsx";
 import { verifyUserEmail } from "../../mutation/verification.mutation.ts";
 
@@ -12,5 +12,5 @@ export function IndexView() {
 
   const isAuth = !!useTokenStore((s) => s.token);
 
-  return isAuth ? <HomeView /> : <AuthView />;
+  return isAuth ? <TripView /> : <AuthView />;
 }

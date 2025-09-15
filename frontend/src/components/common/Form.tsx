@@ -55,11 +55,13 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
       return true;
     } catch (err) {
       if (err instanceof ZodError) {
-        err.errors.forEach((zodError) => {
+        err.issues.forEach((zodError) => {
           setErrors((prevError) => ({
             ...prevError,
             [zodError.path[0]]: zodError.message,
           }));
+
+          console.error(zodError);
         });
       }
 

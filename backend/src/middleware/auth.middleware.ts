@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { NextFunction, Request } from "express";
 import Jwt from "jsonwebtoken";
-import { SafeParseReturnType, z } from "zod";
+import { z } from "zod";
 import { User } from "@prisma/client";
 import { config } from "../config/config";
 import { PrismaService } from "../prisma/prisma.service";
@@ -46,24 +46,18 @@ export class AuthMiddleware implements NestMiddleware {
   }
 
   private verifyToken(token: string): { id: string } {
+    const payloadSchema = z.object({
+      id: z.uuid(),
+    });
+
     const payload = Jwt.verify(token, config.secretKey);
 
-    const validPayload = this.validatePayload(payload);
+    const validPayload = payloadSchema.safeParse(payload);
 
     if (!validPayload.success) {
       throw new UnauthorizedException();
     }
 
     return validPayload.data;
-  }
-
-  private validatePayload(
-    payload: string | Jwt.JwtPayload
-  ): SafeParseReturnType<string | Jwt.JwtPayload, z.output<typeof payloadSchema>> {
-    const payloadSchema = z.object({
-      id: z.string().uuid(),
-    });
-
-    return payloadSchema.safeParse(payload);
   }
 }

@@ -4,8 +4,8 @@ import { Gender } from "../types/user.types.ts";
 export const validUserUpdateSchema = z
   .object({
     name: z.string().min(1, { message: "Name is required" }),
-    email: z.string().email({ message: "Invalid email address" }),
-    birthDate: z.string().datetime(),
+    email: z.email({ message: "Invalid email address" }),
+    birthDate: z.iso.datetime(),
     password: z
       .string()
       .min(8, { message: "Must be 8 or more characters long" })
@@ -14,8 +14,8 @@ export const validUserUpdateSchema = z
     city: z.string().min(1),
     languages: z.string().min(1),
     description: z.string().min(1),
-    avatar: z.string().base64(),
-    gender: z.nativeEnum(Gender),
+    avatar: z.base64(),
+    gender: z.enum(Gender),
   })
   .partial();
 

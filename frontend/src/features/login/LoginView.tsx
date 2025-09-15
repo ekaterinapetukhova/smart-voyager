@@ -5,6 +5,7 @@ import { ValidLogin, validLoginSchema } from "../../validation/auth.validation";
 import { Form } from "../../components/common/Form";
 import { Title } from "../../components/common/Title";
 import { Container } from "../../components/common/Container.tsx";
+import { RouterEnum } from "../../types/router.types.ts";
 
 export function LoginView() {
   const login = useTokenStore((s) => s.login);
@@ -18,7 +19,7 @@ export function LoginView() {
   };
 
   return (
-    <Container childrenContainerClassNames="justify-center gap-x-20" withBg={true}>
+    <Container childrenContainerClassNames="justify-center gap-x-20">
       <Title>
         Unlock Your <span className="text-accent italic font-bold">Next</span> Adventure
       </Title>
@@ -31,7 +32,7 @@ export function LoginView() {
         checkValidation={validLoginSchema.parse}
         sendRequest={submit}
         onSuccess={() => {
-          void navigate("/");
+          void navigate(RouterEnum.Trips);
         }}
       ></Form>
     </Container>

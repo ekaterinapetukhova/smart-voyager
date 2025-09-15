@@ -7,6 +7,7 @@ interface LinkToProps {
   img?: boolean;
   src?: string;
   imgClassNames?: string;
+  isActive?: boolean;
 }
 
 export const LinkTo = (props: LinkToProps) => {
@@ -16,8 +17,8 @@ export const LinkTo = (props: LinkToProps) => {
   return (
     <Link
       className={[
-        "relative group py-3 flex items-center justify-center",
-        props.type === "button" ? "w-full bg-button-primary overflow-hidden" : "w-fit",
+        "relative group flex items-center justify-center",
+        props.type === "button" ? "py-3 w-full bg-button-primary overflow-hidden" : "w-fit",
       ].join(" ")}
       to={props.url}
     >
@@ -26,7 +27,8 @@ export const LinkTo = (props: LinkToProps) => {
           "font-bold z-10 text-xl",
           props.type === "button"
             ? "text-text"
-            : "text-button-primary group-hover:text-button-primary-hover transition-all duration-300 active:text-button-primary-hover",
+            : "text-button-primary group-hover:text-button-primary-hover transition-all duration-300 pb-2",
+          props.isActive ? "text-button-primary-hover" : "text-text",
         ].join(" ")}
       >
         {props.label}
@@ -39,6 +41,7 @@ export const LinkTo = (props: LinkToProps) => {
       )}
       {props.type === "link" && (
         <>
+          {props.isActive && <span className={`absolute bottom-1 block bg-button-primary-hover h-0.5 w-full`} />}
           <span
             className={`absolute bottom-1 block w-0 transform translate-x-[49%] bg-button-primary-hover h-0.5 group-hover:w-1/2 transition-all duration-300 ease-out`}
           />
