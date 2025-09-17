@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Form, FormValues, InputProp } from "../../components/common/Form";
+import { Form, FormValues, InputProp } from "../../components/common/form/Form.tsx";
 import { ValidRegistration, validRegistrationSchema } from "../../validation/auth.validation";
 import { config } from "../../config/config.ts";
 import { Title } from "../../components/common/Title.tsx";
@@ -29,7 +29,7 @@ export function RegistrationView() {
 
     return btoa(str);
   };
-  
+
   const prepareCreatedData = (data: FormValues<typeof fields>) => {
     return { ...data, avatar: bufferToBase64(data.avatar as unknown as ArrayBuffer) };
   };
@@ -61,7 +61,7 @@ export function RegistrationView() {
         onSuccess={() => {
           void navigate(RouterEnum.Auth);
         }}
-      ></Form>
+      />
     </Container>
   );
 }

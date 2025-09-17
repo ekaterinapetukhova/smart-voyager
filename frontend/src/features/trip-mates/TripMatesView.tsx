@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Container } from "../../components/common/Container.tsx";
 import { useTripMates } from "../../hooks/use-trip-mates.ts";
 import { Popup } from "../../components/common/Popup.tsx";
-import { Form } from "../../components/common/Form.tsx";
+import { Form } from "../../components/common/form/Form.tsx";
 import { validChatMessageSchema } from "../../validation/chat.validation.ts";
 import { useChat } from "../../hooks/use-chat.ts";
 import { TripMateCard } from "./TripMateCard.tsx";

@@ -1,12 +1,13 @@
 import * as React from "react";
 
-interface TextInputProps {
+interface RadioInputProps {
   label: string;
   value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedValue: string;
 }
 
-export const TextInput = (props: TextInputProps) => {
+export function RadioInput(props: RadioInputProps) {
   const INPUT_ID = `input-${props.label}`;
 
   return (
@@ -15,10 +16,11 @@ export const TextInput = (props: TextInputProps) => {
       <input
         id={INPUT_ID}
         className="h-10 text-lg border-b-2 pb-1"
-        type="text"
+        type="radio"
         onChange={props.onChange}
         value={props.value}
+        checked={props.value === props.selectedValue}
       />
     </div>
   );
-};
+}

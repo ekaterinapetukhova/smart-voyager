@@ -3,16 +3,16 @@ import { z } from "zod";
 
 const configSchema = z
   .object({
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     GLOBAL_PREFIX: z.string().default("api/v1"),
-    GEOAPIFY_API: z.string().url(),
+    GEOAPIFY_API: z.url(),
     GEOAPIFY_API_KEY: z.string(),
     SECRET_KEY: z.string(),
-    EMAIL: z.string().email(),
+    EMAIL: z.email(),
     EMAIL_PASSWORD: z.string(),
     EMAIL_SERVER: z.string(),
     EMAIL_SERVER_PORT: z.string().transform((v) => Number(v)),
-    FRONTEND_URL: z.string().url(),
+    FRONTEND_URL: z.url(),
     UPLOADS_PATH: z.string(),
   })
   .transform((data) => {

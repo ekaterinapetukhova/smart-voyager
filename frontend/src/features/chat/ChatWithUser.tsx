@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Form } from "../../components/common/Form.tsx";
+import { Form } from "../../components/common/form/Form.tsx";
 import { validChatMessageSchema } from "../../validation/chat.validation.ts";
 import { useChat, useChatById } from "../../hooks/use-chat.ts";
 import { Message } from "./Message.tsx";

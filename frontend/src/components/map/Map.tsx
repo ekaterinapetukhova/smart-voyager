@@ -1,4 +1,4 @@
-import { LayersControl, MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import { ReactElement, useCallback, useRef, useState } from "react";
 import L, { LatLng, LatLngBounds } from "leaflet";
 import { GeoJSON } from "geojson";
@@ -7,12 +7,12 @@ import { Button } from "../common/Button.tsx";
 import { TextInput } from "../common/TextInput.tsx";
 import { RoutePoint } from "../../types/route-point.types.ts";
 import { useRoute } from "../../hooks/use-route.ts";
-import { getPlaceName } from "../../utils/get-place-name.ts";
 import { CreatedRoute, RouteMode, RouteType } from "../../types/route.types.ts";
 import { config } from "../../config/config.ts";
 // import { geojson } from "../../geojson.ts";
-import MarkerIcon1 from "/marker.png";
-import { MapEvents } from "./MapEvents.tsx";
+import MarkerIcon from "/marker.png";
+import { MapPopup } from "./MapPopup.tsx";
+import { MarkerPopup } from "./MarkerPopup.tsx";
 
 // const filters: Filter[] = [
 //   {
@@ -72,8 +72,6 @@ export const Map = (props: Map2Props) => {
 
   const { addRoute } = useRoute();
   // const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
-
-  const { BaseLayer } = LayersControl;
 
   const mapRef = useRef<L.Map | null>(null);
 
@@ -178,29 +176,34 @@ export const Map = (props: Map2Props) => {
   };
 
   const markerIcon = new L.Icon({
-    iconUrl: MarkerIcon1,
-    iconSize: [40, 50], // размер иконки
-    iconAnchor: [20, 40], // точка "прилипания" (ниже середины)
-    popupAnchor: [0, -40], // смещение попапа
+    iconUrl: MarkerIcon,
+    iconSize: [40, 50],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40],
   });
 
   const NewRouteOverlay = () => (
     <>
       {routePoints.map((point, index) => (
         <Marker key={index} position={[point.latitude, point.longitude]} icon={markerIcon}>
-          <Popup>
-            <p>{point.name}</p>
-            <Button
-              label="Remove point"
-              onClick={() => {
-                removePoint(index);
-              }}
-            />
-          </Popup>
+          <MarkerPopup
+            onRemove={() => {
+              removePoint(index);
+            }}
+            point={point}
+          />
         </Marker>
       ))}
       {routePoints.length >= 2 && (
-        <Polyline positions={routePoints.map((p) => [p.latitude, p.longitude])} color="blue" />
+        <Polyline
+          positions={routePoints.map((p) => [p.latitude, p.longitude])}
+          pathOptions={{
+            color: "#FF09EE",
+            weight: 4,
+            dashArray: "8 6",
+            lineCap: "square",
+          }}
+        />
       )}
     </>
   );
@@ -293,18 +296,6 @@ export const Map = (props: Map2Props) => {
             {/*))}*/}
           </div>
         </div>
-
-        <div className="flex flex-col gap-y-2 max-w-sm justify-center items-center">
-          <TextInput
-            label="Route name"
-            type="text"
-            value={routeName}
-            onChange={(e) => {
-              setRouteName(e.target.value);
-            }}
-          />
-          <Button label="Save route" onClick={() => void saveRoute()} />
-        </div>
       </div>
 
       <div className="h-4/5 w-full relative z-0 mx-auto">
@@ -320,10 +311,23 @@ export const Map = (props: Map2Props) => {
             url={`https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}@2x.png?apiKey=${config.geoapifyKey}`}
             className="filter saturate-200 hue-rotate-180 contrast-110"
           />
-          <MapEvents addRoutePoint={addRoutePoint} />
+          <MapPopup onAdd={addRoutePoint} />
           {/*<FilteredPoints />*/}
           <NewRouteOverlay />
         </MapContainer>
+      </div>
+
+      <div className="flex flex-col gap-y-2 max-w-sm justify-center items-center text-text">
+        <TextInput
+          label="Route name"
+          value={routeName}
+          onChange={(e) => {
+            setRouteName(e.target.value);
+          }}
+        />
+        <div className="w-1/3">
+          <Button label="Save route" onClick={() => void saveRoute()} size="medium" />
+        </div>
       </div>
     </div>
   );

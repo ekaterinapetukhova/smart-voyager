@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useTokenStore } from "../../store/user-store";
 import { authAndStoreToken } from "../../utils/auth-and-save-token";
 import { ValidLogin, validLoginSchema } from "../../validation/auth.validation";
-import { Form } from "../../components/common/Form";
+import { Form } from "../../components/common/form/Form.tsx";
 import { Title } from "../../components/common/Title";
 import { Container } from "../../components/common/Container.tsx";
 import { RouterEnum } from "../../types/router.types.ts";

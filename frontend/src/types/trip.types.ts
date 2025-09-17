@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { routePointSchema } from "./route-point.types.ts";
 
-export enum RouteMode {
+export enum TripCreationOptions {
+  User = "user",
+  AI = "ai",
+}
+
+export enum TripMode {
   Drive = "drive",
   Bus = "bus",
   Motorcycle = "motorcycle",
@@ -9,12 +14,12 @@ export enum RouteMode {
   Walk = "walk",
 }
 
-export enum RouteType {
+export enum TripType {
   Balanced = "balanced",
   Short = "short",
 }
 
-export enum RouteCategories {
+export enum TripCategories {
   Accommodation = "accommodation",
   Activity = "activity",
   Commercial = "commercial",
@@ -30,7 +35,7 @@ export enum RouteCategories {
   Sport = "sport",
 }
 
-export interface NrGeoapifyRoutesApiClientOutput {
+export interface NrGeoapifyTripsApiClientOutput {
   type: string;
   features: Feature[];
 }
@@ -76,12 +81,12 @@ export interface Geometry {
 }
 
 export const routeSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   name: z.string(),
-  createdAt: z.string().date(),
+  createdAt: z.date(),
   waypoints: z.array(routePointSchema),
-  mode: z.nativeEnum(RouteMode),
-  type: z.nativeEnum(RouteType),
+  mode: z.enum(TripMode),
+  type: z.enum(TripType),
   geojson: z.object({
     type: z.string(),
     features: z.array(
@@ -126,6 +131,6 @@ export const routeSchema = z.object({
   }),
 });
 
-export type Route = z.output<typeof routeSchema>;
+export type Trip = z.output<typeof routeSchema>;
 
-export type CreatedRoute = Omit<Route, "id" | "createdAt" | "geojson">;
+export type CreatedTrip = Omit<Trip, "id" | "createdAt" | "geojson">;

@@ -2,21 +2,19 @@ import { z } from "zod";
 
 const configSchema = z
   .object({
-    VITE_BACKEND_URL: z.string().url(),
-    VITE_NOMINATIM_URL: z.string().url(),
-    VITE_OVERPASS_URL: z.string().url(),
-    VITE_GEOAPIFY_API: z.string().url(),
+    VITE_BACKEND_URL: z.url(),
+    VITE_GEOAPIFY_URL: z.url(),
     VITE_GEOAPIFY_API_KEY: z.string(),
-    VITE_GEOAPIFY_PLACES_API: z.string().url(),
+    VITE_GEOAPIFY_PLACES_URL: z.url(),
+    VITE_GEOAPIFY_GEOCODE_URL: z.url(),
   })
   .transform((data) => {
     return {
       backendUrl: data.VITE_BACKEND_URL,
-      nominatimUrl: data.VITE_NOMINATIM_URL,
-      overPassUrl: data.VITE_OVERPASS_URL,
-      geoapifyApiUrl: data.VITE_GEOAPIFY_API,
+      geoapifyApiUrl: data.VITE_GEOAPIFY_URL,
       geoapifyKey: data.VITE_GEOAPIFY_API_KEY,
-      geoapifyPlacesApiUrl: data.VITE_GEOAPIFY_PLACES_API,
+      geoapifyPlacesApiUrl: data.VITE_GEOAPIFY_PLACES_URL,
+      geoapifyGeocodeApiUrl: data.VITE_GEOAPIFY_GEOCODE_URL,
     };
   });
 

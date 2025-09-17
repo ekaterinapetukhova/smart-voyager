@@ -2,8 +2,8 @@ import * as React from "react";
 import { FormEvent, useState } from "react";
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { FormField } from "./FormField";
-import { Button } from "./Button.tsx";
+import { FormField } from "./FormField.tsx";
+import { Button } from "../Button.tsx";
 
 export interface InputProp {
   value?: string;
