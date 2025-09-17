@@ -1,4 +1,4 @@
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import { LayersControl, MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from "react-leaflet";
 import { ReactElement, useCallback, useRef, useState } from "react";
 import L, { LatLng, LatLngBounds } from "leaflet";
 import { GeoJSON } from "geojson";
@@ -8,9 +8,11 @@ import { TextInput } from "../common/TextInput.tsx";
 import { RoutePoint } from "../../types/route-point.types.ts";
 import { useRoute } from "../../hooks/use-route.ts";
 import { getPlaceName } from "../../utils/get-place-name.ts";
-import { Filter, OverpassElement, usePOIs } from "../../hooks/use-poi.ts";
-import { CreatedRoute, RouteCategories, RouteMode, RouteType } from "../../types/route.types.ts";
+import { CreatedRoute, RouteMode, RouteType } from "../../types/route.types.ts";
+import { config } from "../../config/config.ts";
 // import { geojson } from "../../geojson.ts";
+import MarkerIcon1 from "/marker.png";
+import { MapEvents } from "./MapEvents.tsx";
 
 // const filters: Filter[] = [
 //   {
@@ -71,6 +73,8 @@ export const Map = (props: Map2Props) => {
   const { addRoute } = useRoute();
   // const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
 
+  const { BaseLayer } = LayersControl;
+
   const mapRef = useRef<L.Map | null>(null);
 
   // const setNewBbox = useCallback(() => {
@@ -126,57 +130,6 @@ export const Map = (props: Map2Props) => {
     markersAdded.current = true;
   }, []); // maybe dep on markers but needs to remove old one
 
-  const MapEvents = () => {
-    const map = useMapEvents({
-      click: (e) => {
-        const popupElem = (e.originalEvent.target as HTMLElement).closest("button, .leaflet-popup");
-
-        if (popupElem) return;
-
-        const latlng = e.latlng;
-
-        void (async () => {
-          const name = await getPlaceName(latlng.lat, latlng.lng);
-          const container = L.DomUtil.create("div");
-
-          const label = L.DomUtil.create("p", "", container);
-          label.innerText = name ?? "";
-
-          const button = L.DomUtil.create("button", "", container);
-          button.innerText = "Add point";
-          button.style.border = "1px solid black";
-          button.style.cursor = "pointer";
-
-          const popup = L.popup().setLatLng(latlng).setContent(container);
-          map.openPopup(popup);
-
-          const newRoutePoint: RoutePoint = {
-            name,
-            latitude: latlng.lat,
-            longitude: latlng.lng,
-          };
-
-          button.onclick = () => {
-            addRoutePoint(newRoutePoint);
-
-            map.closePopup();
-          };
-        })();
-      },
-      // moveend: () => {
-      //   setNewBbox();
-      // },
-      // zoomend: () => {
-      //   setNewBbox();
-      // },
-    });
-
-    addGeoJson(map);
-    addMarkers(map);
-
-    return null;
-  };
-
   const addRoutePoint = (newRoutePoint: RoutePoint) => {
     setRoutePoints((prev) => [
       ...prev,
@@ -224,14 +177,17 @@ export const Map = (props: Map2Props) => {
     setRoutePoints((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const getMarkerIcon = () => {
-    return new L.Icon.Default();
-  };
+  const markerIcon = new L.Icon({
+    iconUrl: MarkerIcon1,
+    iconSize: [40, 50], // размер иконки
+    iconAnchor: [20, 40], // точка "прилипания" (ниже середины)
+    popupAnchor: [0, -40], // смещение попапа
+  });
 
   const NewRouteOverlay = () => (
     <>
       {routePoints.map((point, index) => (
-        <Marker key={index} position={[point.latitude, point.longitude]} icon={getMarkerIcon()}>
+        <Marker key={index} position={[point.latitude, point.longitude]} icon={markerIcon}>
           <Popup>
             <p>{point.name}</p>
             <Button
@@ -284,7 +240,7 @@ export const Map = (props: Map2Props) => {
   // const types = Object.values(RouteType);
 
   return (
-    <div className="w-full">
+    <div className="size-full">
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-4">
           <div className="flex gap-2 items-center">
@@ -351,13 +307,20 @@ export const Map = (props: Map2Props) => {
         </div>
       </div>
 
-      <div className="h-[500px] w-full relative z-0">
-        <MapContainer className="h-full" center={props.initialBounds.getCenter()} zoom={13} scrollWheelZoom>
+      <div className="h-4/5 w-full relative z-0 mx-auto">
+        <MapContainer
+          className="h-full"
+          center={props.initialBounds.getCenter()}
+          zoom={18}
+          scrollWheelZoom
+          preferCanvas={true}
+        >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='Powered by <a href="https://www.geoapify.com/">Geoapify</a>'
+            url={`https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}@2x.png?apiKey=${config.geoapifyKey}`}
+            className="filter saturate-200 hue-rotate-180 contrast-110"
           />
-          <MapEvents />
+          <MapEvents addRoutePoint={addRoutePoint} />
           {/*<FilteredPoints />*/}
           <NewRouteOverlay />
         </MapContainer>

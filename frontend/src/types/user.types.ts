@@ -6,13 +6,13 @@ export enum Gender {
 }
 
 export const userSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   name: z.string(),
   surname: z.string(),
-  email: z.string().email(),
-  birthDate: z.string().datetime(),
-  gender: z.nativeEnum(Gender),
-  avatar: z.string().base64().nullable(),
+  email: z.email(),
+  birthDate: z.iso.datetime(),
+  gender: z.enum(Gender),
+  avatar: z.base64(),
   country: z.string().nullable(),
   city: z.string().nullable(),
   languages: z.string().nullable(),

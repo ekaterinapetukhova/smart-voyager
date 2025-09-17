@@ -8,9 +8,9 @@ interface BackgroundProps {
 
 export function Container(props: BackgroundProps) {
   return (
-    <div className="relative px-5 w-full">
+    <div className="relative px-5 w-full overflow-y-auto">
       <img
-        className="absolute scale-110 left-0 top-o size-full -z-10 opacity-10 contrast-50 object-cover"
+        className="fixed scale-110 left-0 top-o size-full -z-10 opacity-10 contrast-50 object-cover"
         src={Bg}
         alt="Background"
       />

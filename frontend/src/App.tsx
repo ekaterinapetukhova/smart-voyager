@@ -3,10 +3,9 @@ import { ReactNode, useEffect } from "react";
 import { RegistrationView } from "./features/registration/RegistrationView.tsx";
 import { LoginView } from "./features/login/LoginView.tsx";
 import { RouterEnum } from "./types/router.types.ts";
-import { UserView } from "./features/user/UserView.tsx";
+import { UserProfileView } from "./features/user-profile/UserProfileView.tsx";
 import { updateUserStore, useTokenStore } from "./store/user-store.ts";
 import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
-import { UserSettingsView } from "./features/user/UserSettingsView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
 import { CommonChatView } from "./features/chat/CommonChatView.tsx";
 import { Sidebar } from "./components/sidebar/Sidebar.tsx";
@@ -71,14 +70,6 @@ export function App() {
           }
         />
         <Route
-          path={RouterEnum.User}
-          element={
-            <ProtectedRoute isAuth={isAuth}>
-              <UserView />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path={RouterEnum.TripMates}
           element={
             <ProtectedRoute isAuth={isAuth}>
@@ -87,26 +78,10 @@ export function App() {
           }
         />
         <Route
-          path={RouterEnum.UserRoutes}
-          element={
-            <ProtectedRoute isAuth={isAuth}>
-              <UserView />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path={RouterEnum.Chats}
           element={
             <ProtectedRoute isAuth={isAuth}>
               <CommonChatView />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={RouterEnum.UserSettings}
-          element={
-            <ProtectedRoute isAuth={isAuth}>
-              <UserSettingsView />
             </ProtectedRoute>
           }
         />

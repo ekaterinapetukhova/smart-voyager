@@ -117,10 +117,10 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
 
   return (
     <form className={["flex flex-col w-1/4", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
-      <div className="flex flex-col gap-y-5 w-full">{formFields}</div>
+      <div className="flex flex-col gap-y-3 w-full">{formFields}</div>
       {formErrors && <span className="text-error text-xs mt-4">{formErrors}</span>}
       <div className="w-2/3 mx-auto mt-10">
-        <Button type="submit" label={props.buttonText} />
+        <Button type="submit" label={props.buttonText} size="large" />
       </div>
     </form>
   );

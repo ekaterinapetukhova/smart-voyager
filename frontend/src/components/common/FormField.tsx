@@ -19,9 +19,9 @@ export function FormField(props: FormFieldProps) {
 
   if (props.type === "radio" && props.options) {
     field = (
-      <div className="flex gap-x-5 mt-4">
+      <div className="flex gap-x-5 mt-2">
         {props.options.map((option) => (
-          <label key={option} className="flex items-center gap-x-2 text-xl cursor-pointer has-checked:text-accent">
+          <label key={option} className="flex items-center gap-x-2 text-lg cursor-pointer has-checked:text-accent">
             <input
               type="radio"
               name={props.name}
@@ -50,14 +50,15 @@ export function FormField(props: FormFieldProps) {
           type={props.type}
           {...(props.type !== "file"
             ? {
-                value:
-                  props.type === "date" && props.value
-                    ? new Date(props.value).toISOString().split("T")[0]
-                    : props.value,
+                value: props.type === "date" && props.value ? props.value.split("T")[0] : props.value,
               }
             : {})}
           onChange={props.onChange}
-          className={["h-12 py-4 w-full text-xl border-b-2", props.errors ? "border-error" : "border-text"].join(" ")}
+          className={[
+            "h-10 w-full text-lg border-b-2 pb-1",
+            props.errors ? "border-error" : "border-text",
+            props.type == "file" ? "cursor-pointer" : "",
+          ].join(" ")}
         />
         <span
           className={[
@@ -72,12 +73,12 @@ export function FormField(props: FormFieldProps) {
   return (
     <div className="flex flex-col w-full text-text">
       {props.label && (
-        <label className="text-2xl font-bold" htmlFor={props.id}>
+        <label className="text-xl font-bold mb-1" htmlFor={props.id}>
           {props.label}
         </label>
       )}
       {field}
-      {props.errors && <span className="text-error text-xs mt-1.5">{props.errors}</span>}
+      {props.errors && <span className="text-error text-[10px] mt-1.5">{props.errors}</span>}
     </div>
   );
 }

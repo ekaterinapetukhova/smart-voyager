@@ -1,0 +1,75 @@
+import { useEffect, useState } from "react";
+import { updateUserStore, useUserStore } from "../../store/user-store.ts";
+import { Avatar } from "../../components/common/Avatar.tsx";
+import { Popup } from "../../components/common/Popup.tsx";
+
+export function UserProfileView() {
+  const { user } = useUserStore();
+
+  const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    void updateUserStore();
+  }, []);
+
+  if (!user) {
+    return;
+  }
+
+  const renderUserInfoItems = Object.entries(user)
+    .filter(([key, value]) => key !== "avatar" && key !== "id" && value)
+    .map(([key, value]) => {
+      if (!value) {
+        return;
+      }
+
+      let formatedKey;
+      let formatedValue;
+
+      if (key === "birthDate") {
+        formatedKey = "Date of birth";
+        formatedValue = new Date(value).toLocaleString().split(",")[0];
+      } else {
+        formatedKey = key[0].toUpperCase() + key.slice(1);
+        formatedValue = value;
+      }
+
+      return (
+        <li key={key} className="text-text flex gap-x-4">
+          <p>{formatedKey}</p>
+          <p>{formatedValue}</p>
+        </li>
+      );
+    });
+
+  return (
+    <>
+      <div
+        className="relative cursor-pointer z-10 group"
+        onClick={() => {
+          setShowPopup(true);
+        }}
+      >
+        <Avatar src={user.avatar} className="size-14" />
+        {/*<div className="size-16 absolute bg-button-primary-hover transform rotate-180 -z-10 -top-1 -left-1 group-hover:opacity-0 group-hover:scale-75 transition-all duration-300 ease-out"></div>*/}
+        {/*<div className="h-16 w-0 absolute bg-button-primary -z-10 -top-1 -left-1 group-hover:w-16 transition-all duration-300 ease-in"></div>*/}
+        {/*<div className="size-16 absolute -top-1 -left-1 bg-gradient-to-r from-button-primary to-button-primary-hover blur-sm animate-gradient group-hover:gradient-glow -z-10 transition-all" />*/}
+        <div className="size-16 absolute -top-1 -left-1 animated-gradient opacity-30 group-hover:opacity-100 group-hover:animate-gradient transition-all duration-500 ease-out -z-10"></div>
+      </div>
+      {showPopup && (
+        <Popup
+          title={`${user.name}'s profile`}
+          closePopup={() => {
+            setShowPopup(false);
+          }}
+          containerClassName="bg-background"
+        >
+          <div className="flex flex-col">
+            <Avatar src={user.avatar} className="size-80" />
+            <ul>{renderUserInfoItems}</ul>
+          </div>
+        </Popup>
+      )}
+    </>
+  );
+}

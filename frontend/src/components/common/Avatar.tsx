@@ -9,7 +9,7 @@ export function Avatar(props: AvatarProps) {
   return (
     <div className={["overflow-hidden", props.className ?? ""].join(" ")}>
       <img
-        className="w-full h-full object-cover scale-120"
+        className="w-full h-full object-cover"
         src={props.src ? `data:image/jpeg;base64,${props.src}` : UserAvatar}
         alt="User Avatar"
       />

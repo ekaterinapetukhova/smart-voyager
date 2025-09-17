@@ -9,6 +9,8 @@
     --text: #F8F6F9;
     --accent: #F5EB03;
     --error: #FF1744;
+
+    --font: "Kode Mono", monospace;
 }
 
 @theme {
@@ -18,11 +20,13 @@
     --color-text: var(--text);
     --color-accent: var(--accent);
     --color-error: var(--error);
+
+    --font-font: var(--font);
 }
 
 body {
     background-color: var(--background);
-    font-family: "Kode Mono", monospace;
+    font-family: var(--font), monospace;
     font-optical-sizing: auto;
 }
 
@@ -34,3 +38,58 @@ a, button, input {
     display: none;
 }
 
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    cursor: pointer;
+}
+
+.animated-gradient {
+    background: linear-gradient(180deg, var(--button-primary), var(--button-primary-hover));
+    background-size: 200% 200%;
+}
+
+.animate-gradient {
+    animation: gradient 6s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+.leaflet-popup-content {
+    margin: 1rem 0.5rem;
+}
+
+.leaflet-popup-content-wrapper {
+    background: transparent;
+}
+
+.leaflet-popup-tip {
+    background: var(--background);
+    opacity: 0.9;
+}
+
+.leaflet-popup-close-button {
+    color: var(--text) !important;
+    transition: color .2s;
+
+    &:hover {
+        color: var(--accent) !important;
+    }
+}
