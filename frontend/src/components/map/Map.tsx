@@ -1,16 +1,17 @@
-import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
 import { ReactElement, useCallback, useRef, useState } from "react";
 import L, { LatLng, LatLngBounds } from "leaflet";
 import { GeoJSON } from "geojson";
 import { renderToString } from "react-dom/server";
+import { GeoJSON as GeoJSONLayer } from "react-leaflet/GeoJSON";
 import { Button } from "../common/Button.tsx";
 import { TextInput } from "../common/TextInput.tsx";
-import { RoutePoint } from "../../types/route-point.types.ts";
-import { useRoute } from "../../hooks/use-route.ts";
-import { CreatedRoute, RouteMode, RouteType } from "../../types/route.types.ts";
+import { CreatedTrip, TripMode, TripType } from "../../types/trip.types.ts";
 import { config } from "../../config/config.ts";
 // import { geojson } from "../../geojson.ts";
 import MarkerIcon from "/marker.png";
+import { useTrip } from "../../hooks/use-trip.ts";
+import { TripPoint } from "../../types/trip-point.types.ts";
 import { MapPopup } from "./MapPopup.tsx";
 import { MarkerPopup } from "./MarkerPopup.tsx";
 
@@ -52,25 +53,26 @@ export interface Map2Marker {
 
 export interface Map2Props {
   initialBounds: LatLngBounds;
+  miniature?: boolean;
   markers?: Map2Marker[];
   geojson?: GeoJSON;
 }
 
 export const Map = (props: Map2Props) => {
-  const [routePoints, setRoutePoints] = useState<RoutePoint[]>([]);
-  const [routeName, setRouteName] = useState("");
+  const [tripPoints, setTripPoints] = useState<TripPoint[]>([]);
+  const [tripName, setTripName] = useState("");
   // const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   // const [fetchTrigger, setFetchTrigger] = useState(false);
   // const [bbox, setBbox] = useState(props.initialBounds.toBBoxString());
   // const [pois, setPois] = useState<GeoapifyPOI[]>([]);
-  // const [routeMode, setRouteMode] = useState<RouteMode>(RouteMode.Drive);
-  // const [routeType, setRouteType] = useState<RouteType>(RouteType.Balanced);
+  // const [routeMode, setTripMode] = useState<TripMode>(TripMode.Drive);
+  // const [routeType, setTripType] = useState<TripType>(TripType.Balanced);
 
-  // const filters = Object.values(RouteCategories);
+  // const filters = Object.values(TripCategories);
   //
   // const selectedFilters = filters.filter((filter) => selectedKeys.includes(filter));
 
-  const { addRoute } = useRoute();
+  const { addTrip } = useTrip();
   // const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
 
   const mapRef = useRef<L.Map | null>(null);
@@ -128,13 +130,13 @@ export const Map = (props: Map2Props) => {
     markersAdded.current = true;
   }, []); // maybe dep on markers but needs to remove old one
 
-  const addRoutePoint = (newRoutePoint: RoutePoint) => {
-    setRoutePoints((prev) => [
+  const addTripPoint = (newTripPoint: TripPoint) => {
+    setTripPoints((prev) => [
       ...prev,
       {
-        name: newRoutePoint.name,
-        latitude: newRoutePoint.latitude,
-        longitude: newRoutePoint.longitude,
+        name: newTripPoint.name,
+        latitude: newTripPoint.latitude,
+        longitude: newTripPoint.longitude,
       },
     ]);
   };
@@ -157,22 +159,22 @@ export const Map = (props: Map2Props) => {
   //   }
   // };
 
-  const saveRoute = async () => {
-    const route: CreatedRoute = {
-      name: routeName,
-      mode: RouteMode.Drive,
-      type: RouteType.Balanced,
-      waypoints: routePoints,
+  const saveTrip = async () => {
+    const route: CreatedTrip = {
+      name: tripName,
+      mode: TripMode.Drive,
+      type: TripType.Balanced,
+      waypoints: tripPoints,
     };
 
-    await addRoute(route);
+    await addTrip(route);
 
-    setRoutePoints([]);
-    setRouteName("");
+    setTripPoints([]);
+    setTripName("");
   };
 
   const removePoint = (index: number) => {
-    setRoutePoints((prev) => prev.filter((_, i) => i !== index));
+    setTripPoints((prev) => prev.filter((_, i) => i !== index));
   };
 
   const markerIcon = new L.Icon({
@@ -182,9 +184,9 @@ export const Map = (props: Map2Props) => {
     popupAnchor: [0, -40],
   });
 
-  const NewRouteOverlay = () => (
+  const NewTripOverlay = () => (
     <>
-      {routePoints.map((point, index) => (
+      {tripPoints.map((point, index) => (
         <Marker key={index} position={[point.latitude, point.longitude]} icon={markerIcon}>
           <MarkerPopup
             onRemove={() => {
@@ -194,9 +196,9 @@ export const Map = (props: Map2Props) => {
           />
         </Marker>
       ))}
-      {routePoints.length >= 2 && (
+      {tripPoints.length >= 2 && (
         <Polyline
-          positions={routePoints.map((p) => [p.latitude, p.longitude])}
+          positions={tripPoints.map((p) => [p.latitude, p.longitude])}
           pathOptions={{
             color: "#FF09EE",
             weight: 4,
@@ -222,13 +224,13 @@ export const Map = (props: Map2Props) => {
   //             <Button
   //               label="Add point"
   //               onClick={() => {
-  //                 const newRoutePoint: RoutePoint = {
+  //                 const newTripPoint: TripPoint = {
   //                   name: poi.tags?.name,
   //                   latitude: poi.lat!,
   //                   longitude: poi.lon!,
   //                 };
   //
-  //                 addRoutePoint(newRoutePoint);
+  //                 addTripPoint(newTripPoint);
   //               }}
   //             />
   //           </Popup>
@@ -238,12 +240,27 @@ export const Map = (props: Map2Props) => {
   //   </>
   // );
 
-  // const modes = Object.values(RouteMode);
+  // const modes = Object.values(TripMode);
   //
-  // const types = Object.values(RouteType);
+  // const types = Object.values(TripType);
 
   return (
-    <div className="size-full">
+    <div className={props.miniature ? "" : "size-full"}>
+      {!props.miniature && (
+        <div className="flex gap-x-5 max-w-sm justify-center items-center text-text">
+          <TextInput
+            placeholder="Trip name"
+            value={tripName}
+            onChange={(e) => {
+              setTripName(e.target.value);
+            }}
+          />
+          <div className="w-1/3">
+            <Button label="Save route" onClick={() => void saveTrip()} size="medium" />
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-4">
           <div className="flex gap-2 items-center">
@@ -271,7 +288,7 @@ export const Map = (props: Map2Props) => {
             {/*      name="routeMode"*/}
             {/*      checked={routeMode === mode}*/}
             {/*      onChange={() => {*/}
-            {/*        setRouteMode(mode);*/}
+            {/*        setTripMode(mode);*/}
             {/*      }}*/}
             {/*    />*/}
             {/*    {mode[0].toUpperCase() + mode.slice(1)}*/}
@@ -288,7 +305,7 @@ export const Map = (props: Map2Props) => {
             {/*      name="routeType"*/}
             {/*      checked={routeType === type}*/}
             {/*      onChange={() => {*/}
-            {/*        setRouteType(type);*/}
+            {/*        setTripType(type);*/}
             {/*      }}*/}
             {/*    />*/}
             {/*    {type[0].toUpperCase() + type.slice(1)}*/}
@@ -298,36 +315,36 @@ export const Map = (props: Map2Props) => {
         </div>
       </div>
 
-      <div className="h-4/5 w-full relative z-0 mx-auto">
+      <div className={["relative z-0 mx-auto", props.miniature ? "h-60 w-80" : "h-4/5 w-full"].join(" ")}>
         <MapContainer
-          className="h-full"
+          className="h-full outline-none"
           center={props.initialBounds.getCenter()}
           zoom={18}
           scrollWheelZoom
           preferCanvas={true}
+          zoomControl={!props.miniature}
         >
           <TileLayer
             attribution='Powered by <a href="https://www.geoapify.com/">Geoapify</a>'
             url={`https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}@2x.png?apiKey=${config.geoapifyKey}`}
             className="filter saturate-200 hue-rotate-180 contrast-110"
           />
-          <MapPopup onAdd={addRoutePoint} />
+          <MapPopup onAdd={addTripPoint} />
           {/*<FilteredPoints />*/}
-          <NewRouteOverlay />
+          <NewTripOverlay />
+          {props.geojson && (
+            <>
+              <GeoJSONLayer
+                data={props.geojson}
+                style={() => ({
+                  color: "#FF09EE",
+                  weight: 5,
+                  opacity: 1.0,
+                })}
+              />
+            </>
+          )}
         </MapContainer>
-      </div>
-
-      <div className="flex flex-col gap-y-2 max-w-sm justify-center items-center text-text">
-        <TextInput
-          label="Route name"
-          value={routeName}
-          onChange={(e) => {
-            setRouteName(e.target.value);
-          }}
-        />
-        <div className="w-1/3">
-          <Button label="Save route" onClick={() => void saveRoute()} size="medium" />
-        </div>
       </div>
     </div>
   );

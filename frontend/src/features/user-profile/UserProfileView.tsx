@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { updateUserStore, useUserStore } from "../../store/user-store.ts";
+import { updateUserStore, useTokenStore, useUserStore } from "../../store/user-store.ts";
 import { Avatar } from "../../components/common/Avatar.tsx";
 import { Popup } from "../../components/common/Popup.tsx";
+import { Button } from "../../components/common/Button.tsx";
 
 export function UserProfileView() {
   const { user } = useUserStore();
+  const logout = useTokenStore((s) => s.logout);
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -67,6 +69,7 @@ export function UserProfileView() {
           <div className="flex flex-col">
             <Avatar src={user.avatar} className="size-80" />
             <ul>{renderUserInfoItems}</ul>
+            <Button label="Log out" size="medium" onClick={logout} />
           </div>
         </Popup>
       )}

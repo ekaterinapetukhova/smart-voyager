@@ -3,7 +3,6 @@ import { ReactNode, useEffect } from "react";
 import { RegistrationView } from "./features/registration/RegistrationView.tsx";
 import { LoginView } from "./features/login/LoginView.tsx";
 import { RouterEnum } from "./types/router.types.ts";
-import { UserProfileView } from "./features/user-profile/UserProfileView.tsx";
 import { updateUserStore, useTokenStore } from "./store/user-store.ts";
 import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
@@ -12,6 +11,7 @@ import { Sidebar } from "./components/sidebar/Sidebar.tsx";
 import { TripView } from "./features/trip/TripView.tsx";
 import { AuthView } from "./features/auth/AuthView.tsx";
 import { useVerification } from "./hooks/use-verification.ts";
+import { NewTripView } from "./features/trip/NewTripView.tsx";
 
 interface ProtectedRouteProps {
   isAuth: boolean;
@@ -66,6 +66,14 @@ export function App() {
           element={
             <ProtectedRoute isAuth={isAuth}>
               <TripView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.NewTrip}
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <NewTripView />
             </ProtectedRoute>
           }
         />

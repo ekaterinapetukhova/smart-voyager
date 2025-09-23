@@ -1,7 +1,7 @@
 import { LinkTo } from "../../components/common/LinkTo.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
-import { Logo } from "../../components/logo/Logo.tsx";
 import { Container } from "../../components/common/Container.tsx";
+import { Logo } from "../../components/logo/Logo.tsx";
 
 export function AuthView() {
   const authItems = {
