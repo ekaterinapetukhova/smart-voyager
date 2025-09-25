@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { NextFunction, Request } from "express";
 import Jwt from "jsonwebtoken";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { User } from "@prisma/client";
 import { config } from "../config/config";
 import { PrismaService } from "../prisma/prisma.service";

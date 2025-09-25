@@ -34,6 +34,7 @@ export function LoginView() {
         onSuccess={() => {
           void navigate(RouterEnum.Trips);
         }}
+        formClassNames="w-1/4"
       ></Form>
     </Container>
   );

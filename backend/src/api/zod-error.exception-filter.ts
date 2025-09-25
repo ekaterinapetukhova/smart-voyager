@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from "@nestjs/common";
 import { Response } from "express";
-import { ZodError } from "zod";
+import { ZodError } from "zod/v4";
 
 @Catch(ZodError)
 export class ZodErrorExceptionFilter implements ExceptionFilter {

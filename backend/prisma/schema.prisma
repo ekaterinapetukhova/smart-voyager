@@ -12,6 +12,33 @@ enum Gender {
   male
 }
 
+enum TripInterest {
+  History
+  Culture
+  Food
+  Nature
+  Sport
+  Relaxation
+  Events
+  Architecture
+  Photography
+  Shopping
+  Nightlife
+}
+
+enum TripGoals {
+  SharedTravelCosts
+  Safety
+  MeetingLocals
+  PracticingLanguages
+  GroupActivities
+  Volunteering
+  ContentCreation
+  LongTermCompanionship
+  SpontaneousAdventures
+  Support
+}
+
 model User {
   id String @id @default(uuid())
 
@@ -30,13 +57,17 @@ model User {
   city            String?
   languages       String?
   description     String?
+  tripInterest    TripInterest[]
+  travelGoals     TripGoals[]
 
-  Route Route[]
+  route Route[]
 
   chatMessageRecipient ChatMessage[] @relation(name: "chatMessageRecipient")
   chatMessageSender    ChatMessage[] @relation(name: "chatMessageSender")
 
-  Chat Chat[] @relation(name: "chatMembers")
+  chat Chat[] @relation(name: "chatMembers")
+
+  calendar Calendar?
 }
 
 model RouteWaypoint {
@@ -71,6 +102,9 @@ model Route {
   mode      RouteMode
   type      RouteType
 
+  from DateTime
+  to   DateTime
+
   geojson Json
 
   waypoints RouteWaypoint[]
@@ -101,4 +135,11 @@ model ChatMessage {
 
   chat   Chat   @relation(fields: [chatId], references: [id])
   chatId String
+}
+
+model Calendar {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 }

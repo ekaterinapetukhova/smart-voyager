@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Form, FormValues, InputProp } from "../../components/common/form/Form.tsx";
 import { ValidRegistration, validRegistrationSchema } from "../../validation/auth.validation";
 import { config } from "../../config/config.ts";
@@ -8,6 +9,7 @@ import { Container } from "../../components/common/Container.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
 
 export function RegistrationView() {
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const navigate = useNavigate();
 
   const fields = {
@@ -53,15 +55,23 @@ export function RegistrationView() {
       <Title>
         From Dreaming to Traveling – <span className="text-accent italic block font-bold">Start Now</span>
       </Title>
-      <Form
-        buttonText="Let's start!"
-        fields={fields}
-        checkValidation={(data) => validRegistrationSchema.parse(prepareCreatedData(data))}
-        sendRequest={(data) => sendRequest(prepareCreatedData(data))}
-        onSuccess={() => {
-          void navigate(RouterEnum.Auth);
-        }}
-      />
+      <div className="w-1/4 flex flex-col gap-y-4">
+        <Form
+          buttonText="Let's start!"
+          fields={fields}
+          checkValidation={(data) => validRegistrationSchema.parse(prepareCreatedData(data))}
+          sendRequest={(data) => sendRequest(prepareCreatedData(data))}
+          onSuccess={() => {
+            setShowSuccessMessage(true);
+          }}
+        />
+        {showSuccessMessage && (
+          <span className="text-accent text-xs block text-center">
+            We’ve sent a confirmation link to your email. Please check your inbox and click the link to activate your
+            account
+          </span>
+        )}
+      </div>
     </Container>
   );
 }

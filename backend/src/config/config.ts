@@ -1,5 +1,5 @@
 import * as process from "node:process";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const configSchema = z
   .object({
@@ -14,6 +14,7 @@ const configSchema = z
     EMAIL_SERVER_PORT: z.string().transform((v) => Number(v)),
     FRONTEND_URL: z.url(),
     UPLOADS_PATH: z.string(),
+    OPENAI_API_KEY: z.string(),
   })
   .transform((data) => {
     return {
@@ -33,6 +34,8 @@ const configSchema = z
       frontendUrl: data.FRONTEND_URL,
 
       uploadsPath: data.UPLOADS_PATH,
+
+      openaiApiKey: data.OPENAI_API_KEY,
     };
   });
 

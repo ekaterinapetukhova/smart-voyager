@@ -2,8 +2,8 @@ import * as React from "react";
 import { FormEvent, useState } from "react";
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { FormField } from "./FormField.tsx";
 import { Button } from "../Button.tsx";
+import { FormField } from "./FormField.tsx";
 
 export interface InputProp {
   value?: string;
@@ -116,7 +116,7 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
   });
 
   return (
-    <form className={["flex flex-col w-1/4", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
+    <form className={["flex flex-col", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
       <div className="flex flex-col gap-y-3 w-full">{formFields}</div>
       {formErrors && <span className="text-error text-xs mt-4">{formErrors}</span>}
       <div className="w-2/3 mx-auto mt-10">

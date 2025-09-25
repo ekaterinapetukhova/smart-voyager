@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import Jwt from "jsonwebtoken";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { PrismaService } from "../../prisma/prisma.service";
 import { config } from "../../config/config";
 

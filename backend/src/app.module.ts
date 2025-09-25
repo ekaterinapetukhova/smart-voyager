@@ -11,6 +11,7 @@ import { AuthMiddleware } from "./middleware/auth.middleware";
 import { TripMatesModule } from "./trip-mates/trip-mates.module";
 import { FilesModule } from "./files/files.module";
 import { ChatModule } from "./chat/chat.module";
+import { AIModule } from "./openai/openai.module";
 
 @Module({
   imports: [
@@ -24,12 +25,13 @@ import { ChatModule } from "./chat/chat.module";
     TripMatesModule,
     FilesModule,
     ChatModule,
+    AIModule,
   ],
   controllers: [],
   providers: [ZodErrorExceptionFilter],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(AuthMiddleware).exclude("auth/*").forRoutes("*");
+    consumer.apply(AuthMiddleware).exclude("auth/*", "ai").forRoutes("*");
   }
 }
