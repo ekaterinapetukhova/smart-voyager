@@ -3,7 +3,7 @@ import { Container } from "../../components/common/Container.tsx";
 import { Map } from "../../components/map/Map.tsx";
 import { Form, InputProp } from "../../components/common/form/Form.tsx";
 import { ValidAiContentMessage, validAiContentMessage } from "../../validation/ai.validation.ts";
-import { config } from "../../config/config.ts";
+import { authorizedFetch } from "../../utils/authorized-fetch.ts";
 
 export function NewTripView() {
   const fields = {
@@ -11,17 +11,11 @@ export function NewTripView() {
   } satisfies Record<string, InputProp>;
 
   const sendRequest = async (data: ValidAiContentMessage) => {
-    const response = await fetch(`${config.backendUrl}/ai/suggest-trip`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
+    const { post } = authorizedFetch();
 
-    if (!response.ok) {
-      throw new Error("Failed to add user");
-    }
+    const response = await post("ai/suggest-trip", data);
+
+    console.log("response", await response.json());
   };
 
   return (
@@ -32,8 +26,10 @@ export function NewTripView() {
         checkValidation={(data) => validAiContentMessage.parse(data)}
         sendRequest={(data) => sendRequest(data)}
         onSuccess={() => {
-          //
+          console.log();
         }}
+        hiddenLabel
+        formClassNames="flex-row items-center w-full"
       />
       <Map initialBounds={new LatLngBounds([50.23, 19.01], [50.28, 19.06])} />
     </Container>

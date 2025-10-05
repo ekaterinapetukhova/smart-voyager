@@ -7,8 +7,7 @@ export const createRouteDtoSchema = z.object({
   waypoints: z.array(createRouteWaypointDtoSchema),
   mode: z.enum(RouteMode),
   type: z.enum(RouteType),
-  from: z.iso.datetime(),
-  to: z.iso.datetime(),
+  isProposal: z.boolean(),
 });
 
 export type CreateRouteDto = z.output<typeof createRouteDtoSchema>;

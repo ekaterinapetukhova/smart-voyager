@@ -48,6 +48,7 @@ export default tseslint.config(
       "import/no-default-export": "error",
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-non-null-assertion": "off",
+      "@typescript-eslint/require-await": "off",
       "import/order": [
         "error",
         {

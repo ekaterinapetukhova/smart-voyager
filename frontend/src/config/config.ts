@@ -6,7 +6,8 @@ const configSchema = z
     VITE_GEOAPIFY_URL: z.url(),
     VITE_GEOAPIFY_API_KEY: z.string(),
     VITE_GEOAPIFY_PLACES_URL: z.url(),
-    VITE_GEOAPIFY_GEOCODE_URL: z.url(),
+    VITE_GEOAPIFY_REVERSE_GEOCODING_URL: z.url(),
+    VITE_GEOAPIFY_FORWARD_GEOCODING_URL: z.url(),
   })
   .transform((data) => {
     return {
@@ -14,7 +15,8 @@ const configSchema = z
       geoapifyApiUrl: data.VITE_GEOAPIFY_URL,
       geoapifyKey: data.VITE_GEOAPIFY_API_KEY,
       geoapifyPlacesApiUrl: data.VITE_GEOAPIFY_PLACES_URL,
-      geoapifyGeocodeApiUrl: data.VITE_GEOAPIFY_GEOCODE_URL,
+      geoapifyReverseGeocodingApiUrl: data.VITE_GEOAPIFY_REVERSE_GEOCODING_URL,
+      geoapifyForwardGeocodingApiUrl: data.VITE_GEOAPIFY_FORWARD_GEOCODING_URL,
     };
   });
 

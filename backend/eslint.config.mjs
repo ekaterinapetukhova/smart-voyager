@@ -48,6 +48,7 @@ export default tseslint.config(
       "@typescript-eslint/no-useless-constructor": "error",
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
+      "@typescript-eslint/require-await": "off",
       "import/no-default-export": "error",
       "import/order": [
         "error",

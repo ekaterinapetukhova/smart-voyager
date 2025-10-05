@@ -10,6 +10,6 @@ import { GetRoutesByUserService } from "./service/get-routes-by-user.service";
   controllers: [RouteController],
   providers: [CreateRouteService, GetAllRoutesService, GetRoutesByUserService],
   imports: [PrismaModule, GeoapifyModule],
-  exports: [GetRoutesByUserService],
+  exports: [GetRoutesByUserService, CreateRouteService],
 })
 export class RouteModule {}

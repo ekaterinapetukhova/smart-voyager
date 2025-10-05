@@ -26,6 +26,7 @@ import { UpdateUserInformationService } from "./service/update-user-information.
     UpdateUserVerifiedStatusService,
     GetUserByEmailService,
     GetAllUsersService,
+    GetUserByIdService,
   ],
 })
 export class UserModule {}

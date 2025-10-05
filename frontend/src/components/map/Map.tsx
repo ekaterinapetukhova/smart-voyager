@@ -344,6 +344,7 @@ export const Map = (props: Map2Props) => {
               />
             </>
           )}
+          <Marker position={[52.373108, 4.892157]}></Marker>
         </MapContainer>
       </div>
     </div>

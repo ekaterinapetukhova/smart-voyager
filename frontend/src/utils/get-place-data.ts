@@ -66,7 +66,7 @@ export const getPlaceData = async (
 ): Promise<Pick<GetPlaceDataResult, "place_id" | "name" | "bbox"> | null> => {
   try {
     const response = await fetch(
-      `${config.geoapifyGeocodeApiUrl}?lat=${lat.toString()}&lon=${lng.toString()}&format=json&apiKey=${config.geoapifyKey}`
+      `${config.geoapifyReverseGeocodingApiUrl}?lat=${lat.toString()}&lon=${lng.toString()}&format=json&apiKey=${config.geoapifyKey}`
     );
 
     const data: GetPlaceDataResponse = await response.json();

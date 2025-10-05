@@ -32,6 +32,6 @@ import { AIModule } from "./openai/openai.module";
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(AuthMiddleware).exclude("auth/*", "ai").forRoutes("*");
+    consumer.apply(AuthMiddleware).exclude("auth/*", "user").forRoutes("*");
   }
 }

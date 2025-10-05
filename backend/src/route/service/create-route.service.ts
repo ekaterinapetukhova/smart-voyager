@@ -14,7 +14,7 @@ export class CreateRouteService {
     private readonly geoapifyRoutesApiClient: GeoapifyRoutesApiClient
   ) {}
 
-  public async execute(data: CreateRouteDto, user?: User): Promise<Route> {
+  public async execute(data: CreateRouteDto, user: User): Promise<Route> {
     const input: GeoapifyRoutesApiClientInput = {
       mode: data.mode,
       waypoints: data.waypoints.map((w) => `${w.latitude},${w.longitude}`).join("|"),
@@ -27,18 +27,18 @@ export class CreateRouteService {
       name: data.name,
       mode: data.mode,
       type: data.type,
-      from: data.from,
-      to: data.to,
+      isProposal: data.isProposal,
       geojson: JSON.stringify(response),
       waypoints: {
-        create: data.waypoints.map((x, i) => ({
+        create: data.waypoints.map((waypoint, i) => ({
           index: i,
-          latitude: x.latitude,
-          longitude: x.longitude,
-          name: x.name,
+          latitude: waypoint.latitude,
+          longitude: waypoint.longitude,
+          name: waypoint.name,
+          fullAddress: waypoint.fullAddress,
         })),
       },
-      ...(user?.id && { user: { connect: { id: user?.id } } }),
+      user: { connect: { id: user?.id } },
     };
 
     return this.prisma.route.create({

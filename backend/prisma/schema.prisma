@@ -67,16 +67,17 @@ model User {
 
   chat Chat[] @relation(name: "chatMembers")
 
-  calendar Calendar?
+  event Event[]
 }
 
 model RouteWaypoint {
   id String @id @default(uuid())
 
-  index     Int
-  latitude  Float
-  longitude Float
-  name      String?
+  index       Int
+  latitude    Float
+  longitude   Float
+  fullAddress String
+  name        String
 
   route   Route  @relation(fields: [routeId], references: [id])
   routeId String
@@ -102,15 +103,17 @@ model Route {
   mode      RouteMode
   type      RouteType
 
-  from DateTime
-  to   DateTime
-
   geojson Json
 
   waypoints RouteWaypoint[]
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  isProposal Boolean
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  event   Event?  @relation(fields: [eventId], references: [id])
+  eventId String? @unique
 }
 
 model Chat {
@@ -137,9 +140,14 @@ model ChatMessage {
   chatId String
 }
 
-model Calendar {
+model Event {
   id String @id @default(uuid())
 
   user   User   @relation(fields: [userId], references: [id])
-  userId String @unique
+  userId String
+
+  from DateTime
+  to   DateTime
+
+  route Route?
 }
