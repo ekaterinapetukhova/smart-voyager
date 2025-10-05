@@ -11,6 +11,9 @@ export class GetRoutesByUserService {
       where: {
         userId,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
   }
 }

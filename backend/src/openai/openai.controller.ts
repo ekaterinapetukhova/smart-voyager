@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { GetUser } from "../auth/user.decorator";
+import { ServerError } from "../error/server.error";
 import { OpenAIService } from "./openai.service";
 import { validAiContentMessageSchema } from "./dto/suggest-trip-content.dto";
 
@@ -9,10 +10,18 @@ export class OpenaiController {
   public constructor(private readonly openaiService: OpenAIService) {}
 
   @Post("suggest-trip")
-  public suggestTrip(@GetUser() user: User, @Body() body: unknown): Promise<string | undefined> {
+  public async suggestTrip(@GetUser() user: User, @Body() body: unknown): Promise<{ routeId: string } | undefined> {
     const validAiContentMessage = validAiContentMessageSchema.parse(body);
 
-    return this.openaiService.execute(validAiContentMessage, user.id);
+    const routeId = await this.openaiService.execute(validAiContentMessage, user.id);
+
+    if (!routeId) {
+      throw new ServerError("Route creation failed");
+    }
+
+    return {
+      routeId,
+    };
   }
 
   @Get()

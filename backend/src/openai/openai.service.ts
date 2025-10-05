@@ -24,6 +24,14 @@ const validFormattedResponseSchema = z.object({
 
 type ValidFormattedResponse = z.output<typeof validFormattedResponseSchema>;
 
+interface X {
+  type: string;
+  name: string;
+  callId: string;
+  status: string;
+  output: { type: string; text: string };
+}
+
 @Injectable()
 export class OpenAIService {
   private readonly agent: Agent<AIExecutionContext>;
@@ -46,9 +54,9 @@ export class OpenAIService {
 
         const user = await this.getUserByIdService.execute(context.context.userId);
 
-        await this.createRouteService.execute(createRouteDto, user);
+        const route = await this.createRouteService.execute(createRouteDto, user);
 
-        return "trip was created successfully";
+        return route.id;
       },
     });
 
@@ -68,7 +76,11 @@ export class OpenAIService {
       maxTurns: 5,
     });
 
-    return result.finalOutput;
+    const a = result.output.find((x) => x.type === "function_call_result" && x.name === "plan_trip") as X;
+
+    const routeId = a.output.text;
+
+    return routeId;
   }
 
   private async formatResponse(response: ValidFormattedResponse): Promise<CreateRouteDto> {

@@ -1,7 +1,10 @@
 export enum RouterEnum {
   Auth = "/auth",
   Trips = "/trips",
-  NewTrip = "/new-trip",
+  Trip = "/trip/:tripId",
+  NewTripByUser = "/new-trip-by-user",
+  NewTripByAI = "/new-trip-by-ai",
+  NewTripModeChoice = "/new-trip-mode-choice",
   Registration = "/registration",
   Login = "/login",
   Verification = "/verify-email",

@@ -1,5 +1,5 @@
 import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
-import { ReactElement, useCallback, useRef, useState } from "react";
+import { memo, ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import L, { LatLng, LatLngBounds } from "leaflet";
 import { GeoJSON } from "geojson";
 import { renderToString } from "react-dom/server";
@@ -56,6 +56,7 @@ export interface Map2Props {
   miniature?: boolean;
   markers?: Map2Marker[];
   geojson?: GeoJSON;
+  id: string;
 }
 
 export const Map = (props: Map2Props) => {
@@ -76,6 +77,14 @@ export const Map = (props: Map2Props) => {
   // const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
 
   const mapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+      }
+    };
+  }, [mapRef]);
 
   // const setNewBbox = useCallback(() => {
   //   if (!mapRef.current) return;
@@ -323,6 +332,7 @@ export const Map = (props: Map2Props) => {
           scrollWheelZoom
           preferCanvas={true}
           zoomControl={!props.miniature}
+          id={Math.random().toString()}
         >
           <TileLayer
             attribution='Powered by <a href="https://www.geoapify.com/">Geoapify</a>'

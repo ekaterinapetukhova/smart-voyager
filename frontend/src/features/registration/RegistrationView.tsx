@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Form, FormValues, InputProp } from "../../components/common/form/Form.tsx";
 import { ValidRegistration, validRegistrationSchema } from "../../validation/auth.validation";
@@ -6,11 +5,9 @@ import { config } from "../../config/config.ts";
 import { Title } from "../../components/common/Title.tsx";
 import { Gender } from "../../types/user.types.ts";
 import { Container } from "../../components/common/Container.tsx";
-import { RouterEnum } from "../../types/router.types.ts";
 
 export function RegistrationView() {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const navigate = useNavigate();
 
   const fields = {
     name: { value: "", type: "text" },
@@ -52,7 +49,7 @@ export function RegistrationView() {
 
   return (
     <Container childrenContainerClassNames="justify-center gap-x-20">
-      <Title>
+      <Title classNames="w-1/3">
         From Dreaming to Traveling – <span className="text-accent italic block font-bold">Start Now</span>
       </Title>
       <div className="w-1/4 flex flex-col gap-y-4">

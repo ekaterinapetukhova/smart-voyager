@@ -8,10 +8,13 @@ import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
 import { CommonChatView } from "./features/chat/CommonChatView.tsx";
 import { Sidebar } from "./components/sidebar/Sidebar.tsx";
-import { TripView } from "./features/trip/TripView.tsx";
+import { TripListView } from "./features/trip/TripListView.tsx";
 import { AuthView } from "./features/auth/AuthView.tsx";
 import { useVerification } from "./hooks/use-verification.ts";
-import { NewTripView } from "./features/trip/NewTripView.tsx";
+import { NewTripByUserView } from "./features/trip/new-trip/NewTripByUserView.tsx";
+import { NewTripModeChoiceView } from "./features/trip/new-trip/NewTripModeChoiceView.tsx";
+import { NewTripByAIView } from "./features/trip/new-trip/NewTripByAIView.tsx";
+import { TripView } from "./features/trip/TripView.tsx";
 
 interface ProtectedRouteProps {
   isAuth: boolean;
@@ -65,15 +68,39 @@ export function App() {
           path={RouterEnum.Trips}
           element={
             <ProtectedRoute isAuth={isAuth}>
+              <TripListView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.Trip}
+          element={
+            <ProtectedRoute isAuth={isAuth}>
               <TripView />
             </ProtectedRoute>
           }
         />
         <Route
-          path={RouterEnum.NewTrip}
+          path={RouterEnum.NewTripByUser}
           element={
             <ProtectedRoute isAuth={isAuth}>
-              <NewTripView />
+              <NewTripByUserView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.NewTripByAI}
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <NewTripByAIView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.NewTripModeChoice}
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <NewTripModeChoiceView />
             </ProtectedRoute>
           }
         />

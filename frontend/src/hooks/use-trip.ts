@@ -42,7 +42,7 @@ export const useTrip = () => {
   };
 };
 
-export const useTripByUser = () => {
+export const useTripsByUser = () => {
   return useQuery({
     queryKey: [PATH],
     queryFn: async () => {
@@ -53,6 +53,21 @@ export const useTripByUser = () => {
       if (!response.ok) throw new Error("Failed to fetch trip by user's id");
 
       return (await response.json()) as Trip[];
+    },
+  });
+};
+
+export const useTripsById = (tripId: string) => {
+  return useQuery({
+    queryKey: [PATH],
+    queryFn: async () => {
+      const { get } = authorizedFetch();
+
+      const response = await get(`trip/${tripId}`);
+
+      if (!response.ok) throw new Error("Failed to fetch trip by it's id");
+
+      return (await response.json()) as Trip;
     },
   });
 };
