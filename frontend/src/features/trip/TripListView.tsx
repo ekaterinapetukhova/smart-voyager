@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { LatLngBounds } from "leaflet";
-import { GeoJSON } from "geojson";
-import bbox from "@turf/bbox";
+import { Link } from "react-router-dom";
 import { Container } from "../../components/common/Container.tsx";
 import { SearchInput } from "../../components/common/SearchInput.tsx";
 import { useTripsByUser } from "../../hooks/use-trip.ts";
 import { LinkTo } from "../../components/common/LinkTo.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
-import { Map } from "../../components/map/Map.tsx";
 
 export const TripListView = () => {
   const [searchedTrip, setSearchedTrip] = useState("");
@@ -15,17 +12,13 @@ export const TripListView = () => {
   const { data: trips } = useTripsByUser();
 
   const tripItems = trips?.map((trip) => {
-    const geojson = (typeof trip.geojson === "string" ? JSON.parse(trip.geojson) : trip.geojson) as GeoJSON;
-
-    const [minX, minY, maxX, maxY] = bbox(geojson);
-    const bounds = new LatLngBounds([minY, minX], [maxY, maxX]);
-    // const points = point(geojson.bbox!, 1);
-
     return (
-      <li className="w-full py-5 px-3 flex text-accent relative" key={trip.id}>
-        <div className="size-full absolute opacity-20 bg-button-primary-hover top-0 left-0 -z-10"></div>
-        <h3>{trip.name}</h3>
-        <Map miniature geojson={geojson} initialBounds={bounds} id={trip.id} />
+      <li className="text-accent transition" key={trip.id}>
+        <Link to={`/trip/${trip.id}`} className="w-full relative flex flex-col gap-y-2 px-4 py-5">
+          <div className="size-full absolute opacity-20 bg-button-primary-hover top-0 left-0 -z-10"></div>
+          <h3>{trip.name}</h3>
+          <p>{trip.description}</p>
+        </Link>
       </li>
     );
   });
@@ -45,7 +38,7 @@ export const TripListView = () => {
         </div>
       </div>
 
-      {trips && <ul className="w-full">{tripItems}</ul>}
+      {trips && <ul className="w-full flex flex-col gap-y-4">{tripItems}</ul>}
     </Container>
   );
 };

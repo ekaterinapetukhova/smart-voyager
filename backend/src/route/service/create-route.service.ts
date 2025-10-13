@@ -29,6 +29,7 @@ export class CreateRouteService {
       type: data.type,
       isProposal: data.isProposal,
       geojson: JSON.stringify(response),
+      description: data.description,
       waypoints: {
         create: data.waypoints.map((waypoint, i) => ({
           index: i,

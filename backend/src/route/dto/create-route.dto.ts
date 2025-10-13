@@ -8,6 +8,7 @@ export const createRouteDtoSchema = z.object({
   mode: z.enum(RouteMode),
   type: z.enum(RouteType),
   isProposal: z.boolean(),
+  description: z.string(),
 });
 
 export type CreateRouteDto = z.output<typeof createRouteDtoSchema>;

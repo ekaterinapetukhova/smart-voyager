@@ -57,13 +57,13 @@ export const useTripsByUser = () => {
   });
 };
 
-export const useTripsById = (tripId: string) => {
+export const useTripById = (tripId: string) => {
   return useQuery({
-    queryKey: [PATH],
+    queryKey: [PATH, tripId],
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const response = await get(`trip/${tripId}`);
+      const response = await get(`route/${tripId}`);
 
       if (!response.ok) throw new Error("Failed to fetch trip by it's id");
 

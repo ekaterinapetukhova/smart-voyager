@@ -98,10 +98,11 @@ enum RouteType {
 model Route {
   id String @id @default(uuid())
 
-  name      String
-  createdAt DateTime  @default(now())
-  mode      RouteMode
-  type      RouteType
+  name        String
+  createdAt   DateTime  @default(now())
+  mode        RouteMode
+  type        RouteType
+  description String    @default("")
 
   geojson Json
 

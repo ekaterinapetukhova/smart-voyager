@@ -1,5 +1,5 @@
 import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
-import { memo, ReactElement, useCallback, useEffect, useRef, useState } from "react";
+import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
 import L, { LatLng, LatLngBounds } from "leaflet";
 import { GeoJSON } from "geojson";
 import { renderToString } from "react-dom/server";
@@ -45,22 +45,15 @@ export interface GeoapifyPOI {
   };
 }
 
-export interface Map2Marker {
-  position: LatLng;
-  popup?: ReactElement;
-  popupOpen?: boolean;
-}
-
 export interface Map2Props {
   initialBounds: LatLngBounds;
   miniature?: boolean;
-  markers?: Map2Marker[];
+  markers?: TripPoint[];
   geojson?: GeoJSON;
-  id: string;
 }
 
 export const Map = (props: Map2Props) => {
-  const [tripPoints, setTripPoints] = useState<TripPoint[]>([]);
+  const [tripPoints, setTripPoints] = useState<TripPoint[]>(props.markers ?? []);
   const [tripName, setTripName] = useState("");
   // const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
   // const [fetchTrigger, setFetchTrigger] = useState(false);
@@ -255,20 +248,20 @@ export const Map = (props: Map2Props) => {
 
   return (
     <div className={props.miniature ? "" : "size-full"}>
-      {!props.miniature && (
-        <div className="flex gap-x-5 max-w-sm justify-center items-center text-text">
-          <TextInput
-            placeholder="Trip name"
-            value={tripName}
-            onChange={(e) => {
-              setTripName(e.target.value);
-            }}
-          />
-          <div className="w-1/3">
-            <Button label="Save route" onClick={() => void saveTrip()} size="medium" />
-          </div>
-        </div>
-      )}
+      {/*{!props.miniature && (*/}
+      {/*  <div className="flex gap-x-5 max-w-sm justify-center items-center text-text">*/}
+      {/*    <TextInput*/}
+      {/*      placeholder="Trip name"*/}
+      {/*      value={tripName}*/}
+      {/*      onChange={(e) => {*/}
+      {/*        setTripName(e.target.value);*/}
+      {/*      }}*/}
+      {/*    />*/}
+      {/*    <div className="w-1/3">*/}
+      {/*      <Button label="Save route" onClick={() => void saveTrip()} size="medium" />*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*)}*/}
 
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-4">
@@ -327,12 +320,10 @@ export const Map = (props: Map2Props) => {
       <div className={["relative z-0 mx-auto", props.miniature ? "h-60 w-80" : "h-4/5 w-full"].join(" ")}>
         <MapContainer
           className="h-full outline-none"
-          center={props.initialBounds.getCenter()}
-          zoom={18}
           scrollWheelZoom
           preferCanvas={true}
           zoomControl={!props.miniature}
-          id={Math.random().toString()}
+          bounds={props.initialBounds}
         >
           <TileLayer
             attribution='Powered by <a href="https://www.geoapify.com/">Geoapify</a>'
@@ -354,7 +345,6 @@ export const Map = (props: Map2Props) => {
               />
             </>
           )}
-          <Marker position={[52.373108, 4.892157]}></Marker>
         </MapContainer>
       </div>
     </div>

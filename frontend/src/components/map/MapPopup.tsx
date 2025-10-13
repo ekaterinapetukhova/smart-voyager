@@ -1,15 +1,15 @@
 import { Popup, useMapEvents } from "react-leaflet";
 import { useState } from "react";
-import { RoutePoint } from "../../types/route-point.types";
+import { TripPoint } from "../../types/trip-point.types";
 import { Button } from "../common/Button.tsx";
 import { getPlaceData } from "../../utils/get-place-data.ts";
 
 interface MapPopupProps {
-  onAdd: (point: RoutePoint) => void;
+  onAdd: (point: TripPoint) => void;
 }
 
 export const MapPopup = (props: MapPopupProps) => {
-  const [selectedPoint, setSelectedPoint] = useState<RoutePoint | null>(null);
+  const [selectedPoint, setSelectedPoint] = useState<TripPoint | null>(null);
 
   useMapEvents({
     click: (e) => {
@@ -27,7 +27,7 @@ export const MapPopup = (props: MapPopupProps) => {
         }
 
         if (result.name) {
-          const newRoutePoint: RoutePoint = {
+          const newRoutePoint: TripPoint = {
             name: result.name,
             latitude: latlng.lat,
             longitude: latlng.lng,

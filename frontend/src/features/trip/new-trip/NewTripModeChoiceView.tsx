@@ -5,7 +5,7 @@ import { RouterEnum } from "../../../types/router.types.ts";
 
 export function NewTripModeChoiceView() {
   return (
-    <Container childrenContainerClassNames="flex-col py-10">
+    <Container childrenContainerClassNames="flex-col">
       <Title>Choose Mode</Title>
       <div className="flex gap-x-10 w-xl h-full items-center justify-center">
         <LinkTo label="By yourself" url={RouterEnum.NewTripByUser} type="button" />

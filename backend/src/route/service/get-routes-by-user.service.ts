@@ -14,6 +14,9 @@ export class GetRoutesByUserService {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        waypoints: true,
+      },
     });
   }
 }

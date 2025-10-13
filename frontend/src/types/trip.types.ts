@@ -82,50 +82,8 @@ export const routeSchema = z.object({
   waypoints: z.array(tripPointSchema),
   mode: z.enum(TripMode),
   type: z.enum(TripType),
-  geojson: z
-    .object({
-      type: z.string(),
-      features: z.array(
-        z.object({
-          type: z.string(),
-          properties: z.object({
-            mode: z.string(),
-            waypoints: z.array(
-              z.object({
-                location: z.tuple([z.number(), z.number()]),
-                original_index: z.number().int().min(0),
-              })
-            ),
-            units: z.string(),
-            distance: z.number().min(0),
-            distance_units: z.string(),
-            time: z.number().min(0),
-            legs: z.array(
-              z.object({
-                distance: z.number().min(0),
-                time: z.number().min(0),
-                steps: z.array(
-                  z.object({
-                    from_index: z.number().int().min(0),
-                    to_index: z.number().int().min(0),
-                    distance: z.number().min(0),
-                    time: z.number().min(0),
-                    instruction: z.object({
-                      text: z.string().min(1),
-                    }),
-                  })
-                ),
-              })
-            ),
-          }),
-          geometry: z.object({
-            type: z.string(),
-            coordinates: z.array(z.array(z.tuple([z.number(), z.number()])).min(2)).min(1),
-          }),
-        })
-      ),
-    })
-    .or(z.string()),
+  geojson: z.string(),
+  description: z.string(),
 });
 
 export type Trip = z.output<typeof routeSchema>;

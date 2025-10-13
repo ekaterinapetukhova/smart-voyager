@@ -1,9 +1,9 @@
 import { Popup } from "react-leaflet";
-import { RoutePoint } from "../../types/route-point.types.ts";
+import { TripPoint } from "../../types/trip-point.types.ts";
 import { Button } from "../common/Button.tsx";
 
 interface MarkerPopupProps {
-  point: RoutePoint;
+  point: TripPoint;
   onRemove: () => void;
 }
 

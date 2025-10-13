@@ -8,7 +8,7 @@ export class GetRouteByIdService {
   public constructor(private readonly prisma: PrismaService) {}
 
   public async execute(routeId: string): Promise<Route> {
-    const route = await this.prisma.route.findUnique({ where: { id: routeId } });
+    const route = await this.prisma.route.findUnique({ where: { id: routeId }, include: { waypoints: true } });
 
     if (!route) {
       throw new NotFoundError("Route", routeId);
