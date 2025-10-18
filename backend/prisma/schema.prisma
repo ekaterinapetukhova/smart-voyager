@@ -104,8 +104,6 @@ model Route {
   type        RouteType
   description String    @default("")
 
-  geojson Json
-
   waypoints RouteWaypoint[]
 
   isProposal Boolean

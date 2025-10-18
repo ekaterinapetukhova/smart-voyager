@@ -7,3 +7,16 @@ export const createBounds = (geojson: GeoJSON) => {
 
   return new LatLngBounds([minY, minX], [maxY, maxX]);
 };
+
+export const createBoundsFromPoints = (points: number[][]) => {
+  let [minX, minY, maxX, maxY] = [1000, 1000, -1000, -1000];
+
+  for (const point of points) {
+    minX = Math.min(minX, point[0]);
+    minY = Math.min(minY, point[1]);
+    maxX = Math.max(maxX, point[0]);
+    maxY = Math.max(maxY, point[1]);
+  }
+
+  return new LatLngBounds([minX, minY], [maxX, maxY]);
+};

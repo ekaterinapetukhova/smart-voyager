@@ -10,9 +10,9 @@ export const useTripMates = () => {
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const response = await get(PATH);
+      const tripMates: User[] = await get(PATH);
 
-      return (await response.json()) as User[];
+      return tripMates;
     },
   });
 

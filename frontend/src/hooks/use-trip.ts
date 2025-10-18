@@ -2,32 +2,32 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreatedTrip, Trip } from "../types/trip.types.ts";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
 
-const PATH = `route`;
-const QUERY_KEY = "route";
+const PATH = "route";
+export const tripQueryKey = "route";
 
 export const useTrip = () => {
   const queryClient = useQueryClient();
 
   const getAll = useQuery({
-    queryKey: [QUERY_KEY],
+    queryKey: [tripQueryKey],
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const response = await get(PATH);
+      const trips: Trip[] = await get(PATH);
 
-      return (await response.json()) as Trip[];
+      return trips;
     },
   });
 
   const add = useMutation({
-    mutationFn: async (trip: CreatedTrip) => {
+    mutationFn: async (tripDto: CreatedTrip) => {
       const { post } = authorizedFetch();
 
-      const response = await post(PATH, trip);
+      const trip: Trip = await post(PATH, tripDto);
 
-      return (await response.json()) as Trip;
+      return trip;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [QUERY_KEY] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
 
   // const remove = useMutation({
@@ -48,26 +48,22 @@ export const useTripsByUser = () => {
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const response = await get(`me/routes`);
+      const trips: Trip[] = await get(`me/routes`);
 
-      if (!response.ok) throw new Error("Failed to fetch trip by user's id");
-
-      return (await response.json()) as Trip[];
+      return trips;
     },
   });
 };
 
 export const useTripById = (tripId: string) => {
   return useQuery({
-    queryKey: [PATH, tripId],
+    queryKey: [tripQueryKey, tripId],
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const response = await get(`route/${tripId}`);
+      const trips: Trip = await get(`route/${tripId}`);
 
-      if (!response.ok) throw new Error("Failed to fetch trip by it's id");
-
-      return (await response.json()) as Trip;
+      return trips;
     },
   });
 };

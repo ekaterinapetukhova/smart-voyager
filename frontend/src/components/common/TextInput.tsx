@@ -11,11 +11,11 @@ export const TextInput = (props: TextInputProps) => {
   const inputId = `input-${props.label ?? props.placeholder}`;
 
   return (
-    <div className="flex flex-col gap-y-2">
+    <div className="flex flex-col gap-y-2 overflow-hidden max-w-96">
       {props.label && <label htmlFor={inputId}>{props.label}</label>}
       <input
         id={inputId}
-        className="h-10 text-lg border-b-2 pb-1"
+        className="h-10 text-sm border-b-2 pb-1 text-text w-fit field-sizing-content"
         type="text"
         onChange={props.onChange}
         value={props.value}

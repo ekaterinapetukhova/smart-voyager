@@ -8,6 +8,7 @@ const configSchema = z
     VITE_GEOAPIFY_PLACES_URL: z.url(),
     VITE_GEOAPIFY_REVERSE_GEOCODING_URL: z.url(),
     VITE_GEOAPIFY_FORWARD_GEOCODING_URL: z.url(),
+    VITE_GOOGLE_MAPS_NAVIGATION_API: z.url(),
   })
   .transform((data) => {
     return {
@@ -17,6 +18,7 @@ const configSchema = z
       geoapifyPlacesApiUrl: data.VITE_GEOAPIFY_PLACES_URL,
       geoapifyReverseGeocodingApiUrl: data.VITE_GEOAPIFY_REVERSE_GEOCODING_URL,
       geoapifyForwardGeocodingApiUrl: data.VITE_GEOAPIFY_FORWARD_GEOCODING_URL,
+      googleMapsNavigationApiUrl: data.VITE_GOOGLE_MAPS_NAVIGATION_API,
     };
   });
 

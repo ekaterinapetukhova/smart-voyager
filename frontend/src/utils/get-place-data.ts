@@ -63,7 +63,10 @@ interface GetPlaceDataResult {
 export const getPlaceData = async (
   lat: number,
   lng: number
-): Promise<Pick<GetPlaceDataResult, "place_id" | "name" | "bbox"> | null> => {
+): Promise<{
+  name: string;
+  fullAddress: string;
+} | null> => {
   try {
     const response = await fetch(
       `${config.geoapifyReverseGeocodingApiUrl}?lat=${lat.toString()}&lon=${lng.toString()}&format=json&apiKey=${config.geoapifyKey}`
@@ -71,10 +74,16 @@ export const getPlaceData = async (
 
     const data: GetPlaceDataResponse = await response.json();
 
+    console.log(data.results);
+
     if (data.results.length) {
       const place = data.results[0];
 
-      return { name: place.formatted ?? place.name, place_id: place.place_id, bbox: place.bbox };
+      if (!place.formatted) {
+        return null;
+      }
+
+      return { name: place.name ?? place.formatted, fullAddress: place.formatted };
     }
 
     return null;

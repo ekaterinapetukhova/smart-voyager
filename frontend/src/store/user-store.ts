@@ -54,16 +54,12 @@ export async function updateUserStore() {
   } else {
     const { get } = authorizedFetch();
 
-    const response = await get("me");
+    const user: User | null = await get("me");
 
-    if (response.ok) {
-      const userData: User = await response.json();
-
-      useUserStore.getState().updateUserData(userData);
+    if (user !== null) {
+      useUserStore.getState().updateUserData(user);
     } else {
-      if (response.status === 401) {
-        useTokenStore.getState().logout();
-      }
+      useTokenStore.getState().logout();
     }
   }
 }

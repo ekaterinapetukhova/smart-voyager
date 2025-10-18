@@ -1,15 +1,17 @@
 import { useParams } from "react-router-dom";
-import { GeoJSON } from "geojson";
+import { useState } from "react";
 import { Container } from "../../components/common/Container.tsx";
-import { useTripById } from "../../hooks/use-trip.ts";
 import { Title } from "../../components/common/Title.tsx";
-import { Map } from "../../components/map/Map.tsx";
-import { createBounds } from "../../utils/create-bounds.ts";
-import { TripPoint } from "../../types/trip-point.types.ts";
+import { useTripById } from "../../hooks/use-trip.ts";
+import { Map3 } from "../../components/map/Map3.tsx";
+import { useTripPointAPI } from "../../hooks/use-trip-point-api.ts";
 import { PlacesList } from "./PlacesList.tsx";
 
 export function TripView() {
+  const tripPointApi = useTripPointAPI();
   const params = useParams();
+  const [clickTripId, setClickTripId] = useState<string | null>();
+
   const tripId = params.tripId!;
 
   const { data: trip } = useTripById(tripId);
@@ -18,25 +20,23 @@ export function TripView() {
     return;
   }
 
-  const geojson = JSON.parse(trip.geojson) as GeoJSON;
-
-  const bounds = createBounds(geojson);
-
-  const places = trip.waypoints.map((waypoint) => {
-    return {
-      name: waypoint.name,
-      longitude: waypoint.longitude,
-      latitude: waypoint.latitude,
-    } satisfies TripPoint;
-  });
-
   return (
     <Container childrenContainerClassNames="flex-col gap-y-10">
       <Title>{trip.name}</Title>
       <p className="text-text">{trip.description}</p>
       <div className="size-full grid grid-cols-2">
-        <PlacesList places={places} />
-        <Map initialBounds={bounds} markers={places} />
+        <PlacesList
+          places={trip.waypoints}
+          onClick={(id) => {
+            setClickTripId(id);
+          }}
+        />
+        <Map3
+          points={trip.waypoints}
+          onRemovePoint={(id) => void tripPointApi.deleteTripPoint(id)}
+          onAddPoint={(point) => void tripPointApi.addTripPoint({ ...point, tripId })}
+          activePoint={clickTripId ?? null}
+        />
       </div>
     </Container>
   );

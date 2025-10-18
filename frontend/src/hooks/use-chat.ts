@@ -13,9 +13,9 @@ export const useChat = () => {
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const response = await get(PATH);
+      const chats: Chat[] = await get(PATH);
 
-      return (await response.json()) as Chat[];
+      return chats;
     },
     refetchInterval: 5000,
     refetchIntervalInBackground: true,
@@ -25,9 +25,9 @@ export const useChat = () => {
     mutationFn: async (data: ValidChatMessage & { recipientId: string }) => {
       const { post } = authorizedFetch();
 
-      const response = await post(PATH, data);
+      const chat: Chat = await post(PATH, data);
 
-      return (await response.json()) as Chat;
+      return chat;
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [PATH] }),
   });
@@ -36,9 +36,9 @@ export const useChat = () => {
     mutationFn: async (data: ValidChatMessage & { recipientId: string; chatId: string }) => {
       const { post } = authorizedFetch();
 
-      const response = await post(`${PATH}/${data.chatId}/message`, data);
+      const chatMessage: ChatMessage = await post(`${PATH}/${data.chatId}/message`, data);
 
-      return (await response.json()) as ChatMessage;
+      return chatMessage;
     },
     onSuccess: () => void queryClient.invalidateQueries({ queryKey: [PATH] }),
   });
@@ -47,7 +47,6 @@ export const useChat = () => {
     ...getAll,
     askForChat: sendRequest.mutateAsync,
     sendMessage: sendNewMessage.mutateAsync,
-    // deletePoint: remove.mutateAsync,
   };
 };
 

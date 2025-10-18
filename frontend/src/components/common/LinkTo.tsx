@@ -4,8 +4,7 @@ interface LinkToProps {
   label: string;
   url: string;
   type: "button" | "link";
-  img?: boolean;
-  src?: string;
+  imgSrc?: string;
   imgClassNames?: string;
   isActive?: boolean;
 }
@@ -50,6 +49,7 @@ export const LinkTo = (props: LinkToProps) => {
           />
         </>
       )}
+      {/*{props.imgSrc && }*/}
     </Link>
   );
 };

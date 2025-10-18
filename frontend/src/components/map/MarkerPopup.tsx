@@ -1,6 +1,8 @@
 import { Popup } from "react-leaflet";
+import { useState } from "react";
 import { TripPoint } from "../../types/trip-point.types.ts";
 import { Button } from "../common/Button.tsx";
+import { TextInput } from "../common/TextInput.tsx";
 
 interface MarkerPopupProps {
   point: TripPoint;

@@ -1,11 +1,8 @@
 import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
-import { ReactElement, useCallback, useEffect, useRef, useState } from "react";
-import L, { LatLng, LatLngBounds } from "leaflet";
+import { useEffect, useRef, useState } from "react";
+import L, { LatLngBounds } from "leaflet";
 import { GeoJSON } from "geojson";
-import { renderToString } from "react-dom/server";
 import { GeoJSON as GeoJSONLayer } from "react-leaflet/GeoJSON";
-import { Button } from "../common/Button.tsx";
-import { TextInput } from "../common/TextInput.tsx";
 import { CreatedTrip, TripMode, TripType } from "../../types/trip.types.ts";
 import { config } from "../../config/config.ts";
 // import { geojson } from "../../geojson.ts";
@@ -14,25 +11,6 @@ import { useTrip } from "../../hooks/use-trip.ts";
 import { TripPoint } from "../../types/trip-point.types.ts";
 import { MapPopup } from "./MapPopup.tsx";
 import { MarkerPopup } from "./MarkerPopup.tsx";
-
-// const filters: Filter[] = [
-//   {
-//     key: "restaurants",
-//     label: "Restaurants",
-//     query: 'node["amenity"="restaurant"]',
-//   },
-//   { key: "hotels", label: "Hotels", query: 'node["tourism"="hotel"]' },
-//   {
-//     key: "pharmacies",
-//     label: "Pharmacies",
-//     query: 'node["amenity"="pharmacy"]',
-//   },
-//   {
-//     key: "transit",
-//     label: "Transit Stations",
-//     query: 'node["public_transport"="station"]',
-//   },
-// ];
 
 export interface GeoapifyPOI {
   id: string;
@@ -55,19 +33,8 @@ export interface Map2Props {
 export const Map = (props: Map2Props) => {
   const [tripPoints, setTripPoints] = useState<TripPoint[]>(props.markers ?? []);
   const [tripName, setTripName] = useState("");
-  // const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  // const [fetchTrigger, setFetchTrigger] = useState(false);
-  // const [bbox, setBbox] = useState(props.initialBounds.toBBoxString());
-  // const [pois, setPois] = useState<GeoapifyPOI[]>([]);
-  // const [routeMode, setTripMode] = useState<TripMode>(TripMode.Drive);
-  // const [routeType, setTripType] = useState<TripType>(TripType.Balanced);
-
-  // const filters = Object.values(TripCategories);
-  //
-  // const selectedFilters = filters.filter((filter) => selectedKeys.includes(filter));
 
   const { addTrip } = useTrip();
-  // const { loading } = usePOIs(selectedFilters, bbox, fetchTrigger, setPois);
 
   const mapRef = useRef<L.Map | null>(null);
 
@@ -79,59 +46,6 @@ export const Map = (props: Map2Props) => {
     };
   }, [mapRef]);
 
-  // const setNewBbox = useCallback(() => {
-  //   if (!mapRef.current) return;
-  //
-  //   const bounds: LatLngBounds = mapRef.current.getBounds();
-  //   const newBbox = bounds.toBBoxString();
-  //
-  //   setBbox((prev) => {
-  //     if (prev === newBbox) return prev;
-  //
-  //     return newBbox;
-  //   });
-  // }, []);
-
-  const geoJsonAdded = useRef(false);
-
-  const addGeoJson = useCallback((map: L.Map) => {
-    if (geoJsonAdded.current || !props.geojson) {
-      return;
-    }
-
-    L.geoJSON(props.geojson, {
-      style: {
-        color: "#FF2222",
-        weight: 5,
-        opacity: 1.0,
-      },
-    }).addTo(map);
-
-    geoJsonAdded.current = true;
-  }, []); // maybe dep on geojson but needs to remove old one
-
-  const markersAdded = useRef(false);
-
-  const addMarkers = useCallback((map: L.Map) => {
-    if (markersAdded.current || !props.markers || props.markers.length === 0) {
-      return;
-    }
-
-    for (const marker of props.markers) {
-      const instance = L.marker(marker.position).addTo(map);
-
-      if (marker.popup) {
-        const popup = instance.bindPopup(renderToString(marker.popup));
-
-        if (marker.popupOpen) {
-          popup.openPopup();
-        }
-      }
-    }
-
-    markersAdded.current = true;
-  }, []); // maybe dep on markers but needs to remove old one
-
   const addTripPoint = (newTripPoint: TripPoint) => {
     setTripPoints((prev) => [
       ...prev,
@@ -139,27 +53,10 @@ export const Map = (props: Map2Props) => {
         name: newTripPoint.name,
         latitude: newTripPoint.latitude,
         longitude: newTripPoint.longitude,
+        fullAddress: newTripPoint.fullAddress,
       },
     ]);
   };
-
-  // const toggleFilter = (key: string) => {
-  //   setSelectedKeys((prev) => {
-  //     const updated = prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key];
-  //
-  //     if (!updated.length) {
-  //       setPois([]);
-  //     }
-  //
-  //     return updated;
-  //   });
-  // };
-  //
-  // const handleShowPOIs = () => {
-  //   if (selectedKeys.length > 0) {
-  //     setFetchTrigger((prev) => !prev);
-  //   }
-  // };
 
   const saveTrip = async () => {
     const route: CreatedTrip = {
@@ -167,6 +64,7 @@ export const Map = (props: Map2Props) => {
       mode: TripMode.Drive,
       type: TripType.Balanced,
       waypoints: tripPoints,
+      description: "",
     };
 
     await addTrip(route);
@@ -212,40 +110,6 @@ export const Map = (props: Map2Props) => {
     </>
   );
 
-  // const FilteredPoints = () => (
-  //   <>
-  //     {pois.map((poi) => {
-  //       if (!poi.lat || !poi.lon) return null;
-  //
-  //       console.log(poi);
-  //
-  //       return (
-  //         <Marker key={poi.id} position={[poi.lat, poi.lon]}>
-  //           <Popup>
-  //             <p>{poi.tags?.name}</p>
-  //             <Button
-  //               label="Add point"
-  //               onClick={() => {
-  //                 const newTripPoint: TripPoint = {
-  //                   name: poi.tags?.name,
-  //                   latitude: poi.lat!,
-  //                   longitude: poi.lon!,
-  //                 };
-  //
-  //                 addTripPoint(newTripPoint);
-  //               }}
-  //             />
-  //           </Popup>
-  //         </Marker>
-  //       );
-  //     })}
-  //   </>
-  // );
-
-  // const modes = Object.values(TripMode);
-  //
-  // const types = Object.values(TripType);
-
   return (
     <div className={props.miniature ? "" : "size-full"}>
       {/*{!props.miniature && (*/}
@@ -265,55 +129,11 @@ export const Map = (props: Map2Props) => {
 
       <div className="flex justify-between">
         <div className="flex flex-col gap-y-4">
-          <div className="flex gap-2 items-center">
-            {/*{filters.map((filter) => (*/}
-            {/*  <label key={filter} className="flex items-center gap-1">*/}
-            {/*    <input*/}
-            {/*      type="checkbox"*/}
-            {/*      checked={selectedKeys.includes(filter)}*/}
-            {/*      onChange={() => {*/}
-            {/*        toggleFilter(filter);*/}
-            {/*      }}*/}
-            {/*    />*/}
-            {/*    {filter}*/}
-            {/*  </label>*/}
-            {/*))}*/}
-            {/*<Button label={loading ? "Loading" : "Show places"} onClick={handleShowPOIs} />*/}
-          </div>
+          <div className="flex gap-2 items-center"></div>
 
-          <div className="flex gap-2 items-center">
-            {/*{modes.map((mode) => (*/}
-            {/*  <label key={mode} className="flex items-center gap-1">*/}
-            {/*    <input*/}
-            {/*      type="radio"*/}
-            {/*      value={routeMode}*/}
-            {/*      name="routeMode"*/}
-            {/*      checked={routeMode === mode}*/}
-            {/*      onChange={() => {*/}
-            {/*        setTripMode(mode);*/}
-            {/*      }}*/}
-            {/*    />*/}
-            {/*    {mode[0].toUpperCase() + mode.slice(1)}*/}
-            {/*  </label>*/}
-            {/*))}*/}
-          </div>
+          <div className="flex gap-2 items-center"></div>
 
-          <div className="flex gap-2 items-center">
-            {/*{types.map((type) => (*/}
-            {/*  <label key={type} className="flex items-center gap-1">*/}
-            {/*    <input*/}
-            {/*      type="radio"*/}
-            {/*      value={routeType}*/}
-            {/*      name="routeType"*/}
-            {/*      checked={routeType === type}*/}
-            {/*      onChange={() => {*/}
-            {/*        setTripType(type);*/}
-            {/*      }}*/}
-            {/*    />*/}
-            {/*    {type[0].toUpperCase() + type.slice(1)}*/}
-            {/*  </label>*/}
-            {/*))}*/}
-          </div>
+          <div className="flex gap-2 items-center"></div>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { tripPointSchema } from "./trip-point.types.ts";
+import { existingTripPointSchema } from "./trip-point.types.ts";
 
 export enum TripMode {
   Drive = "drive",
@@ -14,7 +14,7 @@ export enum TripType {
   Short = "short",
 }
 
-export enum TripCategories {
+export enum TripPointCategories {
   Accommodation = "accommodation",
   Activity = "activity",
   Commercial = "commercial",
@@ -79,7 +79,7 @@ export const routeSchema = z.object({
   id: z.uuid(),
   name: z.string(),
   createdAt: z.date(),
-  waypoints: z.array(tripPointSchema),
+  waypoints: z.array(existingTripPointSchema),
   mode: z.enum(TripMode),
   type: z.enum(TripType),
   geojson: z.string(),

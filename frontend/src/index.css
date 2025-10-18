@@ -73,11 +73,20 @@ a, button, input {
 }
 
 .leaflet-popup-content {
-    margin: 1rem 0.5rem;
+    /*margin: 1rem 0.5rem;*/
+}
+
+.leaflet-popup {
+    /*margin: 1rem 0.5rem;*/
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .leaflet-popup-content-wrapper {
     background: transparent;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 .leaflet-popup-tip {

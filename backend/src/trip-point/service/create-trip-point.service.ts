@@ -1,0 +1,36 @@
+import { Injectable } from "@nestjs/common";
+import { RouteWaypoint } from "@prisma/client";
+import { CreateTripPointDto } from "../dto/create-trip-point.dto";
+import { PrismaService } from "../../prisma/prisma.service";
+import { ServerError } from "../../error/server.error";
+
+@Injectable()
+export class CreateTripPointService {
+  public constructor(private readonly prisma: PrismaService) {}
+
+  public async execute(data: CreateTripPointDto): Promise<RouteWaypoint> {
+    const maxIndex = await this.prisma.routeWaypoint.aggregate({
+      _max: {
+        index: true,
+      },
+      where: {
+        routeId: data.tripId,
+      },
+    });
+
+    if (maxIndex._max.index === null) {
+      throw new ServerError("unluck max index didn't find");
+    }
+
+    return this.prisma.routeWaypoint.create({
+      data: {
+        index: maxIndex._max.index + 1,
+        routeId: data.tripId,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        name: data.name,
+        fullAddress: data.fullAddress,
+      },
+    });
+  }
+}

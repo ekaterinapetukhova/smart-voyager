@@ -12,6 +12,7 @@ import { TripMatesModule } from "./trip-mates/trip-mates.module";
 import { FilesModule } from "./files/files.module";
 import { ChatModule } from "./chat/chat.module";
 import { AIModule } from "./openai/openai.module";
+import { TripPointModule } from "./trip-point/trip-point.module";
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AIModule } from "./openai/openai.module";
     MailModule,
     MeModule,
     TripMatesModule,
+    TripPointModule,
     FilesModule,
     ChatModule,
     AIModule,
