@@ -8,7 +8,7 @@ export class SwapTripPointsService {
   public constructor(private readonly prisma: PrismaService) {}
 
   public async execute(data: SwapTripPointsDto): Promise<void> {
-    const firstIndex = await this.prisma.routeWaypoint.findUnique({
+    const firstIndex = await this.prisma.tripPoint.findUnique({
       where: {
         id: data.firstTripPointId,
       },
@@ -17,7 +17,7 @@ export class SwapTripPointsService {
       },
     });
 
-    const secondIndex = await this.prisma.routeWaypoint.findUnique({
+    const secondIndex = await this.prisma.tripPoint.findUnique({
       where: {
         id: data.secondTripPointId,
       },
@@ -34,7 +34,7 @@ export class SwapTripPointsService {
       throw new NotFoundError("Trip point not found", data.secondTripPointId);
     }
 
-    await this.prisma.routeWaypoint.update({
+    await this.prisma.tripPoint.update({
       where: {
         id: data.firstTripPointId,
       },
@@ -43,7 +43,7 @@ export class SwapTripPointsService {
       },
     });
 
-    await this.prisma.routeWaypoint.update({
+    await this.prisma.tripPoint.update({
       where: {
         id: data.secondTripPointId,
       },

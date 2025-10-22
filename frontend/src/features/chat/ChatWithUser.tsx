@@ -24,7 +24,9 @@ export function ChatWithUser(props: ChatWithUserProps) {
   useEffect(() => {
     scrollToBottom();
   }, [chat?.chatMessage]);
-  
+
+  console.log(chat);
+
   return (
     <>
       <ul className="w-full overflow-y-auto grow flex flex-col gap-y-6" ref={messagesContainerRef}>

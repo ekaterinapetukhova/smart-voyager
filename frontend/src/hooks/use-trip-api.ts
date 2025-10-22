@@ -2,10 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreatedTrip, Trip } from "../types/trip.types.ts";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
 
-const PATH = "route";
-export const tripQueryKey = "route";
+const path = "trip";
+export const tripQueryKey = "trip";
 
-export const useTrip = () => {
+export const useTripApi = () => {
   const queryClient = useQueryClient();
 
   const getAll = useQuery({
@@ -13,7 +13,7 @@ export const useTrip = () => {
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const trips: Trip[] = await get(PATH);
+      const trips: Trip[] = await get(path);
 
       return trips;
     },
@@ -23,7 +23,7 @@ export const useTrip = () => {
     mutationFn: async (tripDto: CreatedTrip) => {
       const { post } = authorizedFetch();
 
-      const trip: Trip = await post(PATH, tripDto);
+      const trip: Trip = await post(path, tripDto);
 
       return trip;
     },
@@ -44,11 +44,11 @@ export const useTrip = () => {
 
 export const useTripsByUser = () => {
   return useQuery({
-    queryKey: [PATH],
+    queryKey: [path],
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const trips: Trip[] = await get(`me/routes`);
+      const trips: Trip[] = await get(`me/trips`);
 
       return trips;
     },

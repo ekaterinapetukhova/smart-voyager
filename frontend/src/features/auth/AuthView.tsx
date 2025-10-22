@@ -18,7 +18,7 @@ export function AuthView() {
   });
 
   return (
-    <Container childrenContainerClassNames="flex-col pt-10 pb-20">
+    <Container childrenContainerClassNames="flex-col pt-10 pb-20 h-full">
       <Logo />
       <p className="text-text font-medium text-center w-3/4 text-xl grow">
         Create personalized trips, explore smart routes powered by AI, and connect with travel buddies who share your

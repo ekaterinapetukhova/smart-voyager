@@ -48,7 +48,7 @@ export function RegistrationView() {
   };
 
   return (
-    <Container childrenContainerClassNames="justify-center gap-x-20">
+    <Container childrenContainerClassNames="justify-center gap-x-20 h-full">
       <Title classNames="w-1/3">
         From Dreaming to Traveling – <span className="text-accent italic block font-bold">Start Now</span>
       </Title>

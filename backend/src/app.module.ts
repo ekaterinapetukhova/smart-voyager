@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { PrismaModule } from "./prisma/prisma.module";
-import { RouteModule } from "./route/route.module";
+import { TripModule } from "./trip/trip.module";
 import { UserModule } from "./user/user.module";
 import { ZodErrorExceptionFilter } from "./api/zod-error.exception-filter";
 import { GeoapifyModule } from "./geoapify/geoapify.module";
@@ -17,7 +17,7 @@ import { TripPointModule } from "./trip-point/trip-point.module";
 @Module({
   imports: [
     PrismaModule,
-    RouteModule,
+    TripModule,
     UserModule,
     GeoapifyModule,
     AuthModule,

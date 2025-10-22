@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Container } from "../../components/common/Container.tsx";
 import { SearchInput } from "../../components/common/SearchInput.tsx";
-import { useTripsByUser } from "../../hooks/use-trip.ts";
+import { useTripsByUser } from "../../hooks/use-trip-api.ts";
 import { LinkTo } from "../../components/common/LinkTo.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
 
-export const TripListView = () => {
+export function TripListView() {
   const [searchedTrip, setSearchedTrip] = useState("");
 
   const { data: trips } = useTripsByUser();
@@ -41,4 +41,4 @@ export const TripListView = () => {
       {trips && <ul className="w-full flex flex-col gap-y-4">{tripItems}</ul>}
     </Container>
   );
-};
+}

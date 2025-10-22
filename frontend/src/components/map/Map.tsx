@@ -1,109 +1,71 @@
-import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
-import { useEffect, useRef, useState } from "react";
-import L, { LatLngBounds } from "leaflet";
-import { GeoJSON } from "geojson";
-import { GeoJSON as GeoJSONLayer } from "react-leaflet/GeoJSON";
-import { CreatedTrip, TripMode, TripType } from "../../types/trip.types.ts";
+import { MapContainer, Polyline, TileLayer, useMap } from "react-leaflet";
+import L from "leaflet";
+import { useEffect, useMemo, useRef } from "react";
 import { config } from "../../config/config.ts";
-// import { geojson } from "../../geojson.ts";
-import MarkerIcon from "/marker.png";
-import { useTrip } from "../../hooks/use-trip.ts";
-import { TripPoint } from "../../types/trip-point.types.ts";
-import { MapPopup } from "./MapPopup.tsx";
-import { MarkerPopup } from "./MarkerPopup.tsx";
+import { ExistingTripPoint, TripPoint } from "../../types/trip-point.types.ts";
+import { createBoundsFromPoints } from "../../utils/create-bounds.ts";
+import { AddNewPointPopup } from "./AddNewPointPopup.tsx";
+import { ExistingPointMarker } from "./ExistingPointMarker.tsx";
 
-export interface GeoapifyPOI {
-  id: string;
-  properties: {
-    name: string;
-    category: string;
-  };
-  geometry: {
-    coordinates: [number, number]; // [lon, lat]
-  };
+export interface MapProps {
+  points: ExistingTripPoint[];
+  activePoint: string | null;
+  onRemovePoint: (id: string) => void;
+  onAddPoint: (point: TripPoint) => void;
+  classNames?: string;
 }
 
-export interface Map2Props {
-  initialBounds: LatLngBounds;
-  miniature?: boolean;
-  markers?: TripPoint[];
-  geojson?: GeoJSON;
-}
-
-export const Map = (props: Map2Props) => {
-  const [tripPoints, setTripPoints] = useState<TripPoint[]>(props.markers ?? []);
-  const [tripName, setTripName] = useState("");
-
-  const { addTrip } = useTrip();
-
-  const mapRef = useRef<L.Map | null>(null);
+function ProvideMapFragment(props: { setMap: (map: L.Map) => void }) {
+  const map = useMap();
 
   useEffect(() => {
-    return () => {
-      if (mapRef.current) {
-        mapRef.current.remove();
-      }
-    };
-  }, [mapRef]);
+    props.setMap(map);
+  }, [props, map]);
 
-  const addTripPoint = (newTripPoint: TripPoint) => {
-    setTripPoints((prev) => [
-      ...prev,
-      {
-        name: newTripPoint.name,
-        latitude: newTripPoint.latitude,
-        longitude: newTripPoint.longitude,
-        fullAddress: newTripPoint.fullAddress,
-      },
-    ]);
-  };
+  return <></>;
+}
 
-  const saveTrip = async () => {
-    const route: CreatedTrip = {
-      name: tripName,
-      mode: TripMode.Drive,
-      type: TripType.Balanced,
-      waypoints: tripPoints,
-      description: "",
-    };
+export function Map(props: MapProps) {
+  const map = useRef<L.Map | null>(null);
 
-    await addTrip(route);
+  const bounds = useMemo(() => {
+    const coordinates = props.points.map((x) => [x.latitude, x.longitude]);
 
-    setTripPoints([]);
-    setTripName("");
-  };
+    return createBoundsFromPoints(coordinates);
+  }, [props.points]);
 
-  const removePoint = (index: number) => {
-    setTripPoints((prev) => prev.filter((_, i) => i !== index));
-  };
+  useEffect(() => {
+    if (!map.current || !props.activePoint) return;
 
-  const markerIcon = new L.Icon({
-    iconUrl: MarkerIcon,
-    iconSize: [40, 50],
-    iconAnchor: [20, 40],
-    popupAnchor: [0, -40],
-  });
+    const foundPoint = props.points.find((x) => x.id === props.activePoint);
 
-  const NewTripOverlay = () => (
+    if (!foundPoint) return;
+
+    map.current.flyTo([foundPoint.latitude, foundPoint.longitude], 18, {
+      duration: 1,
+    });
+  }, [props, props.activePoint, props.points]);
+
+  const TripOverlay = () => (
     <>
-      {tripPoints.map((point, index) => (
-        <Marker key={index} position={[point.latitude, point.longitude]} icon={markerIcon}>
-          <MarkerPopup
-            onRemove={() => {
-              removePoint(index);
-            }}
-            point={point}
-          />
-        </Marker>
+      {props.points.map((point) => (
+        <ExistingPointMarker
+          key={point.id}
+          onRemove={() => {
+            props.onRemovePoint(point.id);
+          }}
+          point={point}
+        />
       ))}
-      {tripPoints.length >= 2 && (
+      {props.points.length >= 2 && (
         <Polyline
-          positions={tripPoints.map((p) => [p.latitude, p.longitude])}
+          positions={props.points.map((p) => [p.latitude, p.longitude])}
+          smoothFactor={1}
           pathOptions={{
             color: "#FF09EE",
             weight: 4,
             dashArray: "8 6",
-            lineCap: "square",
+            lineCap: "butt",
           }}
         />
       )}
@@ -111,62 +73,25 @@ export const Map = (props: Map2Props) => {
   );
 
   return (
-    <div className={props.miniature ? "" : "size-full"}>
-      {/*{!props.miniature && (*/}
-      {/*  <div className="flex gap-x-5 max-w-sm justify-center items-center text-text">*/}
-      {/*    <TextInput*/}
-      {/*      placeholder="Trip name"*/}
-      {/*      value={tripName}*/}
-      {/*      onChange={(e) => {*/}
-      {/*        setTripName(e.target.value);*/}
-      {/*      }}*/}
-      {/*    />*/}
-      {/*    <div className="w-1/3">*/}
-      {/*      <Button label="Save route" onClick={() => void saveTrip()} size="medium" />*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*)}*/}
-
-      <div className="flex justify-between">
-        <div className="flex flex-col gap-y-4">
-          <div className="flex gap-2 items-center"></div>
-
-          <div className="flex gap-2 items-center"></div>
-
-          <div className="flex gap-2 items-center"></div>
-        </div>
-      </div>
-
-      <div className={["relative z-0 mx-auto", props.miniature ? "h-60 w-80" : "h-4/5 w-full"].join(" ")}>
+    <div className={["size-full", props.classNames ?? ""].join(" ")}>
+      <div className="relative z-0 mx-auto h-4/5 w-full">
         <MapContainer
           className="h-full outline-none"
           scrollWheelZoom
           preferCanvas={true}
-          zoomControl={!props.miniature}
-          bounds={props.initialBounds}
+          zoomControl={true}
+          bounds={bounds}
         >
+          <ProvideMapFragment setMap={(m) => (map.current = m)} />
           <TileLayer
             attribution='Powered by <a href="https://www.geoapify.com/">Geoapify</a>'
             url={`https://maps.geoapify.com/v1/tile/osm-carto/{z}/{x}/{y}@2x.png?apiKey=${config.geoapifyKey}`}
             className="filter saturate-200 hue-rotate-180 contrast-110"
           />
-          <MapPopup onAdd={addTripPoint} />
-          {/*<FilteredPoints />*/}
-          <NewTripOverlay />
-          {props.geojson && (
-            <>
-              <GeoJSONLayer
-                data={props.geojson}
-                style={() => ({
-                  color: "#FF09EE",
-                  weight: 5,
-                  opacity: 1.0,
-                })}
-              />
-            </>
-          )}
+          <AddNewPointPopup onAdd={props.onAddPoint} />
+          <TripOverlay />
         </MapContainer>
       </div>
     </div>
   );
-};
+}

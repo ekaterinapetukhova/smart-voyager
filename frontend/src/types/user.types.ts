@@ -17,6 +17,8 @@ export const userSchema = z.object({
   city: z.string().nullable(),
   languages: z.string().nullable(),
   description: z.string().nullable(),
+  tripInterest: z.array(z.string()),
+  tripGoals: z.array(z.string()),
 });
 
 export type User = z.output<typeof userSchema>;

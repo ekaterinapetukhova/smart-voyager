@@ -1,7 +1,7 @@
 import UserAvatar from "/user-avatar.jpg";
 
 interface AvatarProps {
-  src?: string | null;
+  src?: string;
   className?: string;
 }
 

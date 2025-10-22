@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { GeoapifyModule } from "../geoapify/geoapify.module";
-import { RouteModule } from "../route/route.module";
+import { TripModule } from "../trip/trip.module";
 import { UserModule } from "../user/user.module";
 import { OpenaiController } from "./openai.controller";
 import { OpenAIService } from "./openai.service";
@@ -8,6 +8,6 @@ import { OpenAIService } from "./openai.service";
 @Module({
   controllers: [OpenaiController],
   providers: [OpenAIService],
-  imports: [GeoapifyModule, RouteModule, UserModule],
+  imports: [GeoapifyModule, TripModule, UserModule],
 })
 export class AIModule {}

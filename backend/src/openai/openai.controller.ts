@@ -10,17 +10,17 @@ export class OpenaiController {
   public constructor(private readonly openaiService: OpenAIService) {}
 
   @Post("suggest-trip")
-  public async suggestTrip(@GetUser() user: User, @Body() body: unknown): Promise<{ routeId: string } | undefined> {
+  public async suggestTrip(@GetUser() user: User, @Body() body: unknown): Promise<{ tripId: string } | undefined> {
     const validAiContentMessage = validAiContentMessageSchema.parse(body);
 
-    const routeId = await this.openaiService.execute(validAiContentMessage, user.id);
+    const tripId = await this.openaiService.execute(validAiContentMessage, user.id);
 
-    if (!routeId) {
-      throw new ServerError("Route creation failed");
+    if (!tripId) {
+      throw new ServerError("Trip creation failed");
     }
 
     return {
-      routeId,
+      tripId,
     };
   }
 

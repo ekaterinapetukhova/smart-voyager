@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { Agent, run, RunContext, tool, webSearchTool } from "@openai/agents";
 import z from "zod";
-import { RouteMode, RouteType } from "@prisma/client";
-import { CreateRouteService } from "../route/service/create-route.service";
-import { CreateRouteDto } from "../route/dto/create-route.dto";
+import { CreateTripService } from "../trip/service/create-trip.service";
+import { CreateTripDto } from "../trip/dto/create-trip.dto";
 import { GetUserByIdService } from "../user/service/get-user-by-id.service";
 import { GeoapifyAutocompleteService } from "../geoapify/service/geoapify-autocomplete.service";
 import { ValidAiContentMessage } from "./dto/suggest-trip-content.dto";
@@ -40,7 +39,7 @@ export class OpenAIService {
 
   public constructor(
     private readonly geoapifyAutocompleteService: GeoapifyAutocompleteService,
-    private readonly createRouteService: CreateRouteService,
+    private readonly createTripService: CreateTripService,
     private readonly getUserByIdService: GetUserByIdService
   ) {
     const planTripTool = tool<typeof validFormattedResponseSchema, AIExecutionContext, string>({
@@ -48,7 +47,7 @@ export class OpenAIService {
       description: "plan a trip with places",
       parameters: validFormattedResponseSchema,
       execute: async (trip, context: RunContext<AIExecutionContext> | undefined) => {
-        const createRouteDto = await this.formatResponse(trip);
+        const createTripDto = await this.formatResponse(trip);
 
         if (!context) {
           return "failed to create a trip, stop now";
@@ -56,9 +55,9 @@ export class OpenAIService {
 
         const user = await this.getUserByIdService.execute(context.context.userId);
 
-        const route = await this.createRouteService.execute(createRouteDto, user);
+        const newTrip = await this.createTripService.execute(createTripDto, user);
 
-        return route.id;
+        return newTrip.id;
       },
     });
 
@@ -113,8 +112,8 @@ export class OpenAIService {
     return toolResult.output.text;
   }
 
-  private async formatResponse(response: ValidFormattedResponse): Promise<CreateRouteDto> {
-    const waypoints = await Promise.all(
+  private async formatResponse(response: ValidFormattedResponse): Promise<CreateTripDto> {
+    const tripPoints = await Promise.all(
       response.placesToVisit.map(async (place) => {
         try {
           const { lat, lng, fullAddress } = await this.geoapifyAutocompleteService.execute(
@@ -128,21 +127,16 @@ export class OpenAIService {
             fullAddress: fullAddress,
           };
         } catch (e) {
-          console.log(e);
           return null;
         }
       })
     );
 
-    const result: CreateRouteDto = {
-      waypoints: waypoints.filter((x) => !!x),
-      type: RouteType.balanced,
+    return {
+      tripPoints: tripPoints.filter((x) => !!x),
       name: `AI generated - ${response.name}`,
-      mode: RouteMode.transit,
       isProposal: true,
       description: response.description,
     };
-
-    return result;
   }
 }

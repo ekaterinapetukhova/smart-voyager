@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import { updateUserStore, useTokenStore, useUserStore } from "../../store/user-store.ts";
+import { updateUserStore, useUserStore } from "../../store/user-store.ts";
 import { Avatar } from "../../components/common/Avatar.tsx";
-import { Popup } from "../../components/common/Popup.tsx";
-import { Button } from "../../components/common/Button.tsx";
+import { UserProfilePopup } from "./UserProfilePopup.tsx";
 
-export function UserProfileView() {
+export function UserProfileButton() {
   const { user } = useUserStore();
-  const logout = useTokenStore((s) => s.logout);
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -59,19 +57,12 @@ export function UserProfileView() {
         <div className="size-16 absolute -top-1 -left-1 animated-gradient opacity-30 group-hover:opacity-100 group-hover:animate-gradient transition-all duration-500 ease-out -z-10"></div>
       </div>
       {showPopup && (
-        <Popup
-          title={`${user.name}'s profile`}
-          closePopup={() => {
+        <UserProfilePopup
+          user={user}
+          onClose={() => {
             setShowPopup(false);
           }}
-          containerClassName="bg-background"
-        >
-          <div className="flex flex-col">
-            <Avatar src={user.avatar} className="size-80" />
-            <ul>{renderUserInfoItems}</ul>
-            <Button label="Log out" size="medium" onClick={logout} />
-          </div>
-        </Popup>
+        />
       )}
     </>
   );

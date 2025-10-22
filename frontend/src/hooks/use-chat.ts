@@ -55,11 +55,9 @@ export const useChatById = (chatId: string) => {
     queryKey: [PATH, chatId],
     queryFn: async () => {
       const { get } = authorizedFetch();
-      const response = await get(`${PATH}/${chatId}`);
+      const chat: Chat = await get(`${PATH}/${chatId}`);
 
-      if (!response.ok) throw new Error("Failed to fetch chat");
-
-      return (await response.json()) as Chat;
+      return chat;
     },
 
     staleTime: 5000,
@@ -73,11 +71,9 @@ export const useChatByMembers = (receiverId: string) => {
     queryKey: [PATH, receiverId],
     queryFn: async () => {
       const { get } = authorizedFetch();
-      const response = await get(`${PATH}/${receiverId}`);
+      const chat: Chat = await get(`${PATH}/${receiverId}`);
 
-      if (!response.ok) throw new Error("Failed to fetch chat");
-
-      return (await response.json()) as Chat;
+      return chat;
     },
   });
 };

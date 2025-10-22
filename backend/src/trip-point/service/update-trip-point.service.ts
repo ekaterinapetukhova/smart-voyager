@@ -7,7 +7,7 @@ export class UpdateTripPointService {
   public constructor(private readonly prisma: PrismaService) {}
 
   public async execute(id: string, data: UpdateTripPointDto): Promise<void> {
-    await this.prisma.routeWaypoint.update({
+    await this.prisma.tripPoint.update({
       where: {
         id,
       },

@@ -6,7 +6,7 @@ interface SearchInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const SearchInput = (props: SearchInputProps) => {
+export function SearchInput(props: SearchInputProps) {
   const inputId = `input-${props.placeholder}`;
 
   return (
@@ -21,4 +21,4 @@ export const SearchInput = (props: SearchInputProps) => {
       />
     </div>
   );
-};
+}

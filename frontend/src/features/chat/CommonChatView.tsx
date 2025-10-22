@@ -21,8 +21,6 @@ export function CommonChatView() {
       return null;
     }
 
-    console.log(member.avatar);
-
     const lastMessage = chat.chatMessage[chat.chatMessage.length - 1];
 
     return (

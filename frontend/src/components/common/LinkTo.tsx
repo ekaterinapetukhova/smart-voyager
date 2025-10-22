@@ -9,7 +9,7 @@ interface LinkToProps {
   isActive?: boolean;
 }
 
-export const LinkTo = (props: LinkToProps) => {
+export function LinkTo(props: LinkToProps) {
   const buttonSpanCommonClassNames =
     "absolute top-0 w-0 h-full bg-button-primary-hover transform -skew-x-12 group-hover:w-[60%] transition-all duration-300 ease-out";
 
@@ -52,4 +52,4 @@ export const LinkTo = (props: LinkToProps) => {
       {/*{props.imgSrc && }*/}
     </Link>
   );
-};
+}

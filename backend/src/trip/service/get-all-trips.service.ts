@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { Route } from "@prisma/client";
+import { Trip } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
-export class GetAllRoutesService {
+export class GetAllTripsService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public execute(): Promise<Route[]> {
-    return this.prisma.route.findMany({
+  public execute(): Promise<Trip[]> {
+    return this.prisma.trip.findMany({
       include: {
-        waypoints: true,
+        tripPoints: true,
       },
     });
   }

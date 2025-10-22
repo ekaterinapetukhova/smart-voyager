@@ -1,5 +1,5 @@
 import { Popup, useMapEvents } from "react-leaflet";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { TripPoint } from "../../types/trip-point.types";
 import { Button } from "../common/Button.tsx";
 import { getPlaceData } from "../../utils/get-place-data.ts";
@@ -15,7 +15,7 @@ interface NewPointFormProps {
   onHide: () => void;
 }
 
-const NewPointForm = (props: NewPointFormProps) => {
+function NewPointForm(props: NewPointFormProps) {
   const [pointName, setPointName] = useState(props.selectedPoint.name);
 
   return (
@@ -45,62 +45,62 @@ const NewPointForm = (props: NewPointFormProps) => {
       </div>
     </div>
   );
-};
+}
 
-export const MapPopup = (props: MapPopupProps) => {
+export function AddNewPointPopup(props: MapPopupProps) {
   const [selectedPoint, setSelectedPoint] = useState<TripPoint | null>(null);
+  const isPopupOpen = useRef(false);
 
   useMapEvents({
     click: (e) => {
+      if (!isPopupOpen.current) {
+        isPopupOpen.current = true;
+      } else {
+        isPopupOpen.current = false;
+        setSelectedPoint(null);
+        return;
+      }
+
       const target = e.originalEvent.target as HTMLElement;
 
-      if (target.closest(".leaflet-popup") || target.closest(".removal-button")) return;
+      if (!target.closest(".leaflet-zoom-animated")) return;
 
       const latlng = e.latlng;
 
-      void (async () => {
-        const result = await getPlaceData(latlng.lat, latlng.lng);
-
-        if (!result) {
-          return null;
-        }
-
-        if (result.name) {
+      void getPlaceData(latlng.lat, latlng.lng).then((data) => {
+        if (data?.name) {
           const newRoutePoint: TripPoint = {
-            name: result.name,
+            name: data.name,
             latitude: latlng.lat,
             longitude: latlng.lng,
-            fullAddress: result.name,
+            fullAddress: data.name,
           };
 
           setSelectedPoint(newRoutePoint);
         }
-      })();
+      });
     },
   });
 
   return (
     selectedPoint && (
-      <>
-        <Popup
-          className="font-font shadow-none"
-          position={[selectedPoint.latitude, selectedPoint.longitude]}
-          closeButton={false}
-          // eventHandlers={{
-          //   remove: () => {
-          //     setSelectedPoint(null);
-          //   },
-          // }}
-        >
-          <NewPointForm
-            selectedPoint={selectedPoint}
-            onAdd={props.onAdd}
-            onHide={() => {
-              setSelectedPoint(null);
-            }}
-          />
-        </Popup>
-      </>
+      <Popup
+        className="font-font shadow-none"
+        position={[selectedPoint.latitude, selectedPoint.longitude]}
+        closeButton={false}
+      >
+        <NewPointForm
+          selectedPoint={selectedPoint}
+          onAdd={(point) => {
+            props.onAdd(point);
+
+            setSelectedPoint(null);
+          }}
+          onHide={() => {
+            setSelectedPoint(null);
+          }}
+        />
+      </Popup>
     )
   );
-};
+}

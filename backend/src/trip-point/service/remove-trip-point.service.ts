@@ -6,7 +6,7 @@ export class RemoveTripPointService {
   public constructor(private readonly prisma: PrismaService) {}
 
   public async execute(id: string): Promise<void> {
-    await this.prisma.routeWaypoint.delete({
+    await this.prisma.tripPoint.delete({
       where: {
         id,
       },

@@ -7,7 +7,7 @@ interface TextInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const TextInput = (props: TextInputProps) => {
+export function TextInput(props: TextInputProps) {
   const inputId = `input-${props.label ?? props.placeholder}`;
 
   return (
@@ -27,4 +27,4 @@ export const TextInput = (props: TextInputProps) => {
       />
     </div>
   );
-};
+}

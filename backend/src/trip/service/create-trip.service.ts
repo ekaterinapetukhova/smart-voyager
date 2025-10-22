@@ -1,21 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, Route, User } from "@prisma/client";
+import { Prisma, Trip, User } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
-import { CreateRouteDto } from "../dto/create-route.dto";
+import { CreateTripDto } from "../dto/create-trip.dto";
 
 @Injectable()
-export class CreateRouteService {
+export class CreateTripService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public async execute(data: CreateRouteDto, user: User): Promise<Route> {
-    const createData: Prisma.RouteCreateInput = {
+  public async execute(data: CreateTripDto, user: User): Promise<Trip> {
+    const createData: Prisma.TripCreateInput = {
       name: data.name,
-      mode: data.mode,
-      type: data.type,
       isProposal: data.isProposal,
       description: data.description,
-      waypoints: {
-        create: data.waypoints.map((waypoint, i) => ({
+      tripPoints: {
+        create: data.tripPoints.map((waypoint, i) => ({
           index: i,
           latitude: waypoint.latitude,
           longitude: waypoint.longitude,
@@ -26,7 +24,7 @@ export class CreateRouteService {
       user: { connect: { id: user?.id } },
     };
 
-    return this.prisma.route.create({
+    return this.prisma.trip.create({
       data: createData,
     });
   }

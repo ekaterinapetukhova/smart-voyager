@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
 import { CreateTripPoint, SwapTripPoints, UpdateTripPoint } from "../types/trip-point.types.ts";
-import { tripQueryKey } from "./use-trip.ts";
+import { tripQueryKey } from "./use-trip-api.ts";
 
 const tripPointPath = "trip-point";
 
@@ -48,6 +48,6 @@ export const useTripPointAPI = () => {
     addTripPoint: add.mutateAsync,
     deleteTripPoint: remove.mutateAsync,
     swapTripPoints: swap.mutateAsync,
-    updateTripPoints: update.mutateAsync,
+    updateTripPoint: update.mutateAsync,
   };
 };

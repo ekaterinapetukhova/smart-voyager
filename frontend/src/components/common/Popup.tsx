@@ -29,11 +29,8 @@ export function Popup(props: PopupProps) {
 
   return (
     <div className="inset-0 fixed bg-black/80 z-10 size-full flex justify-center items-center">
-      <div className={["w-fit fit px-5 py-2 relative popup", props.containerClassName ?? ""].join(" ")} ref={popupRef}>
-        <div className="flex flex-col items-center gap-y-4">
-          <span className="text-xl font-bold">{props.title}</span>
-          {props.children}
-        </div>
+      <div className={["p-5 relative popup", props.containerClassName ?? ""].join(" ")} ref={popupRef}>
+        {props.children}
         <span className="text-text cursor-pointer absolute top-2 right-2" onClick={props.closePopup}>
           X
         </span>

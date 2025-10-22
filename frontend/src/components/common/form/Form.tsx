@@ -69,7 +69,7 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
     }
   }
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: (data: typeof formData) => props.sendRequest(data),
     onSuccess: () => {
       if (props.onSuccess) {
@@ -120,7 +120,7 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
       <div className="flex flex-col gap-y-3 w-full">{formFields}</div>
       {formErrors && <span className="text-error text-xs mt-4">{formErrors}</span>}
       <div className="w-2/3 mx-auto mt-10">
-        <Button type="submit" label={props.buttonText} size="large" />
+        <Button type="submit" label={props.buttonText} size="large" isLoading={isPending} />
       </div>
     </form>
   );

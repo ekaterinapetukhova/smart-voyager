@@ -2,13 +2,13 @@ import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common";
 import { AuthMiddleware } from "../middleware/auth.middleware";
 import { PrismaModule } from "../prisma/prisma.module";
 import { UserModule } from "../user/user.module";
-import { RouteModule } from "../route/route.module";
+import { TripModule } from "../trip/trip.module";
 import { FilesModule } from "../files/files.module";
 import { MeController } from "./me.controller";
 import { GetMeService } from "./service/get-me.service";
 
 @Module({
-  imports: [PrismaModule, UserModule, RouteModule, FilesModule],
+  imports: [PrismaModule, UserModule, TripModule, FilesModule],
   controllers: [MeController],
   providers: [GetMeService],
 })

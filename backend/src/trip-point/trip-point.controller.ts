@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Param, ParseUUIDPipe, Post, Put } from "@nestjs/common";
-import { RouteWaypoint } from "@prisma/client";
+import { TripPoint } from "@prisma/client";
 import { CreateTripPointService } from "./service/create-trip-point.service";
 import { createTripPointDtoSchema } from "./dto/create-trip-point.dto";
 import { RemoveTripPointService } from "./service/remove-trip-point.service";
@@ -18,7 +18,7 @@ export class TripPointController {
   ) {}
 
   @Post()
-  public create(@Body() data: unknown): Promise<RouteWaypoint> {
+  public create(@Body() data: unknown): Promise<TripPoint> {
     const createTripPointDto = createTripPointDtoSchema.parse(data);
 
     return this.createTripPointService.execute(createTripPointDto);
