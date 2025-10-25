@@ -1,7 +1,7 @@
-import { LinkTo } from "../../components/common/LinkTo.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
 import { Container } from "../../components/common/Container.tsx";
 import { Logo } from "../../components/logo/Logo.tsx";
+import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 
 export function AuthView() {
   const authItems = {
@@ -12,7 +12,16 @@ export function AuthView() {
   const authItemsList = Object.values(authItems).map(({ name, path }) => {
     return (
       <li key={name}>
-        <LinkTo type="button" label={name} url={path} />
+        <ButtonLink
+          size="large"
+          label={name}
+          componentVariants={{
+            link: {
+              selected: true,
+              url: path,
+            },
+          }}
+        />
       </li>
     );
   });

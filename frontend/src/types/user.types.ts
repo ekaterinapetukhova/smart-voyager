@@ -1,24 +1,47 @@
-import { z } from "zod";
-
 export enum Gender {
   Male = "male",
   Female = "female",
 }
 
-export const userSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  surname: z.string(),
-  email: z.email(),
-  birthDate: z.iso.datetime(),
-  gender: z.enum(Gender),
-  avatar: z.base64(),
-  country: z.string().nullable(),
-  city: z.string().nullable(),
-  languages: z.string().nullable(),
-  description: z.string().nullable(),
-  tripInterest: z.array(z.string()),
-  tripGoals: z.array(z.string()),
-});
+enum TripInterest {
+  History = "history",
+  Culture = "culture",
+  Food = "food",
+  Nature = "nature",
+  Sport = "sport",
+  Relaxation = "relaxation",
+  Events = "events",
+  Architecture = "architecture",
+  Photography = "photography",
+  Shopping = "shopping",
+  Nightlife = "nightlife",
+}
 
-export type User = z.output<typeof userSchema>;
+enum TripGoals {
+  SharedTravelCosts = "sharedTravelCosts",
+  Safety = "safety",
+  MeetingLocals = "meetingLocals",
+  PracticingLanguages = "practicingLanguages",
+  GroupActivities = "groupActivities",
+  Volunteering = "volunteering",
+  ContentCreation = "contentCreation",
+  LongTermCompanionship = "longTermCompanionship",
+  SpontaneousAdventures = "spontaneousAdventures",
+  Support = "support",
+}
+
+export interface User {
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+  birthDate: Date;
+  gender: Gender;
+  avatar: string;
+  country: string | null;
+  city: string | null;
+  languages: string | null;
+  description: string | null;
+  tripInterest: TripInterest[];
+  tripGoals: TripGoals[];
+}

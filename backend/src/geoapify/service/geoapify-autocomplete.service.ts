@@ -17,6 +17,18 @@ interface Result {
   lat: number;
   address_line1: string;
   address_line2: string;
+  result_type:
+    | "unknown"
+    | "amenity"
+    | "building"
+    | "street"
+    | "suburb"
+    | "district"
+    | "postcode"
+    | "city"
+    | "county"
+    | "state"
+    | "country";
 }
 
 @Injectable()
@@ -40,10 +52,15 @@ export class GeoapifyAutocompleteService {
       throw new ServerError("Location not found.");
     }
 
+    const placeResult =
+      response.results.find((place) => place.result_type === "amenity") ??
+      response.results.find((place) => place.result_type === "building") ??
+      response.results[0];
+
     return {
-      lat: response.results[0].lat,
-      lng: response.results[0].lon,
-      fullAddress: `${response.results[0].address_line2}`,
+      lat: placeResult.lat,
+      lng: placeResult.lon,
+      fullAddress: placeResult.address_line2,
     };
   }
 }

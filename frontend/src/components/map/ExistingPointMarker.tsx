@@ -53,6 +53,7 @@ function PointName(props: PointNameProps) {
             className="cursor-pointer text-text inline-block ml-2 size-4 -mt-1 hover:text-accent transition"
             onClick={() => {
               props.onSaveName(pointName);
+              props.onSaveName(pointName);
               setEditMode(false);
             }}
           />
@@ -134,7 +135,7 @@ function PopupContent(props: PopupContentProps) {
             {/*<Button onClick={props.onChange} label="Change position" size="small" />*/}
             <IconMapPinPin className="text-button-primary cursor-pointer" onClick={props.onChange} />
             {/*<Button onClick={props.onRemove} label="Remove point" size="small" />*/}
-            <IconTrash className="text-button-primary cursor-pointer" onClick={props.onChange} />
+            <IconTrash className="text-button-primary cursor-pointer" onClick={props.onRemove} />
           </>
         )}
       </div>
@@ -155,11 +156,11 @@ export function ExistingPointMarker(props: MarkerPopupProps) {
   }
 
   const b = new L.DivIcon({
-    html: `<div style="transform:translate(-50%, -100%)" class="flex flex-col justify-start items-center"><p>${props.point.name}</p><img class="size-12" src="${MarkerIcon}" /></div>`,
+    html: `<div style="transform:translate(-50%, -100%)" class="flex flex-col gap-y-1 justify-start items-center"><p class="font-font text-sm font-bold text-center text-background bg-accent leading-4 shadow-md shadow-background/50 p-1">${props.point.name}</p><img class="size-12" src="${MarkerIcon}" alt="marker" /></div>`,
     iconSize: [120, 0],
     className: "",
     iconAnchor: [0, 0],
-    popupAnchor: [0, 0],
+    popupAnchor: [0, -30],
   });
 
   return (

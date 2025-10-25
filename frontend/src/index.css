@@ -22,6 +22,31 @@
     --color-error: var(--error);
 
     --font-font: var(--font);
+
+    --animate-rotate: rotate 2s infinite;
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(-360deg) scale(10)
+        }
+        100% {
+            transform: rotate(0deg) scale(10)
+        }
+    }
+
+    --animate-neon-gradient: neon-gradient 4s infinite alternate;
+
+    @keyframes neon-gradient {
+        0% {
+            background-position: 0 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0 50%;
+        }
+    }
 }
 
 body {
@@ -56,30 +81,13 @@ a, button, input {
     background-size: 200% 200%;
 }
 
-.animate-gradient {
-    animation: gradient 6s ease infinite;
-}
-
-@keyframes gradient {
-    0% {
-        background-position: 0 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0 50%;
-    }
-}
-
-.leaflet-popup-content {
-    /*margin: 1rem 0.5rem;*/
-}
-
 .leaflet-popup {
-    /*margin: 1rem 0.5rem;*/
     padding: 0 !important;
     margin: 0 !important;
+}
+
+.leaflet-container {
+    background-color: rgba(255, 0, 0, 0.0);
 }
 
 .leaflet-popup-content-wrapper {

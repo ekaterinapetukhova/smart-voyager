@@ -1,7 +1,7 @@
 import { Avatar } from "../../components/common/Avatar.tsx";
-import { Button } from "../../components/common/Button.tsx";
 import { User } from "../../types/user.types.ts";
 import { useChatByMembers } from "../../hooks/use-chat.ts";
+import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 
 interface TripMateCardProps {
   tripMate: User;
@@ -17,7 +17,18 @@ export function TripMateCard(props: TripMateCardProps) {
       <span>{props.tripMate.name}</span>
       <span>{props.tripMate.surname}</span>
       <span>{props.tripMate.description}</span>
-      <Button label="Ask for Chat" onClick={props.onClick} />
+      <ButtonLink
+        size="medium"
+        label="Ask for Chat"
+        componentVariants={{
+          button: {
+            selected: true,
+            onClick: () => {
+              props.onClick();
+            },
+          },
+        }}
+      />
     </li>
   );
 }

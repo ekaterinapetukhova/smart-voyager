@@ -3,10 +3,12 @@ import { useState } from "react";
 
 interface FormFieldProps {
   label?: string;
-  id: string;
-  type: "text" | "password" | "date" | "file" | "textarea" | "radio";
+  id?: string;
+  type: "text" | "password" | "date" | "file" | "textarea" | "radio" | "checkbox";
   name: string;
   value?: string;
+  checked?: boolean;
+  files?: FileList;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errors?: string;
   options?: string[];
@@ -33,6 +35,21 @@ export function FormField(props: FormFieldProps) {
             {option[0].toUpperCase() + option.slice(1)}
           </label>
         ))}
+      </div>
+    );
+  } else if (props.type === "checkbox") {
+    field = (
+      <div className="flex gap-x-5 mt-2">
+        <label className="flex items-center gap-x-2 text-lg cursor-pointer has-checked:text-accent">
+          <input
+            type="checkbox"
+            name={props.name}
+            checked={props.checked}
+            onChange={props.onChange}
+            className="hidden"
+          />
+          {props.label}
+        </label>
       </div>
     );
   } else {

@@ -2,7 +2,7 @@ import * as React from "react";
 import { FormEvent, useState } from "react";
 import { ZodError } from "zod";
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "../Button.tsx";
+import { ButtonLink } from "../ButtonLink.tsx";
 import { FormField } from "./FormField.tsx";
 
 export interface InputProp {
@@ -119,8 +119,18 @@ export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
     <form className={["flex flex-col", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
       <div className="flex flex-col gap-y-3 w-full">{formFields}</div>
       {formErrors && <span className="text-error text-xs mt-4">{formErrors}</span>}
-      <div className="w-2/3 mx-auto mt-10">
-        <Button type="submit" label={props.buttonText} size="large" isLoading={isPending} />
+      <div className="w-fit mx-auto mt-10">
+        <ButtonLink
+          size="large"
+          label={props.buttonText}
+          componentVariants={{
+            button: {
+              selected: true,
+              isLoading: isPending,
+              type: "submit",
+            },
+          }}
+        />
       </div>
     </form>
   );

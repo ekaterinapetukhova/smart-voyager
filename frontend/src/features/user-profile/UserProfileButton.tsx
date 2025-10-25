@@ -16,32 +16,6 @@ export function UserProfileButton() {
     return;
   }
 
-  const renderUserInfoItems = Object.entries(user)
-    .filter(([key, value]) => key !== "avatar" && key !== "id" && value)
-    .map(([key, value]) => {
-      if (!value) {
-        return;
-      }
-
-      let formatedKey;
-      let formatedValue;
-
-      if (key === "birthDate") {
-        formatedKey = "Date of birth";
-        formatedValue = new Date(value).toLocaleString().split(",")[0];
-      } else {
-        formatedKey = key[0].toUpperCase() + key.slice(1);
-        formatedValue = value;
-      }
-
-      return (
-        <li key={key} className="text-text flex gap-x-4">
-          <p>{formatedKey}</p>
-          <p>{formatedValue}</p>
-        </li>
-      );
-    });
-
   return (
     <>
       <div

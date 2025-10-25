@@ -25,12 +25,7 @@ export function Sidebar() {
   const renderMenuItems = Object.values(menuItems).map((value) => {
     return (
       <li key={value.name}>
-        <LinkTo
-          type="link"
-          label={value.name}
-          url={value.path}
-          isActive={value.path === (location.pathname as RouterEnum)}
-        />
+        <LinkTo label={value.name} url={value.path} isActive={value.path === (location.pathname as RouterEnum)} />
       </li>
     );
   });

@@ -97,15 +97,15 @@ export function PlacesList(props: PlacesListProps) {
       </li>
     );
   });
-  
+
   return (
-    <div className="flex flex-col gap-y-4 h-full">
+    <div className="flex flex-col gap-y-4 max-h-full">
       <h3 className="font-bold text-2xl text-accent">Your trip places list</h3>
-      <div className="flex relative h-full">
+      <div className="flex relative grow">
         <div className="flex justify-center w-6 absolute left-0 top-0 bottom-0 -z-10">
           <div className="h-full w-0.5 bg-accent"></div>
         </div>
-        <ul className="flex flex-col gap-y-4 overflow-y-auto">{placeList}</ul>
+        <ul className="absolute inset-0 overflow-y-scroll flex flex-col gap-y-6">{placeList}</ul>
       </div>
     </div>
   );

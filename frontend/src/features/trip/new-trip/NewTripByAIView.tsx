@@ -14,11 +14,11 @@ export function NewTripByAIView() {
   const sendRequest = async (data: ValidAiContentMessage) => {
     const { post } = authorizedFetch();
 
-    const response = await post("ai/suggest-trip", data);
+    const response: {
+      tripId: string;
+    } = await post("ai/suggest-trip", data);
 
-    const { routeId } = await response.json();
-
-    void navigate(`/trip/${routeId}`);
+    void navigate(`/trip/${response.tripId}`);
   };
 
   return (

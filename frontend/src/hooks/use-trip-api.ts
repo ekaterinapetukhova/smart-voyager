@@ -61,9 +61,9 @@ export const useTripById = (tripId: string) => {
     queryFn: async () => {
       const { get } = authorizedFetch();
 
-      const trips: Trip = await get(`route/${tripId}`);
+      const trip: Trip = await get(`${path}/${tripId}`);
 
-      return trips;
+      return trip;
     },
   });
 };

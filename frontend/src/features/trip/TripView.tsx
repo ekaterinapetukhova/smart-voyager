@@ -21,6 +21,8 @@ export function TripView() {
 
   const { data: trip } = useTripById(tripId);
 
+  console.log(trip);
+
   if (!trip) {
     return;
   }
@@ -30,7 +32,7 @@ export function TripView() {
   // };
 
   return (
-    <Container childrenContainerClassNames="flex-col gap-y-10">
+    <Container childrenContainerClassNames="flex-col gap-y-10 h-svh min-h-svh">
       {editTitleMode ? (
         <>
           <TextInput
@@ -62,19 +64,19 @@ export function TripView() {
       )}
 
       <p className="text-text">{trip.description}</p>
-      <div className="size-full grid grid-cols-3 gap-x-10">
+      <div className="w-full grid grid-cols-3 gap-x-10 grow">
         <PlacesList
-          places={trip.waypoints}
+          places={trip.tripPoints}
           onClick={(id) => {
             setClickTripId(id);
           }}
         />
         <Map
-          points={trip.waypoints}
+          points={trip.tripPoints}
           onRemovePoint={(id) => void tripPointApi.deleteTripPoint(id)}
           onAddPoint={(point) => void tripPointApi.addTripPoint({ ...point, tripId })}
           activePoint={clickTripId ?? null}
-          classNames="col-span-2 h-[800px]"
+          classNames="col-span-2"
         />
       </div>
     </Container>

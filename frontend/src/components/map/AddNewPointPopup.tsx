@@ -1,9 +1,9 @@
 import { Popup, useMapEvents } from "react-leaflet";
 import { useRef, useState } from "react";
 import { TripPoint } from "../../types/trip-point.types";
-import { Button } from "../common/Button.tsx";
 import { getPlaceData } from "../../utils/get-place-data.ts";
 import { TextInput } from "../common/TextInput.tsx";
+import { ButtonLink } from "../common/ButtonLink.tsx";
 
 interface MapPopupProps {
   onAdd: (point: TripPoint) => void;
@@ -35,12 +35,17 @@ function NewPointForm(props: NewPointFormProps) {
         }}
       />
       <div className="w-fit">
-        <Button
-          onClick={() => {
-            props.onAdd({ ...props.selectedPoint, name: pointName });
-          }}
-          label="Add point"
+        <ButtonLink
           size="medium"
+          label="Add point"
+          componentVariants={{
+            button: {
+              selected: true,
+              onClick: () => {
+                props.onAdd({ ...props.selectedPoint, name: pointName });
+              },
+            },
+          }}
         />
       </div>
     </div>

@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { Container } from "../../components/common/Container.tsx";
 import { SearchInput } from "../../components/common/SearchInput.tsx";
 import { useTripsByUser } from "../../hooks/use-trip-api.ts";
-import { LinkTo } from "../../components/common/LinkTo.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
+import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 
 export function TripListView() {
   const [searchedTrip, setSearchedTrip] = useState("");
@@ -34,7 +34,16 @@ export function TripListView() {
           }}
         />
         <div className="w-1/3">
-          <LinkTo label="Create new trip" type="button" url={RouterEnum.NewTripModeChoice} />
+          <ButtonLink
+            size="large"
+            label="Create new trip"
+            componentVariants={{
+              link: {
+                selected: true,
+                url: RouterEnum.NewTripModeChoice,
+              },
+            }}
+          />
         </div>
       </div>
 

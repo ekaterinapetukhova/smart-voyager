@@ -90,8 +90,11 @@ export class OpenAIService {
       name: "trip planner",
       model: "gpt-5",
       instructions:
-        "you are agent that provides exciting and interesting trips for user mainly focused on the places and reproduce answer in json format with name of the trip, short description and places one-by-one. Verify all provided places exist before including them into final list",
+        "you are an agent that provides exciting and interesting trips for user mainly focused on the places and saves the trip using the plan_trip tool. You must save the trip and verify all provided places exist before including them into final list. Aim for maximum 10 places.",
       tools: [planTripTool, webSearchTool(), verifyPlaceTool],
+      modelSettings: {
+        toolChoice: "required",
+      },
     });
   }
 
@@ -100,7 +103,7 @@ export class OpenAIService {
       context: {
         userId,
       } satisfies AIExecutionContext,
-      maxTurns: 15,
+      maxTurns: 25,
     });
 
     console.log(result.finalOutput);
