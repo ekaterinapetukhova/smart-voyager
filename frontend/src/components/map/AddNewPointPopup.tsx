@@ -66,10 +66,12 @@ export function AddNewPointPopup(props: MapPopupProps) {
         return;
       }
 
+      console.log(1);
       const target = e.originalEvent.target as HTMLElement;
 
-      if (!target.closest(".leaflet-zoom-animated")) return;
+      if (!target.closest(".leaflet-zoom-animated") && !target.closest(".leaflet-touch-zoom")) return;
 
+      console.log(2);
       const latlng = e.latlng;
 
       void getPlaceData(latlng.lat, latlng.lng).then((data) => {

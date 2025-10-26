@@ -20,7 +20,7 @@ interface PopupContentProps {
   isPlaceLocationChanged: boolean;
   shouldContentBeHidden: boolean;
   onChange: () => void;
-  onCancel: () => void;
+  onFinish: () => void;
   onRemove: () => void;
   popupId: string;
 }
@@ -126,9 +126,13 @@ function PopupContent(props: PopupContentProps) {
             <Button
               label="Save"
               size="small"
-              onClick={() => void updateTripPoint({ ...tmpPoint, id: props.point.id })}
+              onClick={() => {
+                void updateTripPoint({ ...tmpPoint, id: props.point.id });
+                props.onFinish();
+                setTmpPoint(null);
+              }}
             />
-            <Button label="Cancel" size="small" onClick={props.onCancel} />
+            <Button label="Cancel" size="small" onClick={props.onFinish} />
           </>
         ) : (
           <>
@@ -181,7 +185,7 @@ export function ExistingPointMarker(props: MarkerPopupProps) {
             setMarkerDraggable(true);
           }}
           onRemove={props.onRemove}
-          onCancel={() => {
+          onFinish={() => {
             setMarkerDraggable(false);
           }}
         />

@@ -52,9 +52,9 @@ export async function updateUserStore() {
   if (decodedToken.exp && Date.now() >= decodedToken.exp * 1000) {
     useTokenStore.getState().logout();
   } else {
-    const { get } = authorizedFetch();
+    const request = authorizedFetch();
 
-    const user: User | null = await get("me");
+    const user: User | null = await request({ path: "me", method: "GET" });
 
     if (user !== null) {
       useUserStore.getState().updateUserData(user);

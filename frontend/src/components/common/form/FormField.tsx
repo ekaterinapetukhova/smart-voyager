@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface FormFieldProps {
   label?: string;
@@ -16,6 +16,13 @@ interface FormFieldProps {
 
 export function FormField(props: FormFieldProps) {
   const [focused, setFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (props.type === "file" && inputRef.current && props.files) {
+      inputRef.current.files = props.files;
+    }
+  }, [props.type, props.files]);
 
   let field: React.ReactNode;
 
@@ -56,6 +63,7 @@ export function FormField(props: FormFieldProps) {
     field = (
       <div className="relative group">
         <input
+          ref={inputRef}
           onFocus={() => {
             setFocused(true);
           }}

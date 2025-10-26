@@ -13,6 +13,7 @@ import { FilesModule } from "./files/files.module";
 import { ChatModule } from "./chat/chat.module";
 import { AIModule } from "./openai/openai.module";
 import { TripPointModule } from "./trip-point/trip-point.module";
+import { TripEventModule } from "./trip-event/trip-event.module";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { TripPointModule } from "./trip-point/trip-point.module";
     FilesModule,
     ChatModule,
     AIModule,
+    TripEventModule,
   ],
   controllers: [],
   providers: [ZodErrorExceptionFilter],

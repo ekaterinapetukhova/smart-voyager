@@ -9,7 +9,7 @@ interface ButtonLinkProps {
       selected: boolean;
       isLoading?: boolean;
       type?: "button" | "submit" | "reset";
-      onClick?: () => void;
+      onClick?: () => void | Promise<void>;
     };
     link?: {
       selected: boolean;
@@ -72,8 +72,8 @@ export function ButtonLink(props: ButtonLinkProps) {
           onClick={(e) => {
             e.stopPropagation();
 
-            if (button.onClick) {
-              button.onClick();
+            if (button.onClick && !button.isLoading) {
+              void button.onClick();
             }
           }}
         >

@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { existingTripPointSchema } from "./trip-point.types.ts";
+import { ExistingTripPoint } from "./trip-point.types.ts";
+import { TripEvent } from "./trip-event.types.ts";
 
 export enum TripPointCategories {
   Accommodation = "accommodation",
@@ -62,14 +62,15 @@ export interface Geometry {
   coordinates: number[][][];
 }
 
-export const routeSchema = z.object({
-  id: z.uuid(),
-  name: z.string(),
-  createdAt: z.date(),
-  tripPoints: z.array(existingTripPointSchema),
-  description: z.string(),
-});
+export interface Trip {
+  id: string;
+  name: string;
+  createdAt: string;
+  tripPoints: ExistingTripPoint[];
+  description: string;
+  event?: TripEvent;
+}
 
-export type Trip = z.output<typeof routeSchema>;
+export type CreatedTrip = Omit<Trip, "id" | "createdAt" | "tripPoints" | "event">;
 
-export type CreatedTrip = Omit<Trip, "id" | "createdAt" | "geojson">;
+export type UpdateTripDto = Partial<CreatedTrip> & Pick<Trip, "id">;

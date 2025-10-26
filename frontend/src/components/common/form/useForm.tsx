@@ -1,6 +1,6 @@
 import { ZodObject } from "zod";
 import * as React from "react";
-import { ReactElement, useCallback, useMemo, useState } from "react";
+import { ReactElement, useCallback, useState } from "react";
 import { FormField } from "./FormField.tsx";
 
 type FormValues = Record<string, string | boolean | number | Date | File[]>;
@@ -24,6 +24,7 @@ export interface UseFormOutput<T extends FormValues> {
   update: (data: Partial<T>) => void;
   formErrors: string[];
   fieldErrors: { field: keyof T; error: string }[];
+  isValid: boolean;
 }
 
 export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement => {
@@ -34,12 +35,29 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
       case "password":
       case "radio":
         return e.target.value;
-      case "date":
-        return new Date(e.target.value);
-      case "file":
-        const arr: File[] = [];
-        for (let i = 0; i < e.target.files.length; i++) {}
-        return e.target.files ?? new FileList();
+      case "date": {
+        const date = new Date(e.target.value);
+        console.log("date", date);
+        console.log(date.getTime());
+
+        if (!isNaN(date.getTime())) {
+          return date;
+        } else {
+          return props.form.data[props.fieldKey];
+        }
+      }
+      case "file": {
+        const files: File[] = [];
+        if (e.target.files) {
+          for (let i = 0; i < e.target.files.length; i++) {
+            const file = e.target.files.item(i);
+            if (file) {
+              files.push(file);
+            }
+          }
+        }
+        return files;
+      }
       case "checkbox":
         return e.target.checked;
     }
@@ -53,8 +71,14 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
         return { value: (value as string | number).toString() };
       case "date":
         return { value: (value as Date).toISOString() };
-      case "file":
-        return { files: value as FileList };
+      case "file": {
+        const list = new DataTransfer();
+        for (const file of value as File[]) {
+          list.items.add(file);
+        }
+
+        return { files: list.files };
+      }
       case "checkbox":
         return { checked: value as boolean };
     }
@@ -117,5 +141,6 @@ export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOu
     update,
     formErrors,
     fieldErrors,
+    isValid: formErrors.length === 0 && fieldErrors.length === 0,
   };
 }

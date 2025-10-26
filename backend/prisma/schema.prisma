@@ -67,7 +67,7 @@ model User {
 
   chat Chat[] @relation(name: "chatMembers")
 
-  event Event[]
+  event TripEvent[]
 }
 
 model TripPoint {
@@ -97,8 +97,7 @@ model Trip {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  event   Event?  @relation(fields: [eventId], references: [id])
-  eventId String? @unique
+  event TripEvent?
 }
 
 model Chat {
@@ -125,7 +124,7 @@ model ChatMessage {
   chatId String
 }
 
-model Event {
+model TripEvent {
   id String @id @default(uuid())
 
   user   User   @relation(fields: [userId], references: [id])
@@ -134,5 +133,6 @@ model Event {
   from DateTime
   to   DateTime
 
-  trip Trip?
+  trip   Trip   @relation(fields: [tripId], references: [id])
+  tripId String @unique
 }

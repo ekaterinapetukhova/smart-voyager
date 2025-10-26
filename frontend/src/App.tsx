@@ -15,6 +15,7 @@ import { NewTripByUserView } from "./features/trip/new-trip/NewTripByUserView.ts
 import { NewTripModeChoiceView } from "./features/trip/new-trip/NewTripModeChoiceView.tsx";
 import { NewTripByAIView } from "./features/trip/new-trip/NewTripByAIView.tsx";
 import { TripView } from "./features/trip/TripView.tsx";
+import { TripView2 } from "./features/trip/TripView2.tsx";
 
 interface ProtectedRouteProps {
   isAuth: boolean;
@@ -76,7 +77,7 @@ export function App() {
           path={RouterEnum.Trip}
           element={
             <ProtectedRoute isAuth={isAuth}>
-              <TripView />
+              <TripView2 />
             </ProtectedRoute>
           }
         />

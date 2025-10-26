@@ -27,7 +27,7 @@ export function PlacesList(props: PlacesListProps) {
       const link = generateGoogleMapsNavigationUrl({ origin, destination });
 
       navigateBetween = (
-        <div className="pb-6 flex items-center gap-2">
+        <div className="absolute pb-6 flex items-center gap-2 -top-[12px]">
           <a
             className="bg-accent text-background rounded-full size-6 flex items-center justify-center"
             target="_blank"
@@ -43,7 +43,10 @@ export function PlacesList(props: PlacesListProps) {
 
     return (
       <li
-        className="flex flex-col text-text text-sm"
+        className={[
+          "flex flex-col text-text text-sm relative",
+          index === 0 ? "pb-10" : index === props.places.length - 1 ? "pt-10" : "py-10",
+        ].join(" ")}
         data-id={place.id}
         onDragStart={() => {
           setFirstPlaceToSwap(place);
@@ -71,6 +74,12 @@ export function PlacesList(props: PlacesListProps) {
         }}
         key={place.id}
       >
+        <div
+          className={[
+            "absolute w-0.5 bg-accent left-[11px] top-6 -z-10",
+            index !== props.places.length - 1 ? "h-full" : "h-1/2",
+          ].join(" ")}
+        ></div>
         {navigateBetween}
         <div className="flex items-center gap-x-2">
           <a
@@ -102,10 +111,12 @@ export function PlacesList(props: PlacesListProps) {
     <div className="flex flex-col gap-y-4 max-h-full">
       <h3 className="font-bold text-2xl text-accent">Your trip places list</h3>
       <div className="flex relative grow">
-        <div className="flex justify-center w-6 absolute left-0 top-0 bottom-0 -z-10">
-          <div className="h-full w-0.5 bg-accent"></div>
-        </div>
-        <ul className="absolute inset-0 overflow-y-scroll flex flex-col gap-y-6">{placeList}</ul>
+        <ul className="absolute inset-0 overflow-y-scroll flex flex-col">
+          {/*<div className="flex justify-center w-6 absolute left-0 top-0 h-full -z-10">*/}
+          {/*  <div className="h-full w-0.5 bg-accent"></div>*/}
+          {/*</div>*/}
+          {placeList}
+        </ul>
       </div>
     </div>
   );

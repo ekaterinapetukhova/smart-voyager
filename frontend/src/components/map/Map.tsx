@@ -1,5 +1,5 @@
 import { MapContainer, Polyline, TileLayer, useMap } from "react-leaflet";
-import L from "leaflet";
+import L, { LatLngBounds } from "leaflet";
 import { useEffect, useMemo, useRef } from "react";
 import { config } from "../../config/config.ts";
 import { ExistingTripPoint, TripPoint } from "../../types/trip-point.types.ts";
@@ -29,6 +29,10 @@ export function Map(props: MapProps) {
   const map = useRef<L.Map | null>(null);
 
   const bounds = useMemo(() => {
+    if (!props.points.length) {
+      return new LatLngBounds([41.902277040963696, -2.3273195623469216], [55.57834467218206, 33.444164812653085]);
+    }
+
     const coordinates = props.points.map((x) => [x.latitude, x.longitude]);
 
     return createBoundsFromPoints(coordinates);

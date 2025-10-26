@@ -1,7 +1,8 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { CreateUserDto } from "../user/dto/create-user.dto";
+import z from "zod";
+import { createUserDtoSchema } from "../user/dto/create-user.dto";
 import { UpdateUserVerifiedStatusService } from "../user/service/update-user-verified-status.service";
-import { LoginDto } from "./dto/login.dto";
+import { loginDtoSchema } from "./dto/login.dto";
 import { RegisterService } from "./service/register.service";
 import { LoginService } from "./service/login.service";
 
@@ -14,17 +15,27 @@ export class AuthController {
   ) {}
 
   @Post("register")
-  public register(@Body() registerDto: CreateUserDto): Promise<void> {
-    return this.registerService.execute(registerDto);
+  public register(@Body() data: unknown): Promise<void> {
+    const createUserDto = createUserDtoSchema.parse(data);
+
+    return this.registerService.execute(createUserDto);
   }
 
   @Post("login")
-  public login(@Body() loginDto: LoginDto): Promise<{ token: string }> {
+  public login(@Body() data: unknown): Promise<{ token: string }> {
+    const loginDto = loginDtoSchema.parse(data);
+
     return this.loginService.execute(loginDto.email, loginDto.password);
   }
 
   @Post("verify-email")
-  public verify(@Body() data: { emailToken: string }): Promise<void> {
-    return this.updateUserVerifiedStatusService.execute(data.emailToken);
+  public verify(@Body() data: unknown): Promise<void> {
+    const validEmailToken = z
+      .object({
+        token: z.string(),
+      })
+      .parse(data);
+
+    return this.updateUserVerifiedStatusService.execute(validEmailToken.token);
   }
 }

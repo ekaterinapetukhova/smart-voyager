@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreatedTrip, Trip } from "../types/trip.types.ts";
+import { CreatedTrip, Trip, UpdateTripDto } from "../types/trip.types.ts";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
 
 const path = "trip";
@@ -11,9 +11,9 @@ export const useTripApi = () => {
   const getAll = useQuery({
     queryKey: [tripQueryKey],
     queryFn: async () => {
-      const { get } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const trips: Trip[] = await get(path);
+      const trips: Trip[] = await request({ method: "GET", path });
 
       return trips;
     },
@@ -21,9 +21,20 @@ export const useTripApi = () => {
 
   const add = useMutation({
     mutationFn: async (tripDto: CreatedTrip) => {
-      const { post } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const trip: Trip = await post(path, tripDto);
+      const trip: Trip = await request({ data: tripDto, method: "POST", path });
+
+      return trip;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
+  });
+
+  const update = useMutation({
+    mutationFn: async (tripDto: UpdateTripDto) => {
+      const request = authorizedFetch();
+
+      const trip: Trip = await request({ data: tripDto, method: "PATCH", path: `${path}/${tripDto.id}` });
 
       return trip;
     },
@@ -37,7 +48,8 @@ export const useTripApi = () => {
 
   return {
     ...getAll,
-    addTrip: add.mutateAsync,
+    addTrip: add,
+    updateTrip: update,
     // deletePoint: remove.mutateAsync,
   };
 };
@@ -46,9 +58,12 @@ export const useTripsByUser = () => {
   return useQuery({
     queryKey: [path],
     queryFn: async () => {
-      const { get } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const trips: Trip[] = await get(`me/trips`);
+      const trips: Trip[] = await request({
+        path: "me/trips",
+        method: "GET",
+      });
 
       return trips;
     },
@@ -59,9 +74,12 @@ export const useTripById = (tripId: string) => {
   return useQuery({
     queryKey: [tripQueryKey, tripId],
     queryFn: async () => {
-      const { get } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const trip: Trip = await get(`${path}/${tripId}`);
+      const trip: Trip = await request({
+        path: `${path}/${tripId}`,
+        method: "GET",
+      });
 
       return trip;
     },

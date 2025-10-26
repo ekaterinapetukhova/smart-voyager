@@ -66,7 +66,7 @@ function EventForm(props: EventFormProps) {
   );
 }
 
-export function TripView() {
+export function TripView2() {
   const { addTripPoint, deleteTripPoint } = useTripPointAPI();
   const { updateTrip } = useTripApi();
 
@@ -85,7 +85,7 @@ export function TripView() {
   }
 
   return (
-    <Container childrenContainerClassNames="flex-col gap-y-10 h-svh min-h-svh">
+    <Container childrenContainerClassNames="flex-col gap-y-10 h-svh min-h-svh relative">
       {editTitleMode ? (
         <>
           <TextInput
@@ -117,24 +117,24 @@ export function TripView() {
         </Title>
       )}
 
-      <p className="text-text">{trip.description}</p>
+      <p className="text-text absolute top-4 right-4 p-4 h-12 z-10 bg-background/60 ">{trip.description}</p>
       {!trip.event && <EventForm tripId={trip.id} />}
       {trip.event && <TripEvent from={trip.event.from} to={trip.event.to} />}
-      <div className="w-full grid grid-cols-3 gap-x-10 grow">
+      <div className="absolute left-12 bottom-12 top-12 w-sm bg-background/60 z-10 flex flex-col p-4">
         <PlacesList
           places={trip.tripPoints}
           onClick={(id) => {
             setClickTripId(id);
           }}
         />
-        <Map
-          points={trip.tripPoints}
-          onRemovePoint={(id) => void deleteTripPoint(id)}
-          onAddPoint={(point) => void addTripPoint({ ...point, tripId })}
-          activePoint={clickTripId ?? null}
-          classNames="col-span-2"
-        />
       </div>
+      <Map
+        points={trip.tripPoints}
+        onRemovePoint={(id) => void deleteTripPoint(id)}
+        onAddPoint={(point) => void addTripPoint({ ...point, tripId })}
+        activePoint={clickTripId ?? null}
+        classNames="absolute inset-0 -z-10"
+      />
     </Container>
   );
 }

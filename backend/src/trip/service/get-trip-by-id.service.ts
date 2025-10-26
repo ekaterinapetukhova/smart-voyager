@@ -10,7 +10,7 @@ export class GetTripByIdService {
   public async execute(tripId: string): Promise<Trip> {
     const trip = await this.prisma.trip.findUnique({
       where: { id: tripId },
-      include: { tripPoints: { orderBy: { index: "asc" } } },
+      include: { tripPoints: { orderBy: { index: "asc" } }, event: true },
     });
 
     if (!trip) {

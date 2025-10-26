@@ -11,9 +11,9 @@ export const useChat = () => {
   const getAll = useQuery({
     queryKey: [PATH],
     queryFn: async () => {
-      const { get } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const chats: Chat[] = await get(PATH);
+      const chats: Chat[] = await request({ path: PATH, method: "GET" });
 
       return chats;
     },
@@ -23,9 +23,9 @@ export const useChat = () => {
 
   const sendRequest = useMutation({
     mutationFn: async (data: ValidChatMessage & { recipientId: string }) => {
-      const { post } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const chat: Chat = await post(PATH, data);
+      const chat: Chat = await request({ path: PATH, method: "POST", data });
 
       return chat;
     },
@@ -34,9 +34,13 @@ export const useChat = () => {
 
   const sendNewMessage = useMutation({
     mutationFn: async (data: ValidChatMessage & { recipientId: string; chatId: string }) => {
-      const { post } = authorizedFetch();
+      const request = authorizedFetch();
 
-      const chatMessage: ChatMessage = await post(`${PATH}/${data.chatId}/message`, data);
+      const chatMessage: ChatMessage = await request({
+        path: `${PATH}/${data.chatId}/message`,
+        method: "POST",
+        data,
+      });
 
       return chatMessage;
     },
@@ -54,8 +58,11 @@ export const useChatById = (chatId: string) => {
   return useQuery({
     queryKey: [PATH, chatId],
     queryFn: async () => {
-      const { get } = authorizedFetch();
-      const chat: Chat = await get(`${PATH}/${chatId}`);
+      const request = authorizedFetch();
+      const chat: Chat = await request({
+        path: `${PATH}/${chatId}`,
+        method: "GET",
+      });
 
       return chat;
     },
@@ -70,8 +77,11 @@ export const useChatByMembers = (receiverId: string) => {
   return useQuery({
     queryKey: [PATH, receiverId],
     queryFn: async () => {
-      const { get } = authorizedFetch();
-      const chat: Chat = await get(`${PATH}/${receiverId}`);
+      const request = authorizedFetch();
+      const chat: Chat = await request({
+        path: `${PATH}/${receiverId}`,
+        method: "GET",
+      });
 
       return chat;
     },

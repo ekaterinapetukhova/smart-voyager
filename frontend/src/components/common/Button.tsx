@@ -51,7 +51,7 @@ export function Button(props: ButtonProps) {
       onClick={(e) => {
         e.stopPropagation();
 
-        if (props.onClick) {
+        if (props.onClick && !props.isLoading) {
           props.onClick();
         }
       }}

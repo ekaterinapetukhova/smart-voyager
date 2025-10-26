@@ -3,8 +3,8 @@ import { createTripPointDtoSchema } from "../../trip-point/dto/create-trip-point
 
 export const createTripDtoSchema = z.object({
   name: z.string().min(1),
-  tripPoints: z.array(createTripPointDtoSchema.omit({ tripId: true })),
-  isProposal: z.boolean(),
+  tripPoints: z.array(createTripPointDtoSchema.omit({ tripId: true })).default([]),
+  isProposal: z.boolean().default(false),
   description: z.string(),
 });
 
