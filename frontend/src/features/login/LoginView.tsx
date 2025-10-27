@@ -27,12 +27,12 @@ export function LoginView() {
     onSuccess: (token) => {
       login(token);
 
-      void navigate(RouterEnum.Trips);
+      void navigate(RouterEnum.PlannedTrips);
     },
   });
 
   return (
-    <Container childrenContainerClassNames="justify-center gap-x-20 h-full">
+    <Container childrenContainerClassNames="flex items-center justify-center gap-x-20 h-full">
       <Title classNames="w-1/3">
         Unlock Your <span className="text-accent italic font-bold">Next</span> Adventure
       </Title>

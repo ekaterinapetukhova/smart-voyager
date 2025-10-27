@@ -18,5 +18,12 @@ export const createBoundsFromPoints = (points: number[][]) => {
     maxY = Math.max(maxY, point[1]);
   }
 
-  return new LatLngBounds([minX, minY], [maxX, maxY]);
+  const xDiff = maxX - minX;
+  const yDiff = maxY - minY;
+  const paddingMultiplier = 0.1;
+
+  return new LatLngBounds(
+    [minX - xDiff * paddingMultiplier, minY - yDiff * paddingMultiplier],
+    [maxX + xDiff * paddingMultiplier, maxY + yDiff * paddingMultiplier]
+  );
 };

@@ -6,6 +6,8 @@ export const createTripPointDtoSchema = z.object({
   longitude: z.number(),
   name: z.string(),
   fullAddress: z.string(),
+  city: z.string(),
+  country: z.string(),
 });
 
 export type CreateTripPointDto = z.output<typeof createTripPointDtoSchema>;

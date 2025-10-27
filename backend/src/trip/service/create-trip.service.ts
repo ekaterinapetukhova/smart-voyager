@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma, Trip, User } from "@prisma/client";
+import { Prisma, Trip } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateTripDto } from "../dto/create-trip.dto";
 
@@ -7,21 +7,23 @@ import { CreateTripDto } from "../dto/create-trip.dto";
 export class CreateTripService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public async execute(data: CreateTripDto, user: User): Promise<Trip> {
+  public async execute(data: CreateTripDto, userId: string): Promise<Trip> {
     const createData: Prisma.TripCreateInput = {
       name: data.name,
       isProposal: data.isProposal,
       description: data.description,
       tripPoints: {
-        create: data.tripPoints.map((waypoint, i) => ({
+        create: data.tripPoints.map((point, i) => ({
           index: i,
-          latitude: waypoint.latitude,
-          longitude: waypoint.longitude,
-          name: waypoint.name,
-          fullAddress: waypoint.fullAddress,
+          latitude: point.latitude,
+          longitude: point.longitude,
+          name: point.name,
+          fullAddress: point.fullAddress,
+          city: point.city,
+          country: point.country,
         })),
       },
-      user: { connect: { id: user?.id } },
+      user: { connect: { id: userId } },
     };
 
     return this.prisma.trip.create({

@@ -6,6 +6,9 @@ export interface GeoapifyAutocompleteServiceResult {
   lat: number;
   lng: number;
   fullAddress: string;
+  country: string;
+  city: string;
+  name: string;
 }
 
 interface GeoapifyResponse {
@@ -17,6 +20,9 @@ interface Result {
   lat: number;
   address_line1: string;
   address_line2: string;
+  country: string;
+  city: string;
+  name: string;
   result_type:
     | "unknown"
     | "amenity"
@@ -61,6 +67,9 @@ export class GeoapifyAutocompleteService {
       lat: placeResult.lat,
       lng: placeResult.lon,
       fullAddress: placeResult.address_line2,
+      country: placeResult.country,
+      city: placeResult.city,
+      name: placeResult.name,
     };
   }
 }

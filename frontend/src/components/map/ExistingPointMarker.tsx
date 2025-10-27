@@ -53,7 +53,6 @@ function PointName(props: PointNameProps) {
             className="cursor-pointer text-text inline-block ml-2 size-4 -mt-1 hover:text-accent transition"
             onClick={() => {
               props.onSaveName(pointName);
-              props.onSaveName(pointName);
               setEditMode(false);
             }}
           />
@@ -93,13 +92,14 @@ function PopupContent(props: PopupContentProps) {
         setTmpPoint(null);
 
         void getPlaceData(latlng.lat, latlng.lng).then((data) => {
-          console.log({ data });
           if (data) {
             setTmpPoint({
               name: data.name,
               fullAddress: data.fullAddress,
               longitude: latlng.lng,
               latitude: latlng.lat,
+              country: data.country,
+              city: data.city,
             });
           }
         });
@@ -127,7 +127,9 @@ function PopupContent(props: PopupContentProps) {
               label="Save"
               size="small"
               onClick={() => {
-                void updateTripPoint({ ...tmpPoint, id: props.point.id });
+                if (tmpPoint) {
+                  void updateTripPoint({ ...tmpPoint, id: props.point.id });
+                }
                 props.onFinish();
                 setTmpPoint(null);
               }}

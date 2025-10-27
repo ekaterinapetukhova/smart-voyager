@@ -29,9 +29,13 @@ export function ChatWithUser(props: ChatWithUserProps) {
 
   return (
     <>
-      <ul className="w-full overflow-y-auto grow flex flex-col gap-y-6" ref={messagesContainerRef}>
-        {chat?.chatMessage.map((message) => <Message key={message.id} message={message} />)}
-      </ul>
+      {chat?.chatMessage && (
+        <ul className="w-full overflow-y-auto grow flex flex-col gap-y-6" ref={messagesContainerRef}>
+          {chat.chatMessage.map((message) => (
+            <Message key={message.id} message={message} />
+          ))}
+        </ul>
+      )}
       <Form
         fields={{
           content: { value: "", type: "text" },

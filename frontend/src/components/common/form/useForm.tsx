@@ -104,6 +104,7 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
 
 export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOutput<T> {
   const [data, setData] = useState(input.initialData);
+  console.log(data);
   const [fieldErrors, setFieldErrors] = useState<{ field: keyof T; error: string }[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 

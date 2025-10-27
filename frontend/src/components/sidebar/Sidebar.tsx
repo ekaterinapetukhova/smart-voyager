@@ -8,9 +8,13 @@ export function Sidebar() {
   const location = useLocation();
 
   const menuItems = {
-    home: {
-      name: "Trips",
-      path: RouterEnum.Trips,
+    plannedTrips: {
+      name: "Planned trips",
+      path: RouterEnum.PlannedTrips,
+    },
+    draftTrips: {
+      name: "Draft trips",
+      path: RouterEnum.DraftTrips,
     },
     tripMates: {
       name: "Trip Mates",

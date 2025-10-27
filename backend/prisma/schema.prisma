@@ -13,30 +13,37 @@ enum Gender {
 }
 
 enum TripInterest {
-  History
-  Culture
-  Food
-  Nature
-  Sport
-  Relaxation
-  Events
-  Architecture
-  Photography
-  Shopping
-  Nightlife
+  history
+  culture
+  food
+  nature
+  sport
+  relaxation
+  events
+  architecture
+  photography
+  shopping
+  nightlife
 }
 
 enum TripGoals {
-  SharedTravelCosts
-  Safety
-  MeetingLocals
-  PracticingLanguages
-  GroupActivities
-  Volunteering
-  ContentCreation
-  LongTermCompanionship
-  SpontaneousAdventures
-  Support
+  sharedTravelCosts
+  safety
+  meetingLocals
+  practicingLanguages
+  groupActivities
+  volunteering
+  contentCreation
+  longTermCompanionship
+  spontaneousAdventures
+  support
+}
+
+enum Currency {
+  eur
+  usd
+  pln
+  byn
 }
 
 model User {
@@ -52,7 +59,7 @@ model User {
 
   verified Boolean @default(false)
 
-  shouldBeVisible Boolean?
+  shouldBeVisible Boolean?       @default(false)
   country         String?
   city            String?
   languages       String?
@@ -60,14 +67,14 @@ model User {
   tripInterest    TripInterest[]
   tripGoals       TripGoals[]
 
+  currency Currency @default(eur)
+
   trip Trip[]
 
   chatMessageRecipient ChatMessage[] @relation(name: "chatMessageRecipient")
   chatMessageSender    ChatMessage[] @relation(name: "chatMessageSender")
 
   chat Chat[] @relation(name: "chatMembers")
-
-  event TripEvent[]
 }
 
 model TripPoint {
@@ -76,6 +83,8 @@ model TripPoint {
   index       Int
   latitude    Float
   longitude   Float
+  city        String
+  country     String
   fullAddress String
   name        String
 
@@ -98,6 +107,20 @@ model Trip {
   userId String
 
   event TripEvent?
+
+  controlList    ControlListItem[]
+  budgetAnalysis String?
+}
+
+model ControlListItem {
+  id String @id @default(uuid())
+
+  name        String
+  cost        Int
+  description String
+
+  trip   Trip   @relation(fields: [tripid], references: [id])
+  tripid String
 }
 
 model Chat {
@@ -126,9 +149,6 @@ model ChatMessage {
 
 model TripEvent {
   id String @id @default(uuid())
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
 
   from DateTime
   to   DateTime

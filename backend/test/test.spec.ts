@@ -1,7 +1,6 @@
-import path from "node:path";
-import fs from "fs/promises";
 import { INestApplication } from "@nestjs/common";
-import { SaveFilesService } from "../src/files/service/save-file.service";
+import { FindEventsAroundAgent } from "../src/openai/agents/find-events-around.agent";
+import { ControlListCreatorAgent } from "../src/openai/agents/control-list-creator.agent";
 import { initTestApp } from "./init-test-app";
 
 describe("files", () => {
@@ -11,13 +10,27 @@ describe("files", () => {
     app = await initTestApp();
   });
 
-  it("test", async () => {
-    const fileService = app.get(SaveFilesService);
+  it(
+    "test",
+    async () => {
+      const service = app.get(FindEventsAroundAgent);
 
-    const imgPath = path.join(__dirname, "test.jpg");
+      const result = await service.execute("Katowice, Poland", new Date(), new Date());
 
-    const buffer = await fs.readFile(imgPath);
+      console.log(result);
+    },
+    1200 * 1000
+  );
 
-    await fileService.execute("1", buffer);
-  });
+  it(
+    "test1",
+    async () => {
+      const service = app.get(ControlListCreatorAgent);
+
+      const result = await service.execute("df488f29-fcd7-42d5-bd3f-7312f9cad3ef");
+
+      console.log(result);
+    },
+    1200 * 1000
+  );
 });

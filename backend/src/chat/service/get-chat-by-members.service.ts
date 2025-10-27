@@ -21,8 +21,6 @@ export class GetChatByMembersService {
       return null;
     }
 
-    console.log(JSON.stringify(chat, null, 2));
-
     return chat;
   }
 }

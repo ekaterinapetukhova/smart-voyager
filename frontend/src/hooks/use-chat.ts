@@ -3,17 +3,17 @@ import { authorizedFetch } from "../utils/authorized-fetch.ts";
 import { Chat, ChatMessage } from "../types/chat.types.ts";
 import { ValidChatMessage } from "../validation/chat.validation.ts";
 
-const PATH = "chat";
+const path = "chat";
 
 export const useChat = () => {
   const queryClient = useQueryClient();
 
   const getAll = useQuery({
-    queryKey: [PATH],
+    queryKey: [path],
     queryFn: async () => {
       const request = authorizedFetch();
 
-      const chats: Chat[] = await request({ path: PATH, method: "GET" });
+      const chats: Chat[] = await request({ path: path, method: "GET" });
 
       return chats;
     },
@@ -25,11 +25,11 @@ export const useChat = () => {
     mutationFn: async (data: ValidChatMessage & { recipientId: string }) => {
       const request = authorizedFetch();
 
-      const chat: Chat = await request({ path: PATH, method: "POST", data });
+      const chat: Chat = await request({ path: path, method: "POST", data });
 
       return chat;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: [PATH] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [path] }),
   });
 
   const sendNewMessage = useMutation({
@@ -37,14 +37,14 @@ export const useChat = () => {
       const request = authorizedFetch();
 
       const chatMessage: ChatMessage = await request({
-        path: `${PATH}/${data.chatId}/message`,
+        path: `${path}/${data.chatId}/message`,
         method: "POST",
         data,
       });
 
       return chatMessage;
     },
-    onSuccess: () => void queryClient.invalidateQueries({ queryKey: [PATH] }),
+    onSuccess: () => void queryClient.invalidateQueries({ queryKey: [path] }),
   });
 
   return {
@@ -56,11 +56,11 @@ export const useChat = () => {
 
 export const useChatById = (chatId: string) => {
   return useQuery({
-    queryKey: [PATH, chatId],
+    queryKey: [path, chatId],
     queryFn: async () => {
       const request = authorizedFetch();
       const chat: Chat = await request({
-        path: `${PATH}/${chatId}`,
+        path: `${path}/${chatId}`,
         method: "GET",
       });
 
@@ -75,11 +75,12 @@ export const useChatById = (chatId: string) => {
 
 export const useChatByMembers = (receiverId: string) => {
   return useQuery({
-    queryKey: [PATH, receiverId],
+    queryKey: [path, receiverId],
     queryFn: async () => {
       const request = authorizedFetch();
+
       const chat: Chat = await request({
-        path: `${PATH}/${receiverId}`,
+        path: `${path}/${receiverId}`,
         method: "GET",
       });
 

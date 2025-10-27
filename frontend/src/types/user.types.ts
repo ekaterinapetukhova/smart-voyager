@@ -3,37 +3,40 @@ export enum Gender {
   Female = "female",
 }
 
-enum TripInterest {
-  History = "history",
-  Culture = "culture",
-  Food = "food",
-  Nature = "nature",
-  Sport = "sport",
-  Relaxation = "relaxation",
-  Events = "events",
-  Architecture = "architecture",
-  Photography = "photography",
-  Shopping = "shopping",
-  Nightlife = "nightlife",
-}
+export const tripInterest = {
+  history: "history",
+  culture: "culture",
+  food: "food",
+  nature: "nature",
+  sport: "sport",
+  relaxation: "relaxation",
+  events: "events",
+  architecture: "architecture",
+  photography: "photography",
+  shopping: "shopping",
+  nightlife: "nightlife",
+} as const;
 
-enum TripGoals {
-  SharedTravelCosts = "sharedTravelCosts",
-  Safety = "safety",
-  MeetingLocals = "meetingLocals",
-  PracticingLanguages = "practicingLanguages",
-  GroupActivities = "groupActivities",
-  Volunteering = "volunteering",
-  ContentCreation = "contentCreation",
-  LongTermCompanionship = "longTermCompanionship",
-  SpontaneousAdventures = "spontaneousAdventures",
-  Support = "support",
-}
+export type TripInterest = keyof typeof tripInterest;
+
+export const tripGoals = {
+  sharedTravelCosts: "Shared travel costs",
+  safety: "Safety",
+  meetingLocals: "Meeting locals",
+  practicingLanguages: "Practicing languages",
+  groupActivities: "Group activities",
+  volunteering: "Volunteering",
+  contentCreation: "Content creation",
+  longTermCompanionship: "Long term companionship",
+  spontaneousAdventures: "Spontaneous adventures",
+  support: "Support",
+} as const;
+
+export type TripGoals = keyof typeof tripGoals;
 
 export interface User {
   id: string;
   name: string;
-  surname: string;
   email: string;
   birthDate: Date;
   gender: Gender;
@@ -44,4 +47,11 @@ export interface User {
   description: string | null;
   tripInterest: TripInterest[];
   tripGoals: TripGoals[];
+}
+
+export enum Currency {
+  EUR = "eur",
+  USD = "usd",
+  PLN = "pln",
+  BYN = "byn",
 }

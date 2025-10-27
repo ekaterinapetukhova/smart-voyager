@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { RegistrationView } from "./features/registration/RegistrationView.tsx";
 import { LoginView } from "./features/login/LoginView.tsx";
 import { RouterEnum } from "./types/router.types.ts";
@@ -8,14 +8,14 @@ import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
 import { CommonChatView } from "./features/chat/CommonChatView.tsx";
 import { Sidebar } from "./components/sidebar/Sidebar.tsx";
-import { TripListView } from "./features/trip/TripListView.tsx";
+import { DraftTripsListView } from "./features/trip/DraftTripsListView.tsx";
 import { AuthView } from "./features/auth/AuthView.tsx";
 import { useVerification } from "./hooks/use-verification.ts";
 import { NewTripByUserView } from "./features/trip/new-trip/NewTripByUserView.tsx";
 import { NewTripModeChoiceView } from "./features/trip/new-trip/NewTripModeChoiceView.tsx";
 import { NewTripByAIView } from "./features/trip/new-trip/NewTripByAIView.tsx";
-import { TripView } from "./features/trip/TripView.tsx";
-import { TripView2 } from "./features/trip/TripView2.tsx";
+import { TripView } from "./features/trip/trip-view/TripView.tsx";
+import { PlannedTripsListView } from "./features/trip/PlannedTripsListView.tsx";
 
 interface ProtectedRouteProps {
   isAuth: boolean;
@@ -26,6 +26,7 @@ function ProtectedRoute(props: ProtectedRouteProps) {
   if (!props.isAuth) {
     return <Navigate to={RouterEnum.Auth} replace />;
   }
+
   return props.children;
 }
 
@@ -58,7 +59,7 @@ export function App() {
     <div className="flex h-screen overflow-y-auto lg:overflow-hidden">
       {isAuth && <Sidebar />}
       <Routes>
-        <Route path="/" element={<Navigate to={isAuth ? RouterEnum.Trips : RouterEnum.Auth} replace />} />
+        <Route path="/" element={<Navigate to={isAuth ? RouterEnum.PlannedTrips : RouterEnum.Auth} replace />} />
 
         <Route path={RouterEnum.Auth} element={<AuthView />} />
         <Route path={RouterEnum.Registration} element={<RegistrationView />} />
@@ -66,10 +67,18 @@ export function App() {
         <Route path={RouterEnum.Verification} element={<AuthView />} />
 
         <Route
-          path={RouterEnum.Trips}
+          path={RouterEnum.DraftTrips}
           element={
             <ProtectedRoute isAuth={isAuth}>
-              <TripListView />
+              <DraftTripsListView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.PlannedTrips}
+          element={
+            <ProtectedRoute isAuth={isAuth}>
+              <PlannedTripsListView />
             </ProtectedRoute>
           }
         />
@@ -77,7 +86,7 @@ export function App() {
           path={RouterEnum.Trip}
           element={
             <ProtectedRoute isAuth={isAuth}>
-              <TripView2 />
+              <TripView />
             </ProtectedRoute>
           }
         />

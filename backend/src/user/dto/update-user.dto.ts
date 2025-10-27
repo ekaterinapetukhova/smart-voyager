@@ -1,5 +1,5 @@
 import z from "zod/v4";
-import { Gender } from "@prisma/client";
+import { Currency, Gender, TripGoals, TripInterest } from "@prisma/client";
 
 export const updateUserDtoSchema = z
   .object({
@@ -7,12 +7,15 @@ export const updateUserDtoSchema = z
     email: z.string().trim(),
     birthDate: z.coerce.date(),
     password: z.string().trim(),
-    gender: z.nativeEnum(Gender),
+    gender: z.enum(Gender),
     country: z.string().trim(),
     city: z.string().trim(),
     languages: z.string().trim(),
     description: z.string().trim(),
-    avatar: z.string().base64(),
+    avatar: z.base64(),
+    tripInterest: z.array(z.enum(TripInterest)),
+    tripGoals: z.array(z.enum(TripGoals)),
+    currency: z.enum(Currency),
   })
   .partial();
 

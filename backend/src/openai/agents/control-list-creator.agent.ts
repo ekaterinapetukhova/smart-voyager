@@ -1,0 +1,62 @@
+import { Injectable } from "@nestjs/common";
+import { Agent, run, webSearchTool } from "@openai/agents";
+import z from "zod";
+import { AIExecutionContext } from "../openai.types";
+import { GetTripByIdService } from "../../trip/service/get-trip-by-id.service";
+
+const agentOutputSchema = z.object({
+  controlList: z.array(
+    z.object({
+      name: z.string(),
+      cost: z.number(),
+      description: z.string(),
+    })
+  ),
+  budget: z.number(),
+});
+
+export type ControlListCreatorAgentOutput = z.output<typeof agentOutputSchema>;
+
+@Injectable()
+export class ControlListCreatorAgent {
+  private readonly agent: Agent<AIExecutionContext, typeof agentOutputSchema>;
+
+  public constructor(private readonly getTripById: GetTripByIdService) {
+    this.agent = new Agent({
+      name: "control list and budget creator",
+      model: "gpt-5-nano",
+      instructions:
+        "You are an agent that searches based on home address and destination addresses" +
+        "what necessary things user should prepare or took with themselves and how much it may cost." +
+        "Then summarize full raw budget based on this." +
+        "Be brief. Don't ask any questions afterwards, just give the recommendations and that's it.",
+      tools: [webSearchTool()],
+      outputType: agentOutputSchema,
+    });
+  }
+
+  public async execute(tripId: string): Promise<ControlListCreatorAgentOutput> {
+    const trip = await this.getTripById.execute(tripId, {
+      tripPoints: true,
+      user: true,
+    });
+
+    const places = trip.tripPoints.map((point) => {
+      return `${point.city}, ${point.fullAddress}`;
+    });
+
+    const preferences = trip.user.tripInterest.join(", ");
+
+    const result = await run(
+      this.agent,
+      `My current country is ${trip.user.country}. There is the list of cities and main places, which I want to visit: ${places.join(", ")}. ` +
+        "Tell me what I have to take care of, where I can stay, which stuff I can take with me and so on." +
+        `Also pay attention to my interests: ${preferences}. Make this briefly, but meaningfully.`,
+      {
+        maxTurns: 5,
+      }
+    );
+
+    return result.finalOutput ?? { controlList: [], budget: 0 };
+  }
+}

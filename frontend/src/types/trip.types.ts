@@ -68,7 +68,7 @@ export interface Trip {
   createdAt: string;
   tripPoints: ExistingTripPoint[];
   description: string;
-  event?: TripEvent;
+  event: TripEvent | null;
 }
 
 export type CreatedTrip = Omit<Trip, "id" | "createdAt" | "tripPoints" | "event">;

@@ -5,6 +5,8 @@ export const tripPointSchema = z.object({
   longitude: z.number(),
   name: z.string(),
   fullAddress: z.string(),
+  city: z.string(),
+  country: z.string(),
 });
 
 export type TripPoint = z.output<typeof tripPointSchema>;
@@ -22,6 +24,8 @@ export const updateTripPointSchema = z.object({
   longitude: z.number().optional(),
   name: z.string().optional(),
   fullAddress: z.string().optional(),
+  city: z.string(),
+  country: z.string(),
 });
 
 export type UpdateTripPoint = z.output<typeof updateTripPointSchema>;
@@ -38,6 +42,8 @@ export const existingTripPointSchema = z.object({
   longitude: z.number(),
   name: z.string(),
   fullAddress: z.string(),
+  city: z.string(),
+  country: z.string(),
 });
 
 export type ExistingTripPoint = z.output<typeof existingTripPointSchema>;

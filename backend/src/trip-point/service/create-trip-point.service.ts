@@ -20,11 +20,7 @@ export class CreateTripPointService {
     return this.prisma.tripPoint.create({
       data: {
         index: (maxIndex._max.index ?? 0) + 1,
-        tripId: data.tripId,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        name: data.name,
-        fullAddress: data.fullAddress,
+        ...data,
       },
     });
   }

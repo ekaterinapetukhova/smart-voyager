@@ -2,22 +2,24 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Container } from "../../components/common/Container.tsx";
 import { SearchInput } from "../../components/common/SearchInput.tsx";
-import { useTripsByUser } from "../../hooks/use-trip-api.ts";
+import { useTripApi } from "../../hooks/use-trip-api.ts";
 import { RouterEnum } from "../../types/router.types.ts";
 import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 
-export function TripListView() {
+export function DraftTripsListView() {
   const [searchedTrip, setSearchedTrip] = useState("");
 
-  const { data: trips } = useTripsByUser();
+  const { draftTrips } = useTripApi();
 
-  const tripItems = trips?.map((trip) => {
+  const tripItems = draftTrips.data?.map((trip) => {
     return (
-      <li className="text-accent transition" key={trip.id}>
-        <Link to={`/trip/${trip.id}`} className="w-full relative flex flex-col gap-y-2 px-4 py-5">
+      <li className="" key={trip.id}>
+        <Link to={`/trip/${trip.id}`} className="w-full relative flex flex-col gap-y-4 justify-between px-4 py-5">
           <div className="size-full absolute opacity-20 bg-button-primary-hover top-0 left-0 -z-10"></div>
-          <h3>{trip.name}</h3>
-          <p>{trip.description}</p>
+          <div className="flex flex-col">
+            <h3 className="text-accent text-lg"> {trip.name}</h3>
+            <p className="text-text">{trip.description}</p>
+          </div>
         </Link>
       </li>
     );
@@ -47,7 +49,7 @@ export function TripListView() {
         </div>
       </div>
 
-      {trips && <ul className="w-full flex flex-col gap-y-4">{tripItems}</ul>}
+      {draftTrips.isSuccess && <ul className="w-full flex flex-col gap-y-4">{tripItems}</ul>}
     </Container>
   );
 }

@@ -8,12 +8,23 @@ export const tripQueryKey = "trip";
 export const useTripApi = () => {
   const queryClient = useQueryClient();
 
-  const getAll = useQuery({
+  const getAllPlanned = useQuery({
     queryKey: [tripQueryKey],
     queryFn: async () => {
       const request = authorizedFetch();
 
-      const trips: Trip[] = await request({ method: "GET", path });
+      const trips: Trip[] = await request({ method: "GET", path: `${path}/planned` });
+
+      return trips;
+    },
+  });
+
+  const getAllDrafts = useQuery({
+    queryKey: [tripQueryKey, "drafts"],
+    queryFn: async () => {
+      const request = authorizedFetch();
+
+      const trips: Trip[] = await request({ method: "GET", path: `${path}/drafts` });
 
       return trips;
     },
@@ -47,27 +58,12 @@ export const useTripApi = () => {
   // });
 
   return {
-    ...getAll,
+    plannedTrips: getAllPlanned,
+    draftTrips: getAllDrafts,
     addTrip: add,
     updateTrip: update,
     // deletePoint: remove.mutateAsync,
   };
-};
-
-export const useTripsByUser = () => {
-  return useQuery({
-    queryKey: [path],
-    queryFn: async () => {
-      const request = authorizedFetch();
-
-      const trips: Trip[] = await request({
-        path: "me/trips",
-        method: "GET",
-      });
-
-      return trips;
-    },
-  });
 };
 
 export const useTripById = (tripId: string) => {

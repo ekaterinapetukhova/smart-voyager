@@ -46,18 +46,10 @@ export function FormField(props: FormFieldProps) {
     );
   } else if (props.type === "checkbox") {
     field = (
-      <div className="flex gap-x-5 mt-2">
-        <label className="flex items-center gap-x-2 text-lg cursor-pointer has-checked:text-accent">
-          <input
-            type="checkbox"
-            name={props.name}
-            checked={props.checked}
-            onChange={props.onChange}
-            className="hidden"
-          />
-          {props.label}
-        </label>
-      </div>
+      <label className="p-0.5 flex text-center justify-center h-12 font-bold text-sm border-1 border-accent items-center cursor-pointer has-checked:bg-accent has-checked:text-background">
+        <input type="checkbox" name={props.name} checked={props.checked} onChange={props.onChange} className="hidden" />
+        {props.label}
+      </label>
     );
   } else {
     field = (
@@ -96,8 +88,8 @@ export function FormField(props: FormFieldProps) {
   }
 
   return (
-    <div className="flex flex-col w-full text-text">
-      {props.label && (
+    <div className="flex flex-col text-text">
+      {props.label && props.type !== "checkbox" && (
         <label className="text-xl font-bold mb-1" htmlFor={props.id}>
           {props.label}
         </label>

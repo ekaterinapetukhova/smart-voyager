@@ -66,12 +66,10 @@ export function AddNewPointPopup(props: MapPopupProps) {
         return;
       }
 
-      console.log(1);
       const target = e.originalEvent.target as HTMLElement;
 
       if (!target.closest(".leaflet-zoom-animated") && !target.closest(".leaflet-touch-zoom")) return;
 
-      console.log(2);
       const latlng = e.latlng;
 
       void getPlaceData(latlng.lat, latlng.lng).then((data) => {
@@ -81,6 +79,8 @@ export function AddNewPointPopup(props: MapPopupProps) {
             latitude: latlng.lat,
             longitude: latlng.lng,
             fullAddress: data.name,
+            city: data.city,
+            country: data.country,
           };
 
           setSelectedPoint(newRoutePoint);

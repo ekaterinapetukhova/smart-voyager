@@ -66,6 +66,8 @@ export const getPlaceData = async (
 ): Promise<{
   name: string;
   fullAddress: string;
+  city: string;
+  country: string;
 } | null> => {
   try {
     const response = await fetch(
@@ -83,7 +85,12 @@ export const getPlaceData = async (
         return null;
       }
 
-      return { name: place.name ?? place.formatted, fullAddress: place.formatted };
+      return {
+        name: place.name ?? place.formatted,
+        fullAddress: place.formatted,
+        city: place.city ?? "",
+        country: place.country,
+      };
     }
 
     return null;

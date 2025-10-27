@@ -20,7 +20,7 @@ export function NewTripByUserView() {
   });
 
   return (
-    <Container childrenContainerClassNames="flex-col items-start gap-y-10">
+    <Container childrenContainerClassNames="flex flex-col items-start gap-y-10">
       <Title>Imagine your next trip</Title>
       <div className="flex flex-col gap-y-3">
         <Input form={form} fieldKey="name" type="text" label="Trip name" />

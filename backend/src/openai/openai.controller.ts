@@ -1,19 +1,18 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Post } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { GetUser } from "../auth/user.decorator";
 import { ServerError } from "../error/server.error";
-import { OpenAIService } from "./openai.service";
-import { validAiContentMessageSchema } from "./dto/suggest-trip-content.dto";
+import { TripPlannerAgent, tripPlannerInputSchema } from "./agents/trip-planner.agent";
 
 @Controller("ai")
 export class OpenaiController {
-  public constructor(private readonly openaiService: OpenAIService) {}
+  public constructor(private readonly tripPlannerAgent: TripPlannerAgent) {}
 
   @Post("suggest-trip")
   public async suggestTrip(@GetUser() user: User, @Body() body: unknown): Promise<{ tripId: string } | undefined> {
-    const validAiContentMessage = validAiContentMessageSchema.parse(body);
+    const data = tripPlannerInputSchema.parse(body);
 
-    const tripId = await this.openaiService.execute(validAiContentMessage, user.id);
+    const tripId = await this.tripPlannerAgent.execute(data, user.id);
 
     if (!tripId) {
       throw new ServerError("Trip creation failed");
@@ -22,15 +21,5 @@ export class OpenaiController {
     return {
       tripId,
     };
-  }
-
-  @Get()
-  public get(): Promise<string | undefined> {
-    return this.openaiService.execute({ content: "make a trip in katowice with shops" }, "123456");
-  }
-
-  @Post()
-  public post(): void {
-    //
   }
 }

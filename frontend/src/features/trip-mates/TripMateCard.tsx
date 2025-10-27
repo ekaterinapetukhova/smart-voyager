@@ -15,7 +15,6 @@ export function TripMateCard(props: TripMateCardProps) {
     <li className={chat?.id ? "hidden" : "flex flex-col items-center"}>
       <Avatar src={props.tripMate.avatar} className="size-20" />
       <span>{props.tripMate.name}</span>
-      <span>{props.tripMate.surname}</span>
       <span>{props.tripMate.description}</span>
       <ButtonLink
         size="medium"

@@ -14,6 +14,8 @@ export const authorizedFetch = () => {
       },
     });
 
+    console.log(response);
+
     if (!response.ok) {
       console.error(response, await response.text());
 

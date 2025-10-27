@@ -34,7 +34,6 @@ export function TripMatesView() {
       </Container>
       {showPopup && selectedTripMateId && (
         <Popup
-          title="Ask for chat"
           closePopup={() => {
             setShowPopup(false);
           }}

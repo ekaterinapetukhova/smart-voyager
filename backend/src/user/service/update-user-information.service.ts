@@ -30,12 +30,9 @@ export class UpdateUserInformationService {
 
     const updatedData: Partial<User> = {
       ...restData,
+      email: email && email !== existingUser.email ? email : existingUser.email,
       passwordHash: password ? await hashPassword(password) : existingUser.passwordHash,
     };
-
-    if (email && email !== existingUser.email) {
-      updatedData.email = email;
-    }
 
     return this.prisma.user.update({
       where: {

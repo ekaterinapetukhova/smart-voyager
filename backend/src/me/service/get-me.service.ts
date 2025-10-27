@@ -20,6 +20,8 @@ export class GetMeService {
       city: user.city,
       languages: user.languages,
       description: user.description,
+      tripInterest: user.tripInterest,
+      tripGoals: user.tripGoals,
       avatar,
     };
   }

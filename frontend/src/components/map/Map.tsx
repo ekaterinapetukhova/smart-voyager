@@ -83,7 +83,7 @@ export function Map(props: MapProps) {
           className="h-full outline-none"
           scrollWheelZoom
           preferCanvas={true}
-          zoomControl={true}
+          zoomControl={false}
           bounds={bounds}
         >
           <ProvideMapFragment setMap={(m) => (map.current = m)} />

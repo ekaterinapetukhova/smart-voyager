@@ -14,9 +14,7 @@ export function Container(props: BackgroundProps) {
         src={Bg}
         alt="Background"
       />
-      <div className={["flex items-center py-10", props.childrenContainerClassNames ?? ""].join(" ")}>
-        {props.children}
-      </div>
+      <div className={props.childrenContainerClassNames}>{props.children}</div>
     </div>
   );
 }

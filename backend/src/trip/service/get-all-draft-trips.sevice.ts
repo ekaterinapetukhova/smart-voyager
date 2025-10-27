@@ -1,21 +1,22 @@
 import { Injectable } from "@nestjs/common";
-import { Trip } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 
 @Injectable()
-export class GetTripsByUserService {
+export class GetAllDraftTripsService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public execute(userId: string): Promise<Trip[]> {
+  public execute(userId: string): Promise<Prisma.TripGetPayload<{ include: { controlList: true } }>[]> {
     return this.prisma.trip.findMany({
       where: {
         userId,
+        event: null,
       },
       orderBy: {
         createdAt: "desc",
       },
       include: {
-        tripPoints: true,
+        controlList: true,
       },
     });
   }

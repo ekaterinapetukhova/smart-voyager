@@ -22,7 +22,7 @@ export function NewTripByAIView() {
   };
 
   return (
-    <Container>
+    <Container childrenContainerClassNames="">
       {/* add textarea */}
       <Form
         buttonText="Let's create!"

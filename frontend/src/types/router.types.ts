@@ -1,6 +1,7 @@
 export enum RouterEnum {
   Auth = "/auth",
-  Trips = "/trips",
+  PlannedTrips = "/trips/planned",
+  DraftTrips = "/trips/drafts",
   Trip = "/trip/:tripId",
   NewTripByUser = "/new-trip-by-user",
   NewTripByAI = "/new-trip-by-ai",
