@@ -32,10 +32,10 @@ export class AuthController {
   public verify(@Body() data: unknown): Promise<void> {
     const validEmailToken = z
       .object({
-        token: z.string(),
+        emailToken: z.string(),
       })
       .parse(data);
 
-    return this.updateUserVerifiedStatusService.execute(validEmailToken.token);
+    return this.updateUserVerifiedStatusService.execute(validEmailToken.emailToken);
   }
 }

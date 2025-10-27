@@ -1,6 +1,12 @@
 import { useTokenStore } from "../store/user-store.ts";
 import { config } from "../config/config.ts";
 
+export class AuthorizedFetchError extends Error {
+  public constructor(public readonly response: Response) {
+    super();
+  }
+}
+
 export const authorizedFetch = () => {
   const headers = { Authorization: `Bearer ${useTokenStore.getState().token}` };
 
@@ -14,12 +20,10 @@ export const authorizedFetch = () => {
       },
     });
 
-    console.log(response);
-
     if (!response.ok) {
       console.error(response, await response.text());
 
-      throw new Error(`${params.method} failed`);
+      throw new AuthorizedFetchError(response);
     }
 
     return response.headers.get("content-type")?.startsWith("application/json") ? response.json() : response.text();
