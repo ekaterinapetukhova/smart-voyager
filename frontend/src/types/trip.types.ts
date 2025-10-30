@@ -62,6 +62,12 @@ export interface Geometry {
   coordinates: number[][][];
 }
 
+export interface ControlListItem {
+  name: string;
+  cost: number;
+  description: string;
+}
+
 export interface Trip {
   id: string;
   name: string;
@@ -69,8 +75,9 @@ export interface Trip {
   tripPoints: ExistingTripPoint[];
   description: string;
   event: TripEvent | null;
+  controlList: ControlListItem[];
 }
 
-export type CreatedTrip = Omit<Trip, "id" | "createdAt" | "tripPoints" | "event">;
+export type CreateTripDto = Omit<Trip, "id" | "createdAt" | "tripPoints" | "event" | "controlList">;
 
-export type UpdateTripDto = Partial<CreatedTrip> & Pick<Trip, "id">;
+export type UpdateTripDto = Partial<CreateTripDto> & Pick<Trip, "id">;

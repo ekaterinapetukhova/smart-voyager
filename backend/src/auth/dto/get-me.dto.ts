@@ -1,5 +1,5 @@
 import { z } from "zod/v4";
-import { Gender, TripGoals, TripInterest } from "@prisma/client";
+import { Currency, Gender, TripGoals, TripInterest } from "@prisma/client";
 
 export const getMeDtoSchema = z.object({
   id: z.uuid(),
@@ -14,6 +14,7 @@ export const getMeDtoSchema = z.object({
   avatar: z.base64(),
   tripInterest: z.array(z.enum(TripInterest)),
   tripGoals: z.array(z.enum(TripGoals)),
+  currency: z.enum(Currency),
 });
 
 export type GetMeDto = z.output<typeof getMeDtoSchema>;

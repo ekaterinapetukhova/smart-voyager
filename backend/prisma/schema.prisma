@@ -108,8 +108,7 @@ model Trip {
 
   event TripEvent?
 
-  controlList    ControlListItem[]
-  budgetAnalysis String?
+  controlList ControlListItem[]
 }
 
 model ControlListItem {
@@ -119,8 +118,8 @@ model ControlListItem {
   cost        Int
   description String
 
-  trip   Trip   @relation(fields: [tripid], references: [id])
-  tripid String
+  trip   Trip   @relation(fields: [tripId], references: [id])
+  tripId String
 }
 
 model Chat {

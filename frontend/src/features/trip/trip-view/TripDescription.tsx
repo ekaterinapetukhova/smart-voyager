@@ -10,6 +10,9 @@ import { Title } from "../../../components/common/Title.tsx";
 import { useTripApi } from "../../../hooks/use-trip-api.ts";
 import { Trip } from "../../../types/trip.types.ts";
 import { TripEvent } from "../../trip-event/TripEvent.tsx";
+import { authorizedFetch } from "../../../utils/authorized-fetch.ts";
+import { isPrint } from "../../../utils/is-print.ts";
+import { ControlListAndBudget } from "./ControlListAndBudget.tsx";
 
 interface TripDescriptionProps {
   trip: Trip;
@@ -67,10 +70,19 @@ function EventForm(props: EventFormProps) {
 }
 
 export function TripDescription(props: TripDescriptionProps) {
-  const { updateTrip } = useTripApi();
+  const { updateTrip, useCreateControlListByAI } = useTripApi();
 
   const [editTitleMode, setEditTitleMode] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+
+  const createControlListByAI = useCreateControlListByAI();
+
+  const pdf = () => {
+    void authorizedFetch()({
+      method: "POST",
+      path: `pdf/${props.trip.id}`,
+    });
+  };
 
   const scrollToMap = () => {
     const tripMap = document.getElementById("tripMap");
@@ -81,10 +93,10 @@ export function TripDescription(props: TripDescriptionProps) {
   };
 
   return (
-    <div id="tripDescription" className="h-screen pt-10 flex flex-col items-center">
-      <div className="grow">
+    <div id="tripDescription" className="h-screen print:h-fit pt-10 flex flex-col items-center">
+      <div className="grow flex flex-col">
         {editTitleMode ? (
-          <>
+          <div className="flex">
             <TextInput
               value={newTitle}
               onChange={(e) => {
@@ -100,7 +112,7 @@ export function TripDescription(props: TripDescriptionProps) {
                 });
               }}
             />
-          </>
+          </div>
         ) : (
           <Title>
             {props.trip.name}
@@ -113,9 +125,33 @@ export function TripDescription(props: TripDescriptionProps) {
             />
           </Title>
         )}
-        <p className="text-text">{props.trip.description}</p>
-        {!props.trip.event && <EventForm tripId={props.trip.id} />}
-        {props.trip.event && <TripEvent from={props.trip.event.from} to={props.trip.event.to} />}
+        <span className="text-xl text-accent">IS PRINT?{isPrint() ? "YES" : "No"}</span>
+        <Button label="pdf" size="large" onClick={pdf} />
+        <div className="flex grow gap-x-4">
+          <div className="basis-1/2">
+            <p className="text-text">{props.trip.description}</p>
+            {!props.trip.event && <EventForm tripId={props.trip.id} />}
+            {props.trip.event && <TripEvent from={props.trip.event.from} to={props.trip.event.to} />}
+            <div className="w-40">
+              <Button
+                label="Generate control list"
+                size="medium"
+                onClick={() => {
+                  createControlListByAI.mutate(props.trip.id);
+                }}
+                isLoading={createControlListByAI.isPending}
+              />
+            </div>
+          </div>
+          <div className="basis-1/2 flex flex-col relative">
+            <h2 className="text-accent text-lg font-bold">Control list</h2>
+            <div className="absolute inset-0 overflow-y-scroll pt-12 pb-8">
+              {props.trip.controlList.length !== 0 && (
+                <ControlListAndBudget controlListItems={props.trip.controlList} />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
       <div className="w-24">
         <Button label="Scroll to map" size="small" onClick={scrollToMap} />

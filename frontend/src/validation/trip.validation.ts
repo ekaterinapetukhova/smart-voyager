@@ -4,3 +4,9 @@ export const createTripSchema = z.object({
   name: z.string().min(1, { message: "Please give a name for your trip" }),
   description: z.string().min(1, { message: "Please describe your trip" }),
 });
+
+export const createTripByAISchema = z.object({
+  content: z.string().min(1),
+});
+
+export type CreateTripByAI = z.output<typeof createTripByAISchema>;

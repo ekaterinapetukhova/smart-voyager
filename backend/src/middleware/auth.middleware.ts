@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware, UnauthorizedException } from "@nestjs/common";
 import { NextFunction, Request } from "express";
-import Jwt from "jsonwebtoken";
+import Jwt, { JsonWebTokenError } from "jsonwebtoken";
 import { z } from "zod/v4";
 import { User } from "@prisma/client";
 import { config } from "../config/config";
@@ -50,7 +50,15 @@ export class AuthMiddleware implements NestMiddleware {
       id: z.uuid(),
     });
 
-    const payload = Jwt.verify(token, config.secretKey);
+    let payload: Jwt.JwtPayload | string = {};
+
+    try {
+      payload = Jwt.verify(token, config.secretKey);
+    } catch (e) {
+      if (e instanceof JsonWebTokenError) {
+        throw new UnauthorizedException();
+      }
+    }
 
     const validPayload = payloadSchema.safeParse(payload);
 

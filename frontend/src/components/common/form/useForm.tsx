@@ -92,7 +92,7 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
       options={props.options}
       {...castExistingValue(props.form.data[props.fieldKey])}
       onChange={(e) => {
-        props.form.update({ [props.fieldKey]: castNewValue(e) } as Partial<T>);
+        props.form.update({ [props.fieldKey]: castNewValue(e as React.ChangeEvent<HTMLInputElement>) } as Partial<T>);
       }}
       errors={props.form.fieldErrors
         .filter((x) => x.field === props.fieldKey)

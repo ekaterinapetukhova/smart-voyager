@@ -11,17 +11,7 @@ export class GetMeService {
     const avatar = await this.getFileService.execute(user.id);
 
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      gender: user.gender,
-      birthDate: user.birthDate,
-      country: user.country,
-      city: user.city,
-      languages: user.languages,
-      description: user.description,
-      tripInterest: user.tripInterest,
-      tripGoals: user.tripGoals,
+      ...user,
       avatar,
     };
   }

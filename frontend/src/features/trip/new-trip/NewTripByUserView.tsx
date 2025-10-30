@@ -7,7 +7,7 @@ import { Title } from "../../../components/common/Title.tsx";
 import { createTripSchema } from "../../../validation/trip.validation.ts";
 
 export function NewTripByUserView() {
-  const { addTrip } = useTripApi();
+  const { createTrip } = useTripApi();
 
   const navigate = useNavigate();
 
@@ -32,11 +32,11 @@ export function NewTripByUserView() {
             componentVariants={{
               button: {
                 selected: true,
-                isLoading: addTrip.isPending,
+                isLoading: createTrip.isPending,
                 type: "submit",
                 onClick: async () => {
                   if (form.isValid) {
-                    const trip = await addTrip.mutateAsync(form.data);
+                    const trip = await createTrip.mutateAsync(form.data);
 
                     void navigate(`/trip/${trip.id}`);
                   }

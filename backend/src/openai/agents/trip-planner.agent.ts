@@ -6,7 +6,6 @@ import { VerifyPlaceTool } from "../tools/verify-place.tool";
 import { AIExecutionContext } from "../openai.types";
 import { CreateTripDto } from "../../trip/dto/create-trip.dto";
 import { GeoapifyAutocompleteService } from "../../geoapify/service/geoapify-autocomplete.service";
-import { CreateTripService } from "../../trip/service/create-trip.service";
 import { ServerError } from "../../error/server.error";
 
 export const tripPlannerInputSchema = zv4.object({
@@ -35,7 +34,6 @@ export class TripPlannerAgent {
 
   public constructor(
     private readonly geoapifyAutocompleteService: GeoapifyAutocompleteService,
-    private readonly createTripService: CreateTripService,
     verifyPlaceTool: VerifyPlaceTool
   ) {
     this.agent = new Agent<AIExecutionContext, typeof tripPlannerOutputSchema>({
@@ -44,8 +42,8 @@ export class TripPlannerAgent {
       instructions:
         "you are an agent that provides exciting and interesting trips for user mainly focused " +
         "on the places and returns the trip. " +
-        "You must save the trip and verify all provided places exist before including them into " +
-        "final list. Aim for maximum 10 places.",
+        "You must save the trip, briefly describe it and verify all provided places exist before including them into " +
+        "final list. Aim for maximum 10 places, best aim for between 4 and 7.",
       tools: [webSearchTool(), verifyPlaceTool.getTool()],
       modelSettings: {
         toolChoice: "required",
@@ -54,7 +52,7 @@ export class TripPlannerAgent {
     });
   }
 
-  public async execute(data: TripPlannerInput, userId: string): Promise<string | undefined> {
+  public async execute(data: TripPlannerInput, userId: string): Promise<CreateTripDto> {
     const result = await run(this.agent, data.content, {
       context: {
         userId,
@@ -67,11 +65,7 @@ export class TripPlannerAgent {
       throw new ServerError("Generating trip failed");
     }
 
-    const processedTrip = await this.preprocessTrip(initialTrip);
-
-    const newTrip = await this.createTripService.execute(processedTrip, userId);
-
-    return newTrip.id;
+    return await this.preprocessTrip(initialTrip);
   }
 
   private async preprocessTrip(response: TripPlannerOutput): Promise<CreateTripDto> {

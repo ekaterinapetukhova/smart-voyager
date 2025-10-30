@@ -9,7 +9,7 @@ interface FormFieldProps {
   value?: string;
   checked?: boolean;
   files?: FileList;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   errors?: string;
   options?: string[];
 }
@@ -50,6 +50,33 @@ export function FormField(props: FormFieldProps) {
         <input type="checkbox" name={props.name} checked={props.checked} onChange={props.onChange} className="hidden" />
         {props.label}
       </label>
+    );
+  } else if (props.type === "textarea") {
+    field = (
+      <div className="relative group">
+        <textarea
+          onFocus={() => {
+            setFocused(true);
+          }}
+          onBlur={() => {
+            setFocused(false);
+          }}
+          id={props.id}
+          name={props.name}
+          value={props.value}
+          onChange={props.onChange}
+          className={[
+            "h-20 w-full text-lg border-b-2 pb-1 resize-none outline-none",
+            props.errors ? "border-error" : "border-text",
+          ].join(" ")}
+        />
+        <span
+          className={[
+            "absolute bottom-0 left-0 h-0.5 transition-all ease-out duration-300 bg-accent",
+            focused ? "w-full" : "w-0",
+          ].join(" ")}
+        ></span>
+      </div>
     );
   } else {
     field = (

@@ -27,7 +27,7 @@ export function LoginView() {
     onSuccess: (token) => {
       login(token);
 
-      void navigate(RouterEnum.PlannedTrips);
+      setTimeout(() => void navigate(RouterEnum.PlannedTrips), 0);
     },
   });
 

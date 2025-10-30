@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreatedTrip, Trip, UpdateTripDto } from "../types/trip.types.ts";
+import { CreateTripDto, Trip, UpdateTripDto } from "../types/trip.types.ts";
 import { authorizedFetch } from "../utils/authorized-fetch.ts";
+import { CreateTripByAI } from "../validation/trip.validation.ts";
 
 const path = "trip";
 export const tripQueryKey = "trip";
@@ -30,8 +31,8 @@ export const useTripApi = () => {
     },
   });
 
-  const add = useMutation({
-    mutationFn: async (tripDto: CreatedTrip) => {
+  const create = useMutation({
+    mutationFn: async (tripDto: CreateTripDto) => {
       const request = authorizedFetch();
 
       const trip: Trip = await request({ data: tripDto, method: "POST", path });
@@ -40,6 +41,36 @@ export const useTripApi = () => {
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
+
+  const useCreateByAI = (onSuccess: (tripId: string) => void | Promise<void>) =>
+    useMutation({
+      mutationFn: async (tripDto: CreateTripByAI) => {
+        const request = authorizedFetch();
+
+        const { tripId } = (await request({ data: tripDto, method: "POST", path: `${path}/ai-create-trip` })) as {
+          tripId: string;
+        };
+
+        return tripId;
+      },
+      onSuccess: (tripId) => {
+        void queryClient.invalidateQueries({ queryKey: [tripQueryKey] });
+        void onSuccess(tripId);
+      },
+    });
+
+  const useCreateControlListByAI = () => {
+    return useMutation({
+      mutationFn: async (tripId: string) => {
+        const request = authorizedFetch();
+
+        await request({ method: "POST", path: `${path}/${tripId}/ai-create-control-list` });
+      },
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: [tripQueryKey] });
+      },
+    });
+  };
 
   const update = useMutation({
     mutationFn: async (tripDto: UpdateTripDto) => {
@@ -52,17 +83,13 @@ export const useTripApi = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
 
-  // const remove = useMutation({
-  //   mutationFn: deleteRoutePoint,
-  //   onSuccess: () => queryClient.invalidateQueries({ queryKey: ["routePoint"] }),
-  // });
-
   return {
     plannedTrips: getAllPlanned,
     draftTrips: getAllDrafts,
-    addTrip: add,
+    createTrip: create,
+    useCreateByAI: useCreateByAI,
+    useCreateControlListByAI: useCreateControlListByAI,
     updateTrip: update,
-    // deletePoint: remove.mutateAsync,
   };
 };
 

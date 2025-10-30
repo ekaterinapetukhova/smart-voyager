@@ -14,6 +14,7 @@ import { ChatModule } from "./chat/chat.module";
 import { AIModule } from "./openai/openai.module";
 import { TripPointModule } from "./trip-point/trip-point.module";
 import { TripEventModule } from "./trip-event/trip-event.module";
+import { PdfModule } from "./pdf/pdf.module";
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TripEventModule } from "./trip-event/trip-event.module";
     ChatModule,
     AIModule,
     TripEventModule,
+    PdfModule,
   ],
   controllers: [],
   providers: [ZodErrorExceptionFilter],

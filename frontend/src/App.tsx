@@ -1,7 +1,5 @@
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { ReactNode, useEffect, useState } from "react";
-import { RegistrationView } from "./features/registration/RegistrationView.tsx";
-import { LoginView } from "./features/login/LoginView.tsx";
+import { ReactNode, useEffect } from "react";
 import { RouterEnum } from "./types/router.types.ts";
 import { updateUserStore, useTokenStore } from "./store/user-store.ts";
 import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
@@ -9,13 +7,16 @@ import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
 import { CommonChatView } from "./features/chat/CommonChatView.tsx";
 import { Sidebar } from "./components/sidebar/Sidebar.tsx";
 import { DraftTripsListView } from "./features/trip/DraftTripsListView.tsx";
-import { AuthView } from "./features/auth/AuthView.tsx";
 import { useVerification } from "./hooks/use-verification.ts";
 import { NewTripByUserView } from "./features/trip/new-trip/NewTripByUserView.tsx";
 import { NewTripModeChoiceView } from "./features/trip/new-trip/NewTripModeChoiceView.tsx";
 import { NewTripByAIView } from "./features/trip/new-trip/NewTripByAIView.tsx";
 import { TripView } from "./features/trip/trip-view/TripView.tsx";
 import { PlannedTripsListView } from "./features/trip/PlannedTripsListView.tsx";
+import { AuthView } from "./features/auth/AuthView.tsx";
+import { RegistrationView } from "./features/registration/RegistrationView.tsx";
+import { LoginView } from "./features/login/LoginView.tsx";
+import { isPrint } from "./utils/is-print.ts";
 
 interface ProtectedRouteProps {
   isAuth: boolean;
@@ -57,14 +58,42 @@ export function App() {
 
   return (
     <div className="flex h-screen overflow-y-auto lg:overflow-hidden">
-      {isAuth && <Sidebar />}
+      {isAuth && !isPrint() && <Sidebar />}
       <Routes>
         <Route path="/" element={<Navigate to={isAuth ? RouterEnum.PlannedTrips : RouterEnum.Auth} replace />} />
 
-        <Route path={RouterEnum.Auth} element={<AuthView />} />
-        <Route path={RouterEnum.Registration} element={<RegistrationView />} />
-        <Route path={RouterEnum.Login} element={<LoginView />} />
-        <Route path={RouterEnum.Verification} element={<AuthView />} />
+        <Route
+          path={RouterEnum.Auth}
+          element={
+            <ProtectedRoute isAuth={!isAuth}>
+              <AuthView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.Registration}
+          element={
+            <ProtectedRoute isAuth={!isAuth}>
+              <RegistrationView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.Login}
+          element={
+            <ProtectedRoute isAuth={!isAuth}>
+              <LoginView />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={RouterEnum.Verification}
+          element={
+            <ProtectedRoute isAuth={!isAuth}>
+              <AuthView />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path={RouterEnum.DraftTrips}

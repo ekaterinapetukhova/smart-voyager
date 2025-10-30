@@ -1,38 +1,46 @@
 import { useNavigate } from "react-router-dom";
-import { Form, InputProp } from "../../../components/common/form/Form.tsx";
-import { ValidAiContentMessage, validAiContentMessage } from "../../../validation/ai.validation.ts";
 import { Container } from "../../../components/common/Container.tsx";
-import { authorizedFetch } from "../../../utils/authorized-fetch.ts";
+import { useTripApi } from "../../../hooks/use-trip-api.ts";
+import { Input, useForm } from "../../../components/common/form/useForm.tsx";
+import { Title } from "../../../components/common/Title.tsx";
+import { ButtonLink } from "../../../components/common/ButtonLink.tsx";
+import { createTripByAISchema } from "../../../validation/trip.validation.ts";
 
 export function NewTripByAIView() {
   const navigate = useNavigate();
 
-  const fields = {
-    content: { value: "", type: "text" },
-  } satisfies Record<string, InputProp>;
+  const createMutation = useTripApi().useCreateByAI((tripId) => {
+    void navigate(`/trip/${tripId}`);
+  });
 
-  const sendRequest = async (data: ValidAiContentMessage) => {
-    const request = authorizedFetch();
+  const form = useForm({
+    initialData: {
+      content: "",
+    },
+    validation: createTripByAISchema,
+  });
 
-    const response: {
-      tripId: string;
-    } = await request({ method: "POST", path: "ai/suggest-trip", data });
-
-    void navigate(`/trip/${response.tripId}`);
-  };
+  // void navigate(`/trip/${response.tripId}`);
 
   return (
-    <Container childrenContainerClassNames="">
-      {/* add textarea */}
-      <Form
-        buttonText="Let's create!"
-        fields={fields}
-        checkValidation={(data) => validAiContentMessage.parse(data)}
-        sendRequest={(data) => sendRequest(data)}
-        hiddenLabel
-        formClassNames="items-center w-full"
+    <Container childrenContainerClassNames="flex flex-col items-center pt-10">
+      <Title>Describe your trip wishes</Title>
+      <Input type="textarea" form={form} fieldKey="content" />
+      <ButtonLink
+        label="Create"
+        size="large"
+        componentVariants={{
+          button: {
+            selected: true,
+            onClick: () => {
+              if (form.isValid) {
+                createMutation.mutate(form.data);
+              }
+            },
+            isLoading: createMutation.isPending,
+          },
+        }}
       />
-      {/*<Map />*/}
     </Container>
   );
 }

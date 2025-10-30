@@ -25,6 +25,8 @@ export function DraftTripsListView() {
     );
   });
 
+  console.log(draftTrips.data);
+
   return (
     <Container childrenContainerClassNames="items-start flex-col">
       <div className="flex gap-x-16 justify-between w-full pt-10 pb-4">
@@ -50,6 +52,7 @@ export function DraftTripsListView() {
       </div>
 
       {draftTrips.isSuccess && <ul className="w-full flex flex-col gap-y-4">{tripItems}</ul>}
+      {draftTrips.data?.length === 0 && <p className="text-accent">No trips for now...</p>}
     </Container>
   );
 }

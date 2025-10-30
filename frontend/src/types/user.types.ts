@@ -34,6 +34,13 @@ export const tripGoals = {
 
 export type TripGoals = keyof typeof tripGoals;
 
+export enum Currency {
+  EUR = "eur",
+  USD = "usd",
+  PLN = "pln",
+  BYN = "byn",
+}
+
 export interface User {
   id: string;
   name: string;
@@ -47,11 +54,5 @@ export interface User {
   description: string | null;
   tripInterest: TripInterest[];
   tripGoals: TripGoals[];
-}
-
-export enum Currency {
-  EUR = "eur",
-  USD = "usd",
-  PLN = "pln",
-  BYN = "byn",
+  currency: Currency;
 }
