@@ -17,6 +17,6 @@ export class GetAllTripMatesService {
       tripMate.avatar = await this.getFileService.execute(tripMate.id);
     }
 
-    return tripMates.filter((tripMate) => userId !== tripMate.id);
+    return tripMates.filter((tripMate) => userId !== tripMate.id && tripMate.shouldBeVisible);
   }
 }

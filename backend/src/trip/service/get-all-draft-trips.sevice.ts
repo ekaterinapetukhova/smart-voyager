@@ -6,10 +6,32 @@ import { PrismaService } from "../../prisma/prisma.service";
 export class GetAllDraftTripsService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public execute(userId: string): Promise<Prisma.TripGetPayload<{ include: { controlList: true } }>[]> {
+  public execute(userId: string): Promise<
+    Prisma.TripGetPayload<{
+      include: {
+        controlList: true;
+        collaborators: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
+      };
+    }>[]
+  > {
     return this.prisma.trip.findMany({
       where: {
-        userId,
+        OR: [
+          { userId },
+          {
+            collaborators: {
+              some: {
+                id: userId,
+              },
+            },
+          },
+        ],
         event: null,
       },
       orderBy: {
@@ -17,6 +39,13 @@ export class GetAllDraftTripsService {
       },
       include: {
         controlList: true,
+        collaborators: {
+          select: {
+            id: true,
+            avatar: true,
+            name: true,
+          },
+        },
       },
     });
   }

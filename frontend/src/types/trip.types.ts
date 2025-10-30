@@ -76,6 +76,11 @@ export interface Trip {
   description: string;
   event: TripEvent | null;
   controlList: ControlListItem[];
+  collaborators: {
+    id: string;
+    name: string;
+    avatar: string;
+  }[];
 }
 
 export type CreateTripDto = Omit<Trip, "id" | "createdAt" | "tripPoints" | "event" | "controlList">;

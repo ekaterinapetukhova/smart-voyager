@@ -59,7 +59,7 @@ model User {
 
   verified Boolean @default(false)
 
-  shouldBeVisible Boolean?       @default(false)
+  shouldBeVisible Boolean        @default(false)
   country         String?
   city            String?
   languages       String?
@@ -69,7 +69,8 @@ model User {
 
   currency Currency @default(eur)
 
-  trip Trip[]
+  trip                 Trip[] @relation("owner")
+  collaboratingOnTrips Trip[] @relation("collaborator")
 
   chatMessageRecipient ChatMessage[] @relation(name: "chatMessageRecipient")
   chatMessageSender    ChatMessage[] @relation(name: "chatMessageSender")
@@ -103,8 +104,10 @@ model Trip {
 
   isProposal Boolean
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], "owner")
   userId String
+
+  collaborators User[] @relation("collaborator")
 
   event TripEvent?
 

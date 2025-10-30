@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { Container } from "../../../components/common/Container.tsx";
 import { useTripById } from "../../../hooks/use-trip-api.ts";
-import { TripMap } from "./TripMap.tsx";
-import { TripDescription } from "./TripDescription.tsx";
+import { TripMap } from "./map/TripMap.tsx";
+import { TripDescription } from "./description/TripDescription.tsx";
 
 export function TripView() {
   const params = useParams();
@@ -16,7 +16,7 @@ export function TripView() {
   }
 
   return (
-    <Container childrenContainerClassNames="w-full">
+    <Container childrenContainerClassNames="w-full print:text-background">
       <TripDescription trip={trip} />
       <TripMap trip={trip} />
     </Container>

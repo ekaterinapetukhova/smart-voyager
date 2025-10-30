@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import * as jose from "jose";
 import { authorizedFetch, AuthorizedFetchError } from "../utils/authorized-fetch.ts";
-import { User } from "../types/user.types.ts";
+import { User, userSchema } from "../types/user.types.ts";
 import { config } from "../config/config.ts";
 
 interface AuthStore {
@@ -55,11 +55,14 @@ export async function updateUserStore() {
     const request = authorizedFetch();
 
     try {
-      const user: User | null = await request({ path: "me", method: "GET" });
+      const user = await request({ path: "me", method: "GET" });
 
-      if (user !== null) {
-        useUserStore.getState().updateUserData(user);
+      const userValidated = userSchema.safeParse(user);
+
+      if (userValidated.success) {
+        useUserStore.getState().updateUserData(userValidated.data);
       } else {
+        console.log(userValidated.error);
         useTokenStore.getState().logout();
       }
     } catch (e: unknown) {

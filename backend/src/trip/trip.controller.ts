@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put } from "@nestjs/common";
 import { Prisma, Trip, User } from "@prisma/client";
 import { GetUser } from "../auth/user.decorator";
 import { TripPlannerAgent, tripPlannerInputSchema } from "../openai/agents/trip-planner.agent";
@@ -11,6 +11,8 @@ import { updateTripDtoSchema } from "./dto/update-trip.dto";
 import { UpdateTripService } from "./service/update-trip.service";
 import { GetAllDraftTripsService } from "./service/get-all-draft-trips.sevice";
 import { CreateControlListItemService } from "./service/control-list-item/create-control-list.service";
+import { AddTripMateService } from "./service/add-trip-mate.service";
+import { RemoveTripMateService } from "./service/remove-trip-mate.service";
 
 @Controller("trip")
 export class TripController {
@@ -22,7 +24,9 @@ export class TripController {
     private readonly getAllDraftTripsService: GetAllDraftTripsService,
     private readonly tripPlannerAgent: TripPlannerAgent,
     private readonly controlListCreatorAgent: ControlListCreatorAgent,
-    private readonly createControlListItemService: CreateControlListItemService
+    private readonly createControlListItemService: CreateControlListItemService,
+    private readonly addTripMateService: AddTripMateService,
+    private readonly removeTripMateService: RemoveTripMateService
   ) {}
 
   @Post()
@@ -33,22 +37,69 @@ export class TripController {
   }
 
   @Get("planned")
-  public getAll(@GetUser() user: User): Promise<Prisma.TripGetPayload<{ include: { event: true } }>[]> {
+  public getAll(@GetUser() user: User): Promise<
+    Prisma.TripGetPayload<{
+      include: {
+        event: true;
+        collaborators: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
+      };
+    }>[]
+  > {
     return this.getPlannedTripsService.execute(user.id);
   }
 
   @Get("drafts")
-  public getAllDrafts(@GetUser() user: User): Promise<Trip[]> {
+  public getAllDrafts(@GetUser() user: User): Promise<
+    Prisma.TripGetPayload<{
+      include: {
+        collaborators: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
+      };
+    }>[]
+  > {
     return this.getAllDraftTripsService.execute(user.id);
   }
 
   @Get(":id")
   public getById(@Param("id", ParseUUIDPipe) id: string): Promise<
     Prisma.TripGetPayload<{
-      include: { tripPoints: true; event: true; controlList: true };
+      include: {
+        tripPoints: true;
+        event: true;
+        controlList: true;
+        collaborators: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
+      };
     }>
   > {
-    return this.getTripByIdService.execute(id, { ...orderedTripPointsIncludePart, event: true, controlList: true });
+    return this.getTripByIdService.execute(id, {
+      ...orderedTripPointsIncludePart,
+      event: true,
+      controlList: true,
+      collaborators: {
+        select: {
+          id: true,
+          avatar: true,
+          name: true,
+        },
+      },
+    });
   }
 
   @Patch(":id")
@@ -56,6 +107,22 @@ export class TripController {
     const updateTripDto = updateTripDtoSchema.parse(data);
 
     return this.updateTripService.execute(id, updateTripDto);
+  }
+
+  @Put(":tripId/collaborator/:mateId")
+  public async addCollaborator(
+    @Param("tripId", ParseUUIDPipe) tripId: string,
+    @Param("mateId", ParseUUIDPipe) mateId: string
+  ): Promise<void> {
+    await this.addTripMateService.execute(mateId, tripId);
+  }
+
+  @Delete(":tripId/collaborator/:mateId")
+  public async removeCollaborator(
+    @Param("tripId", ParseUUIDPipe) tripId: string,
+    @Param("mateId", ParseUUIDPipe) mateId: string
+  ): Promise<void> {
+    await this.removeTripMateService.execute(mateId, tripId);
   }
 
   @Post("ai-create-trip")

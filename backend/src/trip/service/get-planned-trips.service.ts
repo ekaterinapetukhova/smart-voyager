@@ -6,10 +6,33 @@ import { PrismaService } from "../../prisma/prisma.service";
 export class GetPlannedTripsService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public execute(userId: string): Promise<Prisma.TripGetPayload<{ include: { event: true; controlList: true } }>[]> {
+  public execute(userId: string): Promise<
+    Prisma.TripGetPayload<{
+      include: {
+        event: true;
+        controlList: true;
+        collaborators: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
+      };
+    }>[]
+  > {
     return this.prisma.trip.findMany({
       where: {
-        userId,
+        OR: [
+          { userId },
+          {
+            collaborators: {
+              some: {
+                id: userId,
+              },
+            },
+          },
+        ],
         event: {
           isNot: null,
         },
@@ -17,6 +40,13 @@ export class GetPlannedTripsService {
       include: {
         event: true,
         controlList: true,
+        collaborators: {
+          select: {
+            id: true,
+            avatar: true,
+            name: true,
+          },
+        },
       },
       orderBy: {
         event: {

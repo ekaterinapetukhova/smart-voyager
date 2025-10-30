@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Popup } from "../../components/common/Popup.tsx";
-import { useTokenStore, useUserStore } from "../../store/user-store.ts";
-import { tripGoals, TripGoals, tripInterest, TripInterest, User } from "../../types/user.types.ts";
+import { updateUserStore, useTokenStore, useUserStore } from "../../store/user-store.ts";
+import { Currency, Gender, tripGoals, TripGoals, tripInterest, TripInterest, User } from "../../types/user.types.ts";
 import { Avatar } from "../../components/common/Avatar.tsx";
 import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 import { Input, useForm } from "../../components/common/form/useForm.tsx";
@@ -18,26 +18,46 @@ interface UserProfilePopupProps {
 
 export function UserProfilePopup(props: UserProfilePopupProps) {
   const { logout } = useTokenStore();
-  const { user } = useUserStore();
+
+  const user = props.user;
 
   const queryClient = useQueryClient();
 
   const tripGoalsForm = useForm<Record<TripGoals, boolean>>({
-    initialData: mapObject(tripGoals, (_, k) => user?.tripGoals.includes(k) ?? false),
+    initialData: mapObject(tripGoals, (_, k) => user.tripGoals.includes(k) ?? false),
     validation: z.object({}),
   });
 
   const tripInterestForm = useForm<Record<TripInterest, boolean>>({
-    initialData: mapObject(tripInterest, (_, k) => user?.tripInterest.includes(k) ?? false),
+    initialData: mapObject(tripInterest, (_, k) => user.tripInterest.includes(k) ?? false),
     validation: z.object({}),
   });
 
+  console.log(user);
   const form = useForm({
     initialData: {
-      city: user?.city ?? "",
-      country: user?.country ?? "",
+      name: user.name,
+      birthDate: user.birthDate,
+      gender: user.gender,
+      city: user.city ?? "",
+      password: "",
+      country: user.country ?? "",
+      shouldBeVisible: user.shouldBeVisible,
+      languages: user.languages ?? "",
+      description: user.description ?? "",
+      currency: user.currency,
     },
-    validation: validUserUpdateSchema.pick({ city: true, country: true }),
+    validation: validUserUpdateSchema.pick({
+      name: true,
+      birthDate: true,
+      gender: true,
+      city: true,
+      country: true,
+      shouldBeVisible: true,
+      languages: true,
+      description: true,
+      currency: true,
+    }),
   });
 
   const update = useMutation({
@@ -52,27 +72,74 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
         .filter(([_, v]) => v)
         .map(([k, _]) => k);
 
-      await request({ method: "PATCH", path: `user/${user?.id}`, data: { tripGoals, tripInterest, ...form.data } });
+      await request({ method: "PATCH", path: `user/${user.id}`, data: { tripGoals, tripInterest, ...form.data } });
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["user"] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }),
   });
-
-  if (!user) {
-    return;
-  }
-
-  const userInfoItems = Object.entries(user)
-    .filter(([k, v]) => k !== "avatar" && k !== "id" && k !== "name" && v)
-    .map(([k, v]) => {
-      const label = k === "birthDate" ? "Birth date" : k;
-
-      return (
-        <li key={k} className="flex flex-col gap-y-2">
-          <span className="text-accent font-bold text-xl">{label[0].toUpperCase() + label.slice(1)}</span>
-          <span className="text-text">{v}</span>
-        </li>
-      );
-    });
+  //
+  // const userInfoItems = Object.entries(user)
+  //   .filter(([k, v]) => k !== "avatar" && k !== "id" && k !== "name" && v !== null)
+  //   .map(([k, v]) => {
+  //     const label = k === "birthDate" ? "Birth date" : k;
+  //     let value = v;
+  //     if (typeof v === "number") {
+  //       value = v.toString();
+  //     }
+  //     if (typeof v === "boolean") {
+  //       value = v ? "yes" : "no";
+  //     }
+  //
+  //     return (<>
+  //         <li key={k} className="flex flex-col gap-y-2">
+  //           <span className="text-accent font-bold text-xl">{label[0].toUpperCase() + label.slice(1)}</span>
+  //           <span className="text-text">{value}</span>
+  //         </li>
+  //       </>
+  //     );
+  //   });
+  const userInfoItems = (
+    <>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Email</span>
+        <span className="text-text">{user.email}</span>
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Name</span>
+        <Input type="text" form={form} fieldKey="name" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Birth date</span>
+        <Input type="date" form={form} fieldKey="birthDate" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Gender</span>
+        <Input type="radio" form={form} fieldKey="gender" options={[Gender.Male, Gender.Female]} />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <Input type="checkbox" form={form} fieldKey="shouldBeVisible" label="Should be visible" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Country</span>
+        <Input type="text" form={form} fieldKey="country" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">City</span>
+        <Input type="text" form={form} fieldKey="city" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Languages</span>
+        <Input type="text" form={form} fieldKey="languages" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Description</span>
+        <Input type="text" form={form} fieldKey="description" />
+      </li>
+      <li className="flex flex-col gap-y-2">
+        <span className="text-accent font-bold text-xl">Currency</span>
+        <Input type="radio" form={form} fieldKey="currency" options={Object.values(Currency)} />
+      </li>
+    </>
+  );
 
   const tripGoalsInputs = Object.values(
     mapObject(tripGoals, (v, key) => {
@@ -102,30 +169,33 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
           <h3 className="text-accent font-bold text-xl">Trip interests</h3>
           <div className="flex gap-x-2 flex-wrap">{tripInterestInputs}</div>
         </div>
-        <div className="w-md">
-          <Input type="text" form={form} fieldKey="city" label="City" />
-          <Input type="text" form={form} fieldKey="country" label="Country" />
-        </div>
-        <Button
-          label="send"
-          size="medium"
-          onClick={() => {
-            update.mutate();
-          }}
-        />
-        <div className="w-xs mx-auto">
-          <ButtonLink
-            label="Log out"
-            size="medium"
-            componentVariants={{
-              button: {
-                selected: true,
-                onClick: () => {
-                  logout();
+        <div className="flex justify-evenly pt-2">
+          <div className="w-xs mx-auto">
+            <Button
+              label="send"
+              size="medium"
+              onClick={() => {
+                void update.mutateAsync().then(() => {
+                  props.onClose();
+                  void updateUserStore();
+                });
+              }}
+            />
+          </div>
+          <div className="w-xs mx-auto">
+            <ButtonLink
+              label="Log out"
+              size="medium"
+              componentVariants={{
+                button: {
+                  selected: true,
+                  onClick: () => {
+                    logout();
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       </div>
     </Popup>

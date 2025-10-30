@@ -7,11 +7,17 @@ import { useTripApi } from "../../hooks/use-trip-api.ts";
 import { RouterEnum } from "../../types/router.types.ts";
 import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 import { formatDate, FormattedDate } from "../../utils/formatDate.ts";
+import { Avatar } from "../../components/common/Avatar.tsx";
+import { useUserStore } from "../../store/user-store.ts";
 
 export function PlannedTripsListView() {
   const [searchedTrip, setSearchedTrip] = useState("");
 
   const { plannedTrips } = useTripApi();
+  const { user } = useUserStore();
+  if (!user) {
+    return;
+  }
 
   const tripItems = plannedTrips.data?.map((trip) => {
     let formattedDate: FormattedDate = { from: "", to: "" };
@@ -37,6 +43,12 @@ export function PlannedTripsListView() {
             <div className="flex gap-x-2">
               <span className="text-accent">To</span> {formattedDate.to}
             </div>
+          </div>
+          <div className="flex justify-end">
+            <Avatar src={user.avatar} className="size-8 -ml-2 rounded-full" />
+            {trip.collaborators.map((mate) => {
+              return <Avatar src={mate.avatar} className="size-8 -ml-2 rounded-full" />;
+            })}
           </div>
         </Link>
       </li>

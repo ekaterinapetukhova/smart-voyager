@@ -9,6 +9,8 @@ import { GetTripByIdService } from "./service/get-trip-by-id.service";
 import { UpdateTripService } from "./service/update-trip.service";
 import { GetAllDraftTripsService } from "./service/get-all-draft-trips.sevice";
 import { CreateControlListItemService } from "./service/control-list-item/create-control-list.service";
+import { AddTripMateService } from "./service/add-trip-mate.service";
+import { RemoveTripMateService } from "./service/remove-trip-mate.service";
 
 @Module({
   controllers: [TripController],
@@ -19,6 +21,8 @@ import { CreateControlListItemService } from "./service/control-list-item/create
     GetTripByIdService,
     UpdateTripService,
     CreateControlListItemService,
+    AddTripMateService,
+    RemoveTripMateService,
   ],
   imports: [PrismaModule, GeoapifyModule, AIModule],
   exports: [CreateTripService, GetTripByIdService, CreateControlListItemService],

@@ -15,6 +15,7 @@ export const getMeDtoSchema = z.object({
   tripInterest: z.array(z.enum(TripInterest)),
   tripGoals: z.array(z.enum(TripGoals)),
   currency: z.enum(Currency),
+  shouldBeVisible: z.boolean(),
 });
 
 export type GetMeDto = z.output<typeof getMeDtoSchema>;

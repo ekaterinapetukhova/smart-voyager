@@ -10,10 +10,12 @@ export class PdfController {
   @Post(":tripId")
   public async generate(@Req() req: Request, @Param("tripId", ParseUUIDPipe) tripId: string): Promise<void> {
     const token = req.header("authorization");
+
     if (!token) {
       throw new UnauthorizedException();
     }
     const pdf = await this.generatePdfService.execute(token, tripId);
-    await fs.writeFile("pdf.pdf", pdf);
+
+    await fs.writeFile("trip.pdf", pdf);
   }
 }

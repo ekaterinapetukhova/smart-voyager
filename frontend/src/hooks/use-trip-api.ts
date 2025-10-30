@@ -42,6 +42,34 @@ export const useTripApi = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
 
+  const addTripMate = useMutation({
+    mutationFn: async (params: { tripId: string; mateId: string }) => {
+      const request = authorizedFetch();
+
+      const trip: Trip = await request({
+        method: "PUT",
+        path: `${path}/${params.tripId}/collaborator/${params.mateId}`,
+      });
+
+      return trip;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
+  });
+
+  const removeTripMate = useMutation({
+    mutationFn: async (params: { tripId: string; mateId: string }) => {
+      const request = authorizedFetch();
+
+      const trip: Trip = await request({
+        method: "DELETE",
+        path: `${path}/${params.tripId}/collaborator/${params.mateId}`,
+      });
+
+      return trip;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
+  });
+
   const useCreateByAI = (onSuccess: (tripId: string) => void | Promise<void>) =>
     useMutation({
       mutationFn: async (tripDto: CreateTripByAI) => {
@@ -90,6 +118,8 @@ export const useTripApi = () => {
     useCreateByAI: useCreateByAI,
     useCreateControlListByAI: useCreateControlListByAI,
     updateTrip: update,
+    addTripMate,
+    removeTripMate,
   };
 };
 

@@ -1,9 +1,10 @@
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { useState } from "react";
-import { Map } from "../../../components/map/Map.tsx";
-import { useTripPointAPI } from "../../../hooks/use-trip-point-api.ts";
-import { Trip } from "../../../types/trip.types.ts";
-import { Button } from "../../../components/common/Button.tsx";
+import { Map } from "../../../../components/map/Map.tsx";
+import { useTripPointAPI } from "../../../../hooks/use-trip-point-api.ts";
+import { Trip } from "../../../../types/trip.types.ts";
+import { Button } from "../../../../components/common/Button.tsx";
+import { isPrint } from "../../../../utils/is-print.ts";
 import { PlacesList } from "./PlacesList.tsx";
 
 interface TripMapProps {
@@ -25,9 +26,15 @@ export function TripMap(props: TripMapProps) {
   };
 
   return (
-    <div id="tripMap" className="h-screen relative w-full flex justify-center">
+    <div id="tripMap" className={["h-screen relative w-full flex justify-center", isPrint() && "flex-col"].join(" ")}>
       {showSidebar && (
-        <div className="absolute left-0 bottom-0 top-0 w-sm bg-background/70 z-10 flex flex-col p-4">
+        <div
+          className={
+            isPrint()
+              ? "w-full flex flex-col"
+              : "absolute left-0 bottom-0 top-0 w-sm bg-background/70 z-10 flex flex-col p-4"
+          }
+        >
           <IconChevronUp
             className="text-accent absolute right-5 top-5 cursor-pointer"
             onClick={() => {
@@ -42,7 +49,7 @@ export function TripMap(props: TripMapProps) {
           />
         </div>
       )}
-      {!showSidebar && (
+      {!showSidebar && !isPrint() && (
         <div className="absolute left-0 top-0 h-16 w-sm bg-background/70 z-10 flex flex-col p-4">
           <IconChevronDown
             className="text-accent absolute right-5 top-5 cursor-pointer"
@@ -53,7 +60,7 @@ export function TripMap(props: TripMapProps) {
           <h3 className="font-bold text-2xl text-accent">Your trip places list</h3>
         </div>
       )}
-      <div className="w-24 absolute top-0 z-10">
+      <div className="w-24 absolute top-0 z-10 print:hidden">
         <Button label="Scroll to description" size="small" onClick={scrollToDescription} />
       </div>
       <Map

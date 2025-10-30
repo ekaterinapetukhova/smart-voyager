@@ -16,6 +16,7 @@ export const updateUserDtoSchema = z
     tripInterest: z.array(z.enum(TripInterest)),
     tripGoals: z.array(z.enum(TripGoals)),
     currency: z.enum(Currency),
+    shouldBeVisible: z.boolean(),
   })
   .partial();
 

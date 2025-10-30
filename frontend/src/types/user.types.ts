@@ -1,3 +1,5 @@
+import z from "zod/v4";
+
 export enum Gender {
   Male = "male",
   Female = "female",
@@ -41,18 +43,21 @@ export enum Currency {
   BYN = "byn",
 }
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  birthDate: Date;
-  gender: Gender;
-  avatar: string;
-  country: string | null;
-  city: string | null;
-  languages: string | null;
-  description: string | null;
-  tripInterest: TripInterest[];
-  tripGoals: TripGoals[];
-  currency: Currency;
-}
+export const userSchema = z.object({
+  id: z.uuid(),
+  name: z.string(),
+  gender: z.enum(Gender),
+  email: z.email(),
+  birthDate: z.coerce.date(),
+  country: z.string().nullish(),
+  city: z.string().nullish(),
+  languages: z.string().nullish(),
+  description: z.string().nullish(),
+  avatar: z.base64(),
+  tripInterest: z.array(z.enum(Object.keys(tripInterest))),
+  tripGoals: z.array(z.enum(Object.keys(tripGoals))),
+  currency: z.enum(Currency),
+  shouldBeVisible: z.boolean(),
+});
+
+export type User = z.output<typeof userSchema>;
