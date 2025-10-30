@@ -14,7 +14,7 @@ interface TripMapProps {
 export function TripMap(props: TripMapProps) {
   const { addTripPoint, deleteTripPoint } = useTripPointAPI();
 
-  const [showSidebar, setShowSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(isPrint());
   const [clickTripId, setClickTripId] = useState<string | null>();
 
   const scrollToDescription = () => {
@@ -26,15 +26,15 @@ export function TripMap(props: TripMapProps) {
   };
 
   return (
-    <div id="tripMap" className={["h-screen relative w-full flex justify-center", isPrint() && "flex-col"].join(" ")}>
+    <div
+      id="tripMap"
+      className={[
+        "h-screen relative w-full flex justify-center print:break-before-page print:break-inside-avoid-page",
+        isPrint() && "flex-col break-before-page",
+      ].join(" ")}
+    >
       {showSidebar && (
-        <div
-          className={
-            isPrint()
-              ? "w-full flex flex-col"
-              : "absolute left-0 bottom-0 top-0 w-sm bg-background/70 z-10 flex flex-col p-4"
-          }
-        >
+        <div className={"absolute left-0 bottom-0 top-0 w-sm bg-background/70 z-10 flex flex-col p-4"}>
           <IconChevronUp
             className="text-accent absolute right-5 top-5 cursor-pointer"
             onClick={() => {
@@ -49,7 +49,7 @@ export function TripMap(props: TripMapProps) {
           />
         </div>
       )}
-      {!showSidebar && !isPrint() && (
+      {!showSidebar && (
         <div className="absolute left-0 top-0 h-16 w-sm bg-background/70 z-10 flex flex-col p-4">
           <IconChevronDown
             className="text-accent absolute right-5 top-5 cursor-pointer"

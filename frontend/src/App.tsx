@@ -57,7 +57,7 @@ export function App() {
   }, [emailToken, verifyEmail, isAuth, navigate, token, logout]);
 
   return (
-    <div className="flex h-screen overflow-y-auto lg:overflow-hidden">
+    <div className="flex h-screen overflow-y-auto lg:overflow-hidden print:h-fit print:overflow-auto">
       {isAuth && !isPrint() && <Sidebar />}
       <Routes>
         <Route path="/" element={<Navigate to={isAuth ? RouterEnum.PlannedTrips : RouterEnum.Auth} replace />} />

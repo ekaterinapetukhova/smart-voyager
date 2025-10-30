@@ -10,6 +10,13 @@ export class GetAllDraftTripsService {
     Prisma.TripGetPayload<{
       include: {
         controlList: true;
+        user: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
         collaborators: {
           select: {
             id: true;
@@ -39,6 +46,13 @@ export class GetAllDraftTripsService {
       },
       include: {
         controlList: true,
+        user: {
+          select: {
+            id: true,
+            avatar: true,
+            name: true,
+          },
+        },
         collaborators: {
           select: {
             id: true,

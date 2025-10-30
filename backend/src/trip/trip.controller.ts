@@ -41,6 +41,13 @@ export class TripController {
     Prisma.TripGetPayload<{
       include: {
         event: true;
+        user: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
         collaborators: {
           select: {
             id: true;
@@ -58,6 +65,13 @@ export class TripController {
   public getAllDrafts(@GetUser() user: User): Promise<
     Prisma.TripGetPayload<{
       include: {
+        user: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
         collaborators: {
           select: {
             id: true;
@@ -78,6 +92,13 @@ export class TripController {
         tripPoints: true;
         event: true;
         controlList: true;
+        user: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
         collaborators: {
           select: {
             id: true;
@@ -92,6 +113,13 @@ export class TripController {
       ...orderedTripPointsIncludePart,
       event: true,
       controlList: true,
+      user: {
+        select: {
+          id: true,
+          avatar: true,
+          name: true,
+        },
+      },
       collaborators: {
         select: {
           id: true,

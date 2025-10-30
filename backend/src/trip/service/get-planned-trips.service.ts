@@ -11,6 +11,13 @@ export class GetPlannedTripsService {
       include: {
         event: true;
         controlList: true;
+        user: {
+          select: {
+            id: true;
+            avatar: true;
+            name: true;
+          };
+        };
         collaborators: {
           select: {
             id: true;
@@ -40,6 +47,13 @@ export class GetPlannedTripsService {
       include: {
         event: true,
         controlList: true,
+        user: {
+          select: {
+            id: true,
+            avatar: true,
+            name: true,
+          },
+        },
         collaborators: {
           select: {
             id: true,

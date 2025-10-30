@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Popup } from "../../components/common/Popup.tsx";
-import { updateUserStore, useTokenStore, useUserStore } from "../../store/user-store.ts";
+import { updateUserStore, useTokenStore } from "../../store/user-store.ts";
 import { Currency, Gender, tripGoals, TripGoals, tripInterest, TripInterest, User } from "../../types/user.types.ts";
 import { Avatar } from "../../components/common/Avatar.tsx";
 import { ButtonLink } from "../../components/common/ButtonLink.tsx";
@@ -24,12 +24,12 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
   const queryClient = useQueryClient();
 
   const tripGoalsForm = useForm<Record<TripGoals, boolean>>({
-    initialData: mapObject(tripGoals, (_, k) => user.tripGoals.includes(k) ?? false),
+    initialData: mapObject(tripGoals, (_, k) => user.tripGoals.includes(k)),
     validation: z.object({}),
   });
 
   const tripInterestForm = useForm<Record<TripInterest, boolean>>({
-    initialData: mapObject(tripInterest, (_, k) => user.tripInterest.includes(k) ?? false),
+    initialData: mapObject(tripInterest, (_, k) => user.tripInterest.includes(k)),
     validation: z.object({}),
   });
 

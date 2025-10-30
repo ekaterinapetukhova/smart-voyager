@@ -46,7 +46,9 @@ export function ControlListAndBudget(props: ControlListProps) {
           </span>
         </div>
       </div>
-      <ul className="flex flex-col gap-y-2 absolute inset-0 overflow-y-scroll mt-10 w-full divide">{items}</ul>
+      <ul className="flex flex-col gap-y-2 absolute print:relative inset-0 overflow-y-scroll mt-10 w-full divide">
+        {items}
+      </ul>
     </div>
   );
 }

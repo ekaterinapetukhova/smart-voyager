@@ -6,16 +6,11 @@ import { useTripApi } from "../../hooks/use-trip-api.ts";
 import { RouterEnum } from "../../types/router.types.ts";
 import { ButtonLink } from "../../components/common/ButtonLink.tsx";
 import { Avatar } from "../../components/common/Avatar.tsx";
-import { useUserStore } from "../../store/user-store.ts";
 
 export function DraftTripsListView() {
   const [searchedTrip, setSearchedTrip] = useState("");
 
   const { draftTrips } = useTripApi();
-  const { user } = useUserStore();
-  if (!user) {
-    return;
-  }
 
   const tripItems = draftTrips.data?.map((trip) => {
     return (
@@ -27,7 +22,7 @@ export function DraftTripsListView() {
             <p className="text-text">{trip.description}</p>
           </div>
           <div className="flex justify-end">
-            <Avatar src={user.avatar} className="size-8 -ml-2 rounded-full" />
+            <Avatar src={trip.user.avatar} className="size-8 -ml-2 rounded-full" />
             {trip.collaborators.map((mate) => {
               return <Avatar src={mate.avatar} className="size-8 -ml-2 rounded-full" />;
             })}

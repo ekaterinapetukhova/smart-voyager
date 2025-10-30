@@ -1,5 +1,4 @@
-import fs from "fs/promises";
-import { Controller, Param, ParseUUIDPipe, Post, Req, UnauthorizedException } from "@nestjs/common";
+import { Controller, Param, ParseUUIDPipe, Post, Req, StreamableFile, UnauthorizedException } from "@nestjs/common";
 import { Request } from "express";
 import { GeneratePdfService } from "./service/generate-pdf.service";
 
@@ -8,14 +7,13 @@ export class PdfController {
   public constructor(private readonly generatePdfService: GeneratePdfService) {}
 
   @Post(":tripId")
-  public async generate(@Req() req: Request, @Param("tripId", ParseUUIDPipe) tripId: string): Promise<void> {
+  public async generate(@Req() req: Request, @Param("tripId", ParseUUIDPipe) tripId: string): Promise<StreamableFile> {
     const token = req.header("authorization");
 
     if (!token) {
       throw new UnauthorizedException();
     }
-    const pdf = await this.generatePdfService.execute(token, tripId);
 
-    await fs.writeFile("trip.pdf", pdf);
+    return new StreamableFile(await this.generatePdfService.execute(token, tripId));
   }
 }

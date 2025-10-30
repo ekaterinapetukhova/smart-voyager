@@ -16,6 +16,7 @@ import { isPrint } from "../../../../utils/is-print.ts";
 import { Avatar } from "../../../../components/common/Avatar.tsx";
 import { Popup } from "../../../../components/common/Popup.tsx";
 import { useChat } from "../../../../hooks/use-chat.ts";
+import { downloadArrayBuffer } from "../../../../utils/download-array-buffer.ts";
 import { ControlListAndBudget } from "./ControlListAndBudget.tsx";
 
 interface TripDescriptionProps {
@@ -38,11 +39,14 @@ function TripHeader(props: TripHeaderProps) {
 
   const createControlListByAI = useCreateControlListByAI();
 
-  const pdf = () => {
-    void authorizedFetch()({
+  const pdf = async () => {
+    const response: ArrayBuffer = await authorizedFetch()({
       method: "POST",
       path: `pdf/${props.trip.id}`,
+      isBinary: true,
     });
+
+    downloadArrayBuffer(response, "trip.pdf");
   };
 
   return (
@@ -78,7 +82,13 @@ function TripHeader(props: TripHeaderProps) {
         </Title>
       )}
       <div className="flex gap-x-4 h-14 print:hidden">
-        <Button label="Get PDF" size="medium" onClick={pdf} />
+        <Button
+          label="Get PDF"
+          size="medium"
+          onClick={() => {
+            void pdf();
+          }}
+        />
         <Button
           label="Get control list"
           size="medium"
@@ -153,7 +163,7 @@ export function TripDescription(props: TripDescriptionProps) {
   const chat = useChat();
 
   const { user } = useUserStore();
-  
+
   const tripApi = useTripApi();
   const availableMates: { id: string; avatar: string; name: string }[] = [];
   if (chat.data) {
@@ -162,6 +172,7 @@ export function TripDescription(props: TripDescriptionProps) {
         if (
           !availableMates.find((x) => x.id === m.id) &&
           m.id !== user?.id &&
+          m.id !== props.trip.user.id &&
           !props.trip.collaborators.find((e) => e.id === m.id)
         ) {
           availableMates.push({
@@ -177,7 +188,7 @@ export function TripDescription(props: TripDescriptionProps) {
   const isControlListEmpty = props.trip.controlList.length === 0;
 
   return (
-    <div id="tripDescription" className="h-screen print:h-fit pt-10 flex flex-col items-center print:w-full">
+    <div id="tripDescription" className="h-screen print:h-fit pt-10 flex flex-col items-center print:w-full pb-10">
       <div className="grow flex flex-col ">
         <TripHeader trip={props.trip} />
         <div className="flex grow gap-x-4 pt-5">
@@ -191,27 +202,38 @@ export function TripDescription(props: TripDescriptionProps) {
               {!props.trip.event && !isPrint() && <EventForm tripId={props.trip.id} />}
               {props.trip.event && <TripEvent from={props.trip.event.from} to={props.trip.event.to} />}
               <div className="py-4 flex flex-col gap-2 text-text">
+                <SubTitle content="Owner" />
+                <div className="flex gap-x-2 items-center">
+                  <Avatar src={props.trip.user.avatar} className="size-14 rounded-full" />
+                  <span>{props.trip.user.name}</span>
+                </div>
+              </div>
+              <div className="py-4 flex flex-col gap-2 text-text">
                 <SubTitle content="Mates" />
                 {props.trip.collaborators.map((mate) => {
                   return (
                     <div className="flex gap-x-2 items-center">
                       <Avatar src={mate.avatar} className="size-14 rounded-full" />
                       <span>{mate.name}</span>
-                      <IconTrash
-                        className="cursor-pointer"
-                        onClick={() => {
-                          void tripApi.removeTripMate.mutateAsync({ tripId: props.trip.id, mateId: mate.id });
-                        }}
-                      />
+                      {user?.id === props.trip.user.id && (
+                        <IconTrash
+                          className="cursor-pointer"
+                          onClick={() => {
+                            void tripApi.removeTripMate.mutateAsync({ tripId: props.trip.id, mateId: mate.id });
+                          }}
+                        />
+                      )}
                     </div>
                   );
                 })}
-                <IconPlus
-                  className="cursor-pointer"
-                  onClick={() => {
-                    setAddMatePopupVisible(true);
-                  }}
-                />
+                {user?.id === props.trip.user.id && (
+                  <IconPlus
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setAddMatePopupVisible(true);
+                    }}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -231,23 +253,25 @@ export function TripDescription(props: TripDescriptionProps) {
             setAddMatePopupVisible(false);
           }}
         >
-          <div className="w-[70dvw] h-[70dvh]">
+          <div className="">
             <SubTitle content="Available trip mates" />
-            {availableMates.map((mate) => {
-              return (
-                <div
-                  className="flex gap-x-2 text-text items-center cursor-pointer"
-                  onClick={() => {
-                    void tripApi.addTripMate.mutateAsync({ tripId: props.trip.id, mateId: mate.id }).then(() => {
-                      setAddMatePopupVisible(false);
-                    });
-                  }}
-                >
-                  <Avatar src={mate.avatar} className="size-14 rounded-full" />
-                  <span>{mate.name}</span>
-                </div>
-              );
-            })}
+            <ul className="absolute inset-0 overflow-y-scroll">
+              {availableMates.map((mate) => {
+                return (
+                  <li
+                    className="flex gap-x-2 text-text items-center cursor-pointer"
+                    onClick={() => {
+                      void tripApi.addTripMate.mutateAsync({ tripId: props.trip.id, mateId: mate.id }).then(() => {
+                        setAddMatePopupVisible(false);
+                      });
+                    }}
+                  >
+                    <Avatar src={mate.avatar} className="size-14 rounded-full" />
+                    <span>{mate.name}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </Popup>
       )}

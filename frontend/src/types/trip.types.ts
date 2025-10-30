@@ -76,6 +76,11 @@ export interface Trip {
   description: string;
   event: TripEvent | null;
   controlList: ControlListItem[];
+  user: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
   collaborators: {
     id: string;
     name: string;
