@@ -1,4 +1,5 @@
 import { ReactNode, useEffect, useRef } from "react";
+import { IconSquareLetterX } from "@tabler/icons-react";
 
 interface PopupProps {
   children: ReactNode;
@@ -28,18 +29,15 @@ export function Popup(props: PopupProps) {
 
   return (
     <div className="inset-0 fixed bg-black/80 z-100 size-full flex justify-center items-center">
-      <div
-        className={[
-          "relative z-10 overflow-hidden bg-background p-1 overscroll-none",
-          props.containerClassName ?? "",
-        ].join(" ")}
-        ref={popupRef}
-      >
+      <div className={["relative overflow-hidden p-1", props.containerClassName ?? ""].join(" ")} ref={popupRef}>
         <div className="animate-neon-gradient bg-[200%,_200%] absolute inset-0 h-full w-full bg-linear-to-r from-button-primary via-accent to-button-primary-hover"></div>
-        <div className="relative z-20 bg-background h-full flex flex-col">{props.children}</div>
-        <span className="text-text z-20 cursor-pointer absolute top-2 right-2" onClick={props.closePopup}>
-          X
-        </span>
+        <div className="relative z-20 bg-background h-full flex flex-col gap-y-4">{props.children}</div>
+        <IconSquareLetterX
+          className="text-text z-20 cursor-pointer absolute top-4 right-4 hover:text-accent"
+          stroke={2}
+          onClick={props.closePopup}
+        />
+        s
       </div>
     </div>
   );

@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Container } from "../../components/common/Container.tsx";
 import { useTripMates } from "../../hooks/use-trip-mates.ts";
-import { Popup } from "../../components/common/Popup.tsx";
-import { Form } from "../../components/common/form/Form.tsx";
-import { validChatMessageSchema } from "../../validation/chat.validation.ts";
-import { useChat } from "../../hooks/use-chat.ts";
+import { Title } from "../../components/common/Title.tsx";
+import { SelectInput } from "../../components/common/SelectInput.tsx";
+import { useCountriesAndCities } from "../../hooks/use-countries-and-cities.ts";
 import { TripMateCard } from "./TripMateCard.tsx";
+import { TripMatesPopup } from "./TripMatesPopup.tsx";
 
 export function TripMatesView() {
   const { data: tripMates } = useTripMates();
-  const { askForChat } = useChat();
+
+  const { data: countriesAndCities } = useCountriesAndCities();
 
   const [showPopup, setShowPopup] = useState(false);
   const [selectedTripMateId, setSelectedTripMateId] = useState("");
@@ -28,30 +29,20 @@ export function TripMatesView() {
   });
 
   return (
-    <>
-      <Container>
-        <ul className="grid grid-cols-[repeat(auto-fit,_10rem)] gap-4">{tripMatesList}</ul>
-      </Container>
+    <Container childrenContainerClassNames="py-10 w-full flex flex-col gap-y-10 pt-10">
+      <Title>Find Trip Mates</Title>
+      <SelectInput label="Filter by countries" />
+      <div className="w-full">
+        <ul className="grid grid-cols-[repeat(auto-fit,_16rem)] gap-6">{tripMatesList}</ul>
+      </div>
+
       {showPopup && selectedTripMateId && (
-        <Popup
-          closePopup={() => {
+        <TripMatesPopup
+          onClose={() => {
             setShowPopup(false);
           }}
-        >
-          <Form
-            fields={{
-              content: { value: "", type: "text" },
-            }}
-            checkValidation={validChatMessageSchema.parse}
-            sendRequest={(data) => askForChat({ recipientId: selectedTripMateId, content: data.content })}
-            buttonText="Send"
-            formClassNames="items-center w-full"
-            onSuccess={() => {
-              setShowPopup(false);
-            }}
-          />
-        </Popup>
+        />
       )}
-    </>
+    </Container>
   );
 }

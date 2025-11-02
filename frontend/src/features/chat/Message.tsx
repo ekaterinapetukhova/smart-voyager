@@ -13,8 +13,6 @@ export function Message(props: MessageProps) {
     minute: "2-digit",
   });
 
-  console.log(props.message.content);
-
   return (
     <li
       className={[

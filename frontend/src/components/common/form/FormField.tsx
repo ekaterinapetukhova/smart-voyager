@@ -66,14 +66,14 @@ export function FormField(props: FormFieldProps) {
           value={props.value}
           onChange={props.onChange}
           className={[
-            "h-20 w-full text-lg border-b-2 pb-1 resize-none outline-none",
+            "w-full h-40 text-lg p-3 resize-none outline-none bg-transparent",
             props.errors ? "border-error" : "border-text",
           ].join(" ")}
         />
         <span
           className={[
-            "absolute bottom-0 left-0 h-0.5 transition-all ease-out duration-300 bg-accent",
-            focused ? "w-full" : "w-0",
+            "absolute border-accent border-2 left-0 top-0 transition-all ease-out duration-300 -z-10",
+            focused ? "size-full" : "size-full",
           ].join(" ")}
         ></span>
       </div>

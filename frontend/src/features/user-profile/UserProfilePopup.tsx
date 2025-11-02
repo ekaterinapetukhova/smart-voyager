@@ -76,27 +76,7 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["me"] }),
   });
-  //
-  // const userInfoItems = Object.entries(user)
-  //   .filter(([k, v]) => k !== "avatar" && k !== "id" && k !== "name" && v !== null)
-  //   .map(([k, v]) => {
-  //     const label = k === "birthDate" ? "Birth date" : k;
-  //     let value = v;
-  //     if (typeof v === "number") {
-  //       value = v.toString();
-  //     }
-  //     if (typeof v === "boolean") {
-  //       value = v ? "yes" : "no";
-  //     }
-  //
-  //     return (<>
-  //         <li key={k} className="flex flex-col gap-y-2">
-  //           <span className="text-accent font-bold text-xl">{label[0].toUpperCase() + label.slice(1)}</span>
-  //           <span className="text-text">{value}</span>
-  //         </li>
-  //       </>
-  //     );
-  //   });
+
   const userInfoItems = (
     <>
       <li className="flex flex-col gap-y-2">
@@ -155,7 +135,7 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
 
   return (
     <Popup closePopup={props.onClose} containerClassName="w-2/3 h-4/5">
-      <div className="px-4 py-2 overflow-y-scroll">
+      <div className="py-4 px-6 overflow-y-scroll">
         <h2 className="text-3xl font-bold text-text mb-4">{props.user.name}</h2>
         <div className="flex gap-x-4">
           <ul className="grow">{userInfoItems}</ul>

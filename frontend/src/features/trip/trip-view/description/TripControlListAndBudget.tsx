@@ -3,11 +3,11 @@ import { ControlListItem } from "../../../../types/trip.types.ts";
 import { useUserStore } from "../../../../store/user-store.ts";
 import { SubTitle } from "../../../../components/common/SubTitle.tsx";
 
-interface ControlListProps {
+interface TripControlListProps {
   controlListItems: ControlListItem[];
 }
 
-export function ControlListAndBudget(props: ControlListProps) {
+export function TripControlListAndBudget(props: TripControlListProps) {
   const { user } = useUserStore();
 
   if (!user) {
@@ -37,16 +37,16 @@ export function ControlListAndBudget(props: ControlListProps) {
 
   return (
     <div className="h-full overflow-y-scroll relative w-full">
-      <div className="flex justify-between text-lg w-full">
+      <div className="flex justify-between">
         <SubTitle content="Control list" />
         <div className="flex text-text gap-x-2">
           <SubTitle content="Total budget needed:" />
-          <span className="flex gap-x-2">
+          <span className="flex gap-x-2 text-lg">
             <span className="text-accent">{budget}</span> <span>{currency}</span>
           </span>
         </div>
       </div>
-      <ul className="flex flex-col gap-y-2 absolute print:relative inset-0 overflow-y-scroll mt-10 w-full divide">
+      <ul className="flex flex-col gap-y-2 absolute print:relative inset-0 overflow-y-scroll mt-10 w-full divide pr-4">
         {items}
       </ul>
     </div>

@@ -84,6 +84,8 @@ export const useChatByMembers = (receiverId: string) => {
         method: "GET",
       });
 
+      console.log(chat.id);
+
       return chat;
     },
   });

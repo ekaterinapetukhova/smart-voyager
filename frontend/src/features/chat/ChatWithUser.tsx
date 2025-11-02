@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
-import { Form } from "../../components/common/form/Form.tsx";
 import { validChatMessageSchema } from "../../validation/chat.validation.ts";
 import { useChat, useChatById } from "../../hooks/use-chat.ts";
+import { Input, useForm } from "../../components/common/form/useForm.tsx";
+import { Button } from "../../components/common/Button.tsx";
+import { updateUserStore } from "../../store/user-store.ts";
 import { Message } from "./Message.tsx";
 
 interface ChatWithUserProps {
@@ -21,6 +23,13 @@ export function ChatWithUser(props: ChatWithUserProps) {
     }
   };
 
+  const form = useForm({
+    initialData: {
+      content: "",
+    },
+    validation: validChatMessageSchema,
+  });
+
   useEffect(() => {
     scrollToBottom();
   }, [chat?.chatMessage]);
@@ -36,26 +45,25 @@ export function ChatWithUser(props: ChatWithUserProps) {
           ))}
         </ul>
       )}
-      <Form
-        fields={{
-          content: { value: "", type: "text" },
-        }}
-        checkValidation={validChatMessageSchema.parse}
-        sendRequest={async (data) => {
-          await sendMessage({
-            recipientId: props.recipientId,
-            content: data.content,
-            chatId: props.chatId,
-          });
+      <div>
+        <Input type="textarea" form={form} fieldKey="content" />\
+        <div className="w-1/5 mx-auto">
+          <Button
+            label="send"
+            size="large"
+            onClick={async () => {
+              if (form.isValid) {
+                await sendMessage({ content: form.data.content, recipientId: props.recipientId, chatId: props.chatId });
 
-          data.content = "";
+                void updateUserStore();
+                scrollToBottom();
+              }
 
-          scrollToBottom();
-        }}
-        buttonText="Send"
-        formClassNames="items-center w-full flex-row"
-        hiddenLabel={true}
-      />
+              form.data.content = "";
+            }}
+          />
+        </div>
+      </div>
     </>
   );
 }

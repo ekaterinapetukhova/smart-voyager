@@ -16,11 +16,11 @@ export const authAndStoreToken = async (data: ValidLogin) => {
   });
 
   if (!response.ok) {
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 400) {
       throw new UnauthorizedError("Email or password is not correct");
     }
   }
-  
+
   const body = (await response.json()) as LoginResponse;
 
   return body.token;

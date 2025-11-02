@@ -16,7 +16,7 @@ export function TripView() {
   }
 
   return (
-    <Container childrenContainerClassNames="w-full print:text-background">
+    <Container childrenContainerClassNames="w-full pt-10">
       <TripDescription trip={trip} />
       <TripMap trip={trip} />
     </Container>

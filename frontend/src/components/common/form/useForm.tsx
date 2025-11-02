@@ -3,7 +3,7 @@ import * as React from "react";
 import { ReactElement, useCallback, useState } from "react";
 import { FormField } from "./FormField.tsx";
 
-type FormValues = Record<string, string | boolean | number | Date | File[]>;
+export type FormValues = Record<string, string | boolean | number | Date | File[]>;
 
 export interface UseFormInput<T extends FormValues> {
   initialData: T;
@@ -37,8 +37,6 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
         return e.target.value;
       case "date": {
         const date = new Date(e.target.value);
-        console.log("date", date);
-        console.log(date.getTime());
 
         if (!isNaN(date.getTime())) {
           return date;
@@ -104,7 +102,6 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
 
 export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOutput<T> {
   const [data, setData] = useState(input.initialData);
-  console.log(data);
   const [fieldErrors, setFieldErrors] = useState<{ field: keyof T; error: string }[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
@@ -117,9 +114,11 @@ export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOu
       setData(merged);
 
       const validate = input.validation.safeParse(merged);
+
       if (!validate.success) {
         const newFieldErrors: { field: keyof T; error: string }[] = [];
         const newFormErrors: string[] = [];
+
         for (const error of validate.error.issues) {
           if (error.path.length >= 1) {
             newFieldErrors.push({ field: error.path[0] as keyof T, error: error.message });
@@ -127,6 +126,7 @@ export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOu
             newFormErrors.push(error.message);
           }
         }
+
         setFieldErrors(newFieldErrors);
         setFormErrors(newFormErrors);
       } else {

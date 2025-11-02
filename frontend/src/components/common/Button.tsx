@@ -4,7 +4,7 @@ interface ButtonProps {
   label: string;
   type?: "button" | "submit" | "reset";
   icon?: string;
-  onClick?: () => void;
+  onClick?: () => void | Promise<void>;
   size: "large" | "medium" | "small";
   isLoading?: boolean;
 }
@@ -40,13 +40,18 @@ export function Button(props: ButtonProps) {
       medium: "text-sm",
       large: "text-xl",
     },
+    p: {
+      small: "p-0.5",
+      medium: "p-1",
+      large: "p-1.5",
+    },
   };
 
   return (
     <button
       type={props.type ?? "button"}
       className={[
-        "cursor-pointer relative overflow-hidden bg-button-primary group w-full py-3 px-4 flex items-center justify-center",
+        "cursor-pointer relative overflow-hidden bg-button-primary group w-full  flex items-center justify-center",
       ].join(" ")}
       onClick={(e) => {
         e.stopPropagation();
@@ -68,7 +73,13 @@ export function Button(props: ButtonProps) {
         </>
       ) : (
         <>
-          <span className={["font-bold text-text z-10", sizeStyles.fontSize[props.size]].join(" ")}>{props.label}</span>
+          <span
+            className={["font-bold text-text z-10", sizeStyles.fontSize[props.size], sizeStyles.p[props.size]].join(
+              " "
+            )}
+          >
+            {props.label}
+          </span>
           <span className="absolute top-0 -left-2 w-0 h-full bg-button-primary-hover transform -skew-x-12 group-hover:w-[60%] transition-all duration-500 ease-out" />
           <span className="absolute top-0 -right-2 w-0 h-full bg-button-primary-hover transform -skew-x-12 group-hover:w-[60%] transition-all duration-500 ease-out" />
         </>

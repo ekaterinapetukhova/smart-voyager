@@ -1,137 +1,35 @@
-import * as React from "react";
-import { FormEvent, useState } from "react";
-import { ZodError } from "zod";
+import { PropsWithChildren } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { ButtonLink } from "../ButtonLink.tsx";
-import { FormField } from "./FormField.tsx";
+import { Button } from "../Button.tsx";
+import { FormValues, UseFormOutput } from "./useForm.tsx";
 
-export interface InputProp {
-  value?: string;
-  options?: string[];
-  type: "text" | "date" | "password" | "file" | "radio";
-  label?: string;
+export interface FormProps<T extends FormValues, O> {
+  form: UseFormOutput<T>;
+  submitButtonLabel: string;
+  submitFn: (data: T) => Promise<O>;
+  onSuccess: (data: O) => void | Promise<void>;
 }
 
-export type FormValues<T extends Record<string, InputProp>> = {
-  [K in keyof T]: T[K]["value"];
-};
-
-export interface FormProps<T extends Record<string, InputProp>> {
-  fields: T;
-  checkValidation: (data: FormValues<T>) => void;
-  sendRequest: (data: FormValues<T>) => Promise<unknown>;
-  buttonText: string;
-  formClassNames?: string;
-  onSuccess?: () => void;
-  hiddenLabel?: boolean;
-}
-
-export function Form<T extends Record<string, InputProp>>(props: FormProps<T>) {
-  const [formData, setFormData] = useState<FormValues<T>>(
-    Object.fromEntries(Object.entries(props.fields).map(([k, v]) => [k, v.value])) as FormValues<T>
-  );
-  const [formErrors, setFormErrors] = useState("");
-  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const handleInputFileChange = async (fileList: FileList) => {
-    const buffer = await fileList[0].arrayBuffer();
-
-    setFormData((prevFormData) => ({ ...prevFormData, avatar: buffer }));
-  };
-
-  function validateForm() {
-    setErrors({});
-    setFormErrors("");
-
-    try {
-      props.checkValidation(formData);
-
-      return true;
-    } catch (err) {
-      if (err instanceof ZodError) {
-        err.issues.forEach((zodError) => {
-          setErrors((prevError) => ({
-            ...prevError,
-            [zodError.path[0]]: zodError.message,
-          }));
-
-          console.error(zodError);
-        });
-      }
-
-      return false;
-    }
-  }
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: (data: typeof formData) => props.sendRequest(data),
-    onSuccess: () => {
-      if (props.onSuccess) {
-        props.onSuccess();
-      }
-    },
-    onError: (err) => {
-      if (err instanceof ZodError) {
-        setErrors((prev) => ({ ...prev, password: err.message }) as Partial<Record<keyof T, string>>);
-      } else if (err instanceof Error) {
-        setFormErrors(err.message);
-      }
-    },
-  });
-
-  function submit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (validateForm()) {
-      mutate(formData);
-    }
-  }
-
-  const formFields = Object.entries(props.fields).map(([key, value]) => {
-    return (
-      <FormField
-        key={key}
-        {...(props.hiddenLabel ? {} : { label: value.label ?? key[0].toUpperCase() + key.slice(1) })}
-        id={key}
-        type={value.type}
-        name={key}
-        value={formData[key]}
-        options={value.options}
-        onChange={(e) => {
-          if (value.type === "file" && e.target.files) {
-            void handleInputFileChange(e.target.files);
-          } else {
-            handleChange(e);
-          }
-        }}
-        errors={errors[key]}
-      ></FormField>
-    );
+export function Form<T extends FormValues, O>(props: PropsWithChildren<FormProps<T, O>>) {
+  const mutation = useMutation({
+    mutationFn: props.submitFn,
+    onSuccess: props.onSuccess,
   });
 
   return (
-    <form className={["flex flex-col", props.formClassNames ?? ""].join(" ")} onSubmit={submit}>
-      <div className="flex flex-col gap-y-3 w-full">{formFields}</div>
-      {formErrors && <span className="text-error text-xs mt-4">{formErrors}</span>}
-      <div className="w-fit mx-auto mt-10">
-        <ButtonLink
-          size="large"
-          label={props.buttonText}
-          componentVariants={{
-            button: {
-              selected: true,
-              isLoading: isPending,
-              type: "submit",
-            },
-          }}
-        />
-      </div>
-    </form>
+    <div>
+      {props.children}
+      {mutation.error && <p className="text-red-800 font-bold animate-pulse">{mutation.error.message}</p>}
+      <Button
+        label={props.submitButtonLabel}
+        size="large"
+        isLoading={mutation.isPending}
+        onClick={() => {
+          if (props.form.isValid) {
+            mutation.mutate(props.form.data);
+          }
+        }}
+      />
+    </div>
   );
 }

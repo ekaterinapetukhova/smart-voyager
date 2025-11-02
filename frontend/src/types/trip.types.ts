@@ -88,6 +88,9 @@ export interface Trip {
   }[];
 }
 
-export type CreateTripDto = Omit<Trip, "id" | "createdAt" | "tripPoints" | "event" | "controlList">;
+export type CreateTripDto = Omit<
+  Trip,
+  "id" | "createdAt" | "tripPoints" | "event" | "controlList" | "collaborators" | "user"
+>;
 
 export type UpdateTripDto = Partial<CreateTripDto> & Pick<Trip, "id">;

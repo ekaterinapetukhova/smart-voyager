@@ -5,6 +5,7 @@ import { Chat } from "../../types/chat.types.ts";
 import { useUserStore } from "../../store/user-store.ts";
 import { Avatar } from "../../components/common/Avatar.tsx";
 import { User } from "../../types/user.types.ts";
+import { Title } from "../../components/common/Title.tsx";
 import { ChatWithUser } from "./ChatWithUser.tsx";
 
 export function CommonChatView() {
@@ -32,10 +33,10 @@ export function CommonChatView() {
           setSelectedMember(member);
         }}
       >
-        <Avatar src={member.avatar} className="size-14 rounded-full" />
-        <div className="flex flex-col">
-          <span>{member.name}</span>
-          <span className="truncate">{lastMessage.content}</span>
+        <Avatar src={member.avatar} className="size-14 rounded-full overflow-hidden" />
+        <div className="flex flex-col gap-y-2">
+          <span className="text-accent font-bold text-lg">{member.name}</span>
+          <span className="truncate text-text">{lastMessage.content}</span>
         </div>
       </li>
     );
@@ -43,10 +44,15 @@ export function CommonChatView() {
 
   return (
     <Container>
-      <div className="w-full flex">
-        <ul className="w-1/4 flex flex-col gap-y-4">{chatMembers}</ul>
-        <div className="w-full flex flex-col gap-y-2 h-[80vh] scroll-smooth">
-          {selectedChat && selectedMember && <ChatWithUser chatId={selectedChat.id} recipientId={selectedMember.id} />}
+      <div className="w-full flex flex-col gap-y-10 pt-10">
+        <Title>Your chats</Title>
+        <div className="flex">
+          <ul className="w-1/4 flex flex-col gap-y-4">{chatMembers}</ul>
+          <div className="w-full flex flex-col gap-y-2 h-[80vh] scroll-smooth bg-button-primary-hover/20">
+            {selectedChat && selectedMember && (
+              <ChatWithUser chatId={selectedChat.id} recipientId={selectedMember.id} />
+            )}
+          </div>
         </div>
       </div>
     </Container>

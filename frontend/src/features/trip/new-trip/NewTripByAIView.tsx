@@ -23,24 +23,28 @@ export function NewTripByAIView() {
   // void navigate(`/trip/${response.tripId}`);
 
   return (
-    <Container childrenContainerClassNames="flex flex-col items-center pt-10">
+    <Container childrenContainerClassNames="flex flex-col items-center pt-10 h-full">
       <Title>Describe your trip wishes</Title>
-      <Input type="textarea" form={form} fieldKey="content" />
-      <ButtonLink
-        label="Create"
-        size="large"
-        componentVariants={{
-          button: {
-            selected: true,
-            onClick: () => {
-              if (form.isValid) {
-                createMutation.mutate(form.data);
-              }
-            },
-            isLoading: createMutation.isPending,
-          },
-        }}
-      />
+      <div className="mt-64 h-full flex flex-col gap-y-10 w-1/2">
+        <Input type="textarea" form={form} fieldKey="content" />
+        <div className="w-1/3 mx-auto">
+          <ButtonLink
+            label="Create"
+            size="large"
+            componentVariants={{
+              button: {
+                selected: true,
+                onClick: () => {
+                  if (form.isValid) {
+                    createMutation.mutate(form.data);
+                  }
+                },
+                isLoading: createMutation.isPending,
+              },
+            }}
+          />
+        </div>
+      </div>
     </Container>
   );
 }
