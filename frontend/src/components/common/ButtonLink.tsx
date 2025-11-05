@@ -52,12 +52,21 @@ export function ButtonLink(props: ButtonLinkProps) {
       medium: "text-sm",
       large: "text-xl",
     },
+    p: {
+      small: "p-0.5",
+      medium: "p-1",
+      large: "p-1.5",
+    },
   };
 
   const componentClassNames =
-    "cursor-pointer relative overflow-hidden bg-button-primary group w-full py-3 px-4 flex items-center justify-center";
+    "cursor-pointer relative overflow-hidden h-full bg-button-primary group w-full py-3 px-4 flex items-center justify-center";
 
-  const labelClassNames = ["text-center font-bold text-text z-10", sizeStyles.fontSize[props.size]].join(" ");
+  const labelClassNames = [
+    "text-center font-bold text-text z-10",
+    sizeStyles.fontSize[props.size],
+    sizeStyles.p[props.size],
+  ].join(" ");
 
   const buttonSpanCommonClassNames =
     "absolute top-0 w-0 h-full bg-button-primary-hover transform -skew-x-12 group-hover:w-[60%] transition-all duration-300 ease-out";

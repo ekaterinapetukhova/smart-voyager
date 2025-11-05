@@ -6,7 +6,6 @@ import { Title } from "../../components/common/Title";
 import { Container } from "../../components/common/Container.tsx";
 import { RouterEnum } from "../../types/router.types.ts";
 import { Input, useForm } from "../../components/common/form/useForm.tsx";
-import { Form } from "../../components/common/form/Form.tsx";
 
 export function LoginView() {
   const login = useTokenStore((s) => s.login);
@@ -19,6 +18,13 @@ export function LoginView() {
       password: "",
     },
     validation: validLoginSchema,
+    submit: {
+      fn: authAndStoreToken,
+      onSuccess: (token) => {
+        login(token);
+        setTimeout(() => void navigate(RouterEnum.PlannedTrips), 0);
+      },
+    },
   });
 
   return (
@@ -28,18 +34,10 @@ export function LoginView() {
       </Title>
 
       <div className="flex flex-col gap-y-3">
-        <Form
-          form={form}
-          submitFn={authAndStoreToken}
-          submitButtonLabel="LEts Go"
-          onSuccess={(token) => {
-            login(token);
-            setTimeout(() => void navigate(RouterEnum.PlannedTrips), 0);
-          }}
-        >
-          <Input form={form} type="text" label="Email" fieldKey="email" />
-          <Input form={form} type="password" label="Password" fieldKey="password" />
-        </Form>
+        <Input form={form} type="text" label="Email" fieldKey="email" />
+        <Input form={form} type="password" label="Password" fieldKey="password" />
+        <form.SubmitError />
+        <form.SubmitButton label="Let's start" size="large" />
       </div>
     </Container>
   );

@@ -13,6 +13,7 @@ import { GetAllDraftTripsService } from "./service/get-all-draft-trips.sevice";
 import { CreateControlListItemService } from "./service/control-list-item/create-control-list.service";
 import { AddTripMateService } from "./service/add-trip-mate.service";
 import { RemoveTripMateService } from "./service/remove-trip-mate.service";
+import { RemoveTripService } from "./service/remove-trip.service";
 
 @Controller("trip")
 export class TripController {
@@ -26,7 +27,8 @@ export class TripController {
     private readonly controlListCreatorAgent: ControlListCreatorAgent,
     private readonly createControlListItemService: CreateControlListItemService,
     private readonly addTripMateService: AddTripMateService,
-    private readonly removeTripMateService: RemoveTripMateService
+    private readonly removeTripMateService: RemoveTripMateService,
+    private readonly removeTripService: RemoveTripService
   ) {}
 
   @Post()
@@ -173,5 +175,10 @@ export class TripController {
     const items = await this.controlListCreatorAgent.execute(trip);
 
     await this.createControlListItemService.createMany(items.controlList, trip.id);
+  }
+
+  @Delete(":id")
+  public async removeTrip(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
+    return this.removeTripService.execute(id);
   }
 }

@@ -5,9 +5,9 @@ import { ButtonLink } from "../../../components/common/ButtonLink.tsx";
 
 export function NewTripModeChoiceView() {
   return (
-    <Container childrenContainerClassNames="flex items-center flex-col h-full">
+    <Container childrenContainerClassNames="flex items-center flex-col h-full pt-10">
       <Title>How do you want to plan your trip?</Title>
-      <div className="flex gap-x-10 w-xl h-full items-center justify-center">
+      <div className="flex gap-x-10 w-xl m-auto">
         <ButtonLink
           size="large"
           label="By yourself"

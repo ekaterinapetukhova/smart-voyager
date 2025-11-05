@@ -1,13 +1,19 @@
 import { ZodObject } from "zod";
 import * as React from "react";
 import { ReactElement, useCallback, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { Button, ButtonProps } from "../Button.tsx";
 import { FormField } from "./FormField.tsx";
 
 export type FormValues = Record<string, string | boolean | number | Date | File[]>;
 
-export interface UseFormInput<T extends FormValues> {
+export interface UseFormInput<T extends FormValues, O = unknown> {
   initialData: T;
   validation: ZodObject;
+  submit?: {
+    fn: (data: T) => Promise<O>;
+    onSuccess: (data: O) => void | Promise<void>;
+  };
 }
 
 interface FieldProps<T extends FormValues> {
@@ -25,6 +31,8 @@ export interface UseFormOutput<T extends FormValues> {
   formErrors: string[];
   fieldErrors: { field: keyof T; error: string }[];
   isValid: boolean;
+  SubmitButton: (props: Omit<ButtonProps, "isLoading" | "onClick">) => ReactElement;
+  SubmitError: () => ReactElement;
 }
 
 export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement => {
@@ -100,7 +108,7 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
   );
 };
 
-export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOutput<T> {
+export function useForm<T extends FormValues, O = unknown>(input: UseFormInput<T, O>): UseFormOutput<T> {
   const [data, setData] = useState(input.initialData);
   const [fieldErrors, setFieldErrors] = useState<{ field: keyof T; error: string }[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
@@ -111,6 +119,7 @@ export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOu
         ...data,
         ...newData,
       };
+
       setData(merged);
 
       const validate = input.validation.safeParse(merged);
@@ -137,11 +146,38 @@ export function useForm<T extends FormValues>(input: UseFormInput<T>): UseFormOu
     [data, input.validation]
   );
 
+  const mutation = useMutation({
+    mutationFn: input.submit?.fn,
+    onSuccess: input.submit?.onSuccess,
+  });
+
+  const isValid = formErrors.length === 0 && fieldErrors.length === 0;
+
+  const SubmitButton = (props: Omit<ButtonProps, "isLoading" | "onClick">) =>
+    input.submit ? (
+      <Button
+        {...props}
+        disabled={!isValid}
+        isLoading={mutation.isPending}
+        onClick={() => {
+          if (isValid) {
+            mutation.mutate(data);
+          }
+        }}
+      />
+    ) : (
+      <></>
+    );
+
+  const SubmitError = () => (mutation.error ? <div className="text-error">{mutation.error.message}</div> : <></>);
+
   return {
     data,
     update,
-    formErrors,
     fieldErrors,
-    isValid: formErrors.length === 0 && fieldErrors.length === 0,
+    formErrors,
+    isValid,
+    SubmitButton,
+    SubmitError,
   };
 }

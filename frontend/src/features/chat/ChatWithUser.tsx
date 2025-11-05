@@ -34,8 +34,6 @@ export function ChatWithUser(props: ChatWithUserProps) {
     scrollToBottom();
   }, [chat?.chatMessage]);
 
-  console.log(chat);
-
   return (
     <>
       {chat?.chatMessage && (
@@ -46,7 +44,7 @@ export function ChatWithUser(props: ChatWithUserProps) {
         </ul>
       )}
       <div>
-        <Input type="textarea" form={form} fieldKey="content" />\
+        <Input type="textarea" form={form} fieldKey="content" />
         <div className="w-1/5 mx-auto">
           <Button
             label="send"

@@ -30,7 +30,7 @@ export function TripMap(props: TripMapProps) {
       id="tripMap"
       className={[
         "h-screen relative w-full flex justify-center print:break-before-page print:break-inside-avoid-page",
-        isPrint() && "flex-col break-before-page",
+        isPrint() && "flex-col break-before-page ",
       ].join(" ")}
     >
       {showSidebar && (
@@ -68,7 +68,7 @@ export function TripMap(props: TripMapProps) {
         onRemovePoint={(id) => void deleteTripPoint(id)}
         onAddPoint={(point) => void addTripPoint({ ...point, tripId: props.trip.id })}
         activePoint={clickTripId ?? null}
-        classNames="absolute inset-0"
+        classNames={!isPrint() ? "absolute inset-0" : "absolute left-[384px] right-0 top-0 bottom-0"}
       />
     </div>
   );

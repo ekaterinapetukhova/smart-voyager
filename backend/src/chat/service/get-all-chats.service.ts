@@ -18,7 +18,13 @@ export class GetAllChatsService {
         },
       },
       include: {
-        members: true,
+        members: {
+          select: {
+            name: true,
+            avatar: true,
+            id: true,
+          },
+        },
         chatMessage: true,
       },
     });

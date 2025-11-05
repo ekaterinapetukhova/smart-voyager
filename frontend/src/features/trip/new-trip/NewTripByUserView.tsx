@@ -20,12 +20,12 @@ export function NewTripByUserView() {
   });
 
   return (
-    <Container childrenContainerClassNames="flex flex-col items-start gap-y-10">
+    <Container childrenContainerClassNames="flex flex-col items-center pt-10 h-full">
       <Title>Imagine your next trip</Title>
-      <div className="flex flex-col gap-y-3">
+      <div className="flex flex-col gap-y-5 m-auto h-full w-1/2 justify-center">
         <Input form={form} fieldKey="name" type="text" label="Trip name" />
-        <Input form={form} fieldKey="description" type="text" label="Trip description" />
-        <div className="w-fit mx-auto mt-10">
+        <Input form={form} fieldKey="description" type="textarea" label="Trip description" />
+        <div className="w-fit mx-auto">
           <ButtonLink
             size="large"
             label="Let's create"

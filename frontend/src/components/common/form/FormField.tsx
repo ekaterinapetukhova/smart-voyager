@@ -46,14 +46,14 @@ export function FormField(props: FormFieldProps) {
     );
   } else if (props.type === "checkbox") {
     field = (
-      <label className="p-0.5 flex text-center justify-center h-12 font-bold text-sm border-1 border-accent items-center cursor-pointer has-checked:bg-accent has-checked:text-background">
+      <label className="p-1 flex text-center justify-center h-10 text-xs border-1 border-accent items-center cursor-pointer has-checked:bg-accent has-checked:text-background">
         <input type="checkbox" name={props.name} checked={props.checked} onChange={props.onChange} className="hidden" />
         {props.label}
       </label>
     );
   } else if (props.type === "textarea") {
     field = (
-      <div className="relative group">
+      <div className="relative z-10 group">
         <textarea
           onFocus={() => {
             setFocused(true);
@@ -66,14 +66,16 @@ export function FormField(props: FormFieldProps) {
           value={props.value}
           onChange={props.onChange}
           className={[
-            "w-full h-40 text-lg p-3 resize-none outline-none bg-transparent",
+            "size-full min-h-32 max-h-40 text-lg resize-none outline-none border bg-transparent p-3 relative z-20",
+            focused ? "border-accent" : "border-text",
             props.errors ? "border-error" : "border-text",
           ].join(" ")}
         />
         <span
           className={[
-            "absolute border-accent border-2 left-0 top-0 transition-all ease-out duration-300 -z-10",
-            focused ? "size-full" : "size-full",
+            "absolute inset-0 transition-all ease-out duration-300 -z-10",
+            focused ? "size-full" : "size-0",
+            props.errors ? "border-error" : "border-accent",
           ].join(" ")}
         ></span>
       </div>
@@ -82,6 +84,7 @@ export function FormField(props: FormFieldProps) {
     field = (
       <div className="relative group">
         <input
+          autoFocus={true}
           ref={inputRef}
           onFocus={() => {
             setFocused(true);
@@ -106,8 +109,9 @@ export function FormField(props: FormFieldProps) {
         />
         <span
           className={[
-            "absolute bottom-0 left-0 h-0.5 transition-all ease-out duration-300 bg-accent",
+            "absolute bottom-0 left-0 h-0.5 transition-all ease-out duration-300",
             focused ? "w-full" : "w-0",
+            props.errors ? "bg-error" : "bg-accent",
           ].join(" ")}
         ></span>
       </div>

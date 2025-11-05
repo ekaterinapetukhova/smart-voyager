@@ -29,7 +29,7 @@ export class AuthController {
   }
 
   @Post("verify-email")
-  public verify(@Body() data: unknown): Promise<void> {
+  public verify(@Body() data: unknown): Promise<{ token: string }> {
     const validEmailToken = z
       .object({
         emailToken: z.string(),

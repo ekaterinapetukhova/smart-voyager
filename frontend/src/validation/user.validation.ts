@@ -5,7 +5,7 @@ export const validUserUpdateSchema = z
   .object({
     name: z.string(),
     email: z.email({ message: "Invalid email address" }),
-    birthDate: z.iso.datetime(),
+    birthDate: z.date(),
     password: z.string(),
     country: z.string(),
     city: z.string(),
@@ -14,7 +14,6 @@ export const validUserUpdateSchema = z
     avatar: z.base64(),
     gender: z.enum(Gender),
     currency: z.enum(Currency),
+    shouldBeVisible: z.boolean(),
   })
   .partial();
-
-export type ValidUpdateUser = z.output<typeof validUserUpdateSchema>;

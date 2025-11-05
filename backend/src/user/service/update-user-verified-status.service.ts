@@ -8,24 +8,34 @@ import { config } from "../../config/config";
 export class UpdateUserVerifiedStatusService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public async execute(token: string): Promise<void> {
-    const payload = this.verifyToken(token);
+  public async execute(verifyToken: string): Promise<{ token: string }> {
+    const verifyPayload = this.verifyToken(verifyToken);
 
-    await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: {
-        email: payload.email,
+        email: verifyPayload.email,
       },
       data: {
         verified: true,
       },
     });
+
+    const payload = {
+      id: user.id,
+    };
+
+    const token = Jwt.sign(payload, config.secretKey, {
+      expiresIn: "1d",
+    });
+
+    return { token };
   }
 
   private verifyToken(token: string): { email: string } {
     const payload = Jwt.verify(token, config.secretKey);
 
     const payloadSchema = z.object({
-      email: z.string().email(),
+      email: z.email(),
     });
 
     return payloadSchema.parse(payload);

@@ -20,6 +20,8 @@ interface TripDescriptionProps {
 export function TripDescription(props: TripDescriptionProps) {
   const [addCollaborationPopupVisible, setCollaborationPopupVisible] = useState(false);
 
+  // const [editDescriptionMode, setEditDescriptionMode] = useState();useState
+
   const scrollToMap = () => {
     const tripMap = document.getElementById("tripMap");
 
@@ -46,8 +48,6 @@ export function TripDescription(props: TripDescriptionProps) {
               <SubTitle content="Description" />
               <p className="text-text print:text-justify">{props.trip.description}</p>
             </TripBlockWrapper>
-            {props.trip.event && <TripEvent from={props.trip.event.from} to={props.trip.event.to} />}
-            {!props.trip.event && !isPrint() && <TripEventForm trip={props.trip} user={user} />}
             <div className="grid grid-cols-2">
               <TripOwner trip={props.trip} />
               <TripCollaborators
@@ -58,6 +58,8 @@ export function TripDescription(props: TripDescriptionProps) {
                 user={user}
               />
             </div>
+            {props.trip.event && <TripEvent from={props.trip.event.from} to={props.trip.event.to} />}
+            {!props.trip.event && !isPrint() && <TripEventForm trip={props.trip} user={user} />}
           </div>
           {!isControlListEmpty && (
             <div className="basis-1/2 flex flex-col w-full">

@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 
-interface ButtonProps {
+export interface ButtonProps {
   label: string;
   type?: "button" | "submit" | "reset";
   icon?: string;
   onClick?: () => void | Promise<void>;
   size: "large" | "medium" | "small";
   isLoading?: boolean;
+  disabled?: boolean;
 }
 
 export function Button(props: ButtonProps) {
@@ -49,15 +50,17 @@ export function Button(props: ButtonProps) {
 
   return (
     <button
+      disabled={props.disabled}
       type={props.type ?? "button"}
       className={[
         "cursor-pointer relative overflow-hidden bg-button-primary group w-full  flex items-center justify-center",
+        props.disabled && "grayscale pointer-events-none",
       ].join(" ")}
       onClick={(e) => {
         e.stopPropagation();
 
         if (props.onClick && !props.isLoading) {
-          props.onClick();
+          void props.onClick();
         }
       }}
     >

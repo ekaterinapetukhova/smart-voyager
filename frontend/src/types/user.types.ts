@@ -6,17 +6,17 @@ export enum Gender {
 }
 
 export const tripInterest = {
-  history: "history",
-  culture: "culture",
-  food: "food",
-  nature: "nature",
-  sport: "sport",
-  relaxation: "relaxation",
-  events: "events",
-  architecture: "architecture",
-  photography: "photography",
-  shopping: "shopping",
-  nightlife: "nightlife",
+  history: "History",
+  culture: "Culture",
+  food: "Food",
+  nature: "Nature",
+  sport: "Sport",
+  relaxation: "Relaxation",
+  events: "Events",
+  architecture: "Architecture",
+  photography: "Photography",
+  shopping: "Shopping",
+  nightlife: "Nightlife",
 } as const;
 
 export type TripInterest = keyof typeof tripInterest;
@@ -54,8 +54,8 @@ export const userSchema = z.object({
   languages: z.string().nullish(),
   description: z.string().nullish(),
   avatar: z.base64(),
-  tripInterest: z.array(z.enum(Object.keys(tripInterest))),
-  tripGoals: z.array(z.enum(Object.keys(tripGoals))),
+  tripInterest: z.array(z.enum(Object.keys(tripInterest))).max(3),
+  tripGoals: z.array(z.enum(Object.keys(tripGoals))).max(3),
   currency: z.enum(Currency),
   shouldBeVisible: z.boolean(),
 });

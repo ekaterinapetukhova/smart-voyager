@@ -1,23 +1,44 @@
-import { useState } from "react";
-import * as React from "react";
+import { MaybePromise } from "../../utils/maybe-promise.ts";
 
-interface SelectInputProps {
+export interface SelectInputProps {
   label: string;
+  options: {
+    name: string;
+    value: string;
+  }[];
+  onChange: (e: string) => MaybePromise<void>;
+  initialOptionLabel: string;
+  value?: string;
 }
 
 export function SelectInput(props: SelectInputProps) {
-  const [value, setValue] = useState("");
+  const optionClassName = "cursor-pointer text-background";
+
+  const options = props.options.map((option) => {
+    return (
+      <option
+        key={option.value}
+        className={optionClassName}
+        value={option.value}
+        selected={props.value === option.value}
+      >
+        {option.name}
+      </option>
+    );
+  });
 
   return (
-    <div>
-      <label>{props.label}</label>
-      <input
-        type="select"
-        value={value}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          setValue(e.target.value);
-        }}
-      />
+    <div className="flex flex-col text-text gap-y-2">
+      <label className="text-xl font-bold">{props.label}</label>
+      <select
+        className="border-1 border-text p-1 cursor-pointer focus:border-accent"
+        onChange={(e) => void props.onChange(e.target.value)}
+      >
+        <option className={optionClassName} value="">
+          {props.initialOptionLabel}
+        </option>
+        {options}
+      </select>
     </div>
   );
 }

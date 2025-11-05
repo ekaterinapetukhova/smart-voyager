@@ -39,24 +39,26 @@ export function TripCollaboratorsPopup(props: TripCollaborationsPopupProps) {
 
   return (
     <Popup closePopup={props.onClose} containerClassName="w-1/4 h-2/3">
-      <SubTitle content="Available trip mates" />
-      <ul className="flex flex-col gap-y-4">
-        {availableMates.map((mate) => {
-          return (
-            <li
-              className="flex gap-x-2 text-text items-center cursor-pointer hover:bg-text/10"
-              onClick={() => {
-                void addTripMate.mutateAsync({ tripId: props.trip.id, mateId: mate.id }).then(() => {
-                  props.onClose();
-                });
-              }}
-            >
-              <Avatar src={mate.avatar} className="size-14 rounded-full" />
-              <span>{mate.name}</span>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="p-4 flex flex-col gap-y-4">
+        <SubTitle content="Available trip mates" />
+        <ul className="flex flex-col gap-y-4">
+          {availableMates.map((mate) => {
+            return (
+              <li
+                className="flex gap-x-2 text-text items-center cursor-pointer hover:bg-text/10"
+                onClick={() => {
+                  void addTripMate.mutateAsync({ tripId: props.trip.id, mateId: mate.id }).then(() => {
+                    props.onClose();
+                  });
+                }}
+              >
+                <Avatar src={mate.avatar} className="size-14 rounded-full" />
+                <span>{mate.name}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </Popup>
   );
 }

@@ -111,15 +111,29 @@ export const useTripApi = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
 
+  const useRemoveTrip = (onSuccess: () => void | Promise<void>) =>
+    useMutation({
+      mutationFn: async (tripId: string) => {
+        const request = authorizedFetch();
+
+        await request({ method: "DELETE", path: `${path}/${tripId}` });
+      },
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: [tripQueryKey] });
+        void onSuccess();
+      },
+    });
+
   return {
     plannedTrips: getAllPlanned,
     draftTrips: getAllDrafts,
     createTrip: create,
-    useCreateByAI: useCreateByAI,
-    useCreateControlListByAI: useCreateControlListByAI,
+    useCreateByAI,
+    useCreateControlListByAI,
     updateTrip: update,
     addTripMate,
     removeTripMate,
+    useRemoveTrip,
   };
 };
 

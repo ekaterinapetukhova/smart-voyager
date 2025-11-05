@@ -30,10 +30,10 @@ export function TripsList(props: TripListProps) {
 
     return (
       <li className="" key={trip.id}>
-        <Link to={`/trip/${trip.id}`} className="w-full relative flex flex-col gap-y-4 p-0.5 justify-between group ">
-          <div className="animate-neon-gradient bg-[200%,_200%] absolute inset-0 size-0 group-hover:size-full transition -z-10 bg-linear-to-r from-button-primary via-accent to-button-primary-hover"></div>
+        <Link to={`/trip/${trip.id}`} className="w-full relative flex flex-col gap-y-4 p-0.5 justify-between group">
+          <div className="animate-neon-gradient bg-[200%,_200%] absolute inset-0 size-0 group-hover:size-full transition-all -z-10 bg-linear-to-r from-button-primary via-accent to-button-primary-hover"></div>
 
-          <div className="group-hover:bg-background bg-background/50 transition z-20 size-full p-4">
+          <div className="bg-background transition z-20 size-full p-4">
             <div className="flex flex-col">
               <h3 className="text-accent text-xl"> {trip.name}</h3>
               <p className="text-text">{trip.description}</p>
@@ -89,8 +89,12 @@ export function TripsList(props: TripListProps) {
           />
         </div>
       </div>
-      <ul className="w-full flex flex-col gap-y-5">{tripItems}</ul>
-      {props.trips.data.length === 0 && <p className="text-accent">No trips for now...</p>}
+
+      {props.trips.data.length === 0 ? (
+        <p className="text-accent">No trips for now...</p>
+      ) : (
+        <ul className="w-full flex flex-col gap-y-5">{tripItems}</ul>
+      )}
     </Container>
   );
 }

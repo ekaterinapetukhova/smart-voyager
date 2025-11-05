@@ -2,45 +2,41 @@ import { Popup } from "../../components/common/Popup.tsx";
 import { validChatMessageSchema } from "../../validation/chat.validation.ts";
 import { useChat } from "../../hooks/use-chat.ts";
 import { Input, useForm } from "../../components/common/form/useForm.tsx";
-import { Button } from "../../components/common/Button.tsx";
-import { updateUserStore, useUserStore } from "../../store/user-store.ts";
+import { updateUserStore } from "../../store/user-store.ts";
+import { Title } from "../../components/common/Title.tsx";
 
 interface TripMatesPopupProps {
   onClose: () => void;
+  recipientId: string;
 }
 
 export function TripMatesPopup(props: TripMatesPopupProps) {
-  const { user } = useUserStore();
-
   const { askForChat } = useChat();
-  
+
   const form = useForm({
     initialData: {
       content: "",
     },
     validation: validChatMessageSchema,
+    submit: {
+      fn: async () => {
+        await askForChat({ content: form.data.content, recipientId: props.recipientId });
+      },
+      onSuccess: () => {
+        void updateUserStore();
+        props.onClose();
+      },
+    },
   });
 
-  if (!user) {
-    return;
-  }
-
   return (
-    <Popup closePopup={props.onClose}>
-      <Input label="Send your first message" form={form} fieldKey="content" type="text" />
-      <div className="w-xs mx-auto">
-        <Button
-          label="send"
-          size="medium"
-          onClick={async () => {
-            if (form.isValid) {
-              await askForChat({ content: form.data.content, recipientId: user.id });
-
-              void updateUserStore();
-            }
-            props.onClose();
-          }}
-        />
+    <Popup closePopup={props.onClose} containerClassName="w-1/3">
+      <div className="py-4 px-6 h-full flex flex-col gap-y-4 overflow-auto">
+        <Title classNames="text-xl text-center">Send your first message</Title>
+        <Input form={form} fieldKey="content" type="textarea" />
+        <div className="w-1/2 h-12 mx-auto">
+          <form.SubmitButton label="Send" size="medium" />
+        </div>
       </div>
     </Popup>
   );

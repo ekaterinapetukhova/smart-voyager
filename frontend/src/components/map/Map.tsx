@@ -77,7 +77,7 @@ export function Map(props: MapProps) {
   );
 
   return (
-    <div className={["size-full", props.classNames ?? ""].join(" ")}>
+    <div className={["", props.classNames ?? ""].join(" ")}>
       <div className="relative z-0 mx-auto size-full">
         <MapContainer
           className="h-full outline-none"

@@ -25,8 +25,8 @@ export function NewTripByAIView() {
   return (
     <Container childrenContainerClassNames="flex flex-col items-center pt-10 h-full">
       <Title>Describe your trip wishes</Title>
-      <div className="mt-64 h-full flex flex-col gap-y-10 w-1/2">
-        <Input type="textarea" form={form} fieldKey="content" />
+      <div className="mt-64 h-full flex flex-col gap-y-5 w-1/2">
+        <Input type="textarea" form={form} fieldKey="content" label="Trip description" />
         <div className="w-1/3 mx-auto">
           <ButtonLink
             label="Create"
