@@ -30,7 +30,10 @@ export function FormField(props: FormFieldProps) {
     field = (
       <div className="flex gap-x-5 mt-2">
         {props.options.map((option) => (
-          <label key={option} className="flex items-center gap-x-2 text-lg cursor-pointer has-checked:text-accent">
+          <label
+            key={option}
+            className="flex items-center gap-x-2 text-md xl:text-lg cursor-pointer has-checked:text-accent"
+          >
             <input
               type="radio"
               name={props.name}
@@ -102,7 +105,7 @@ export function FormField(props: FormFieldProps) {
             : {})}
           onChange={props.onChange}
           className={[
-            "h-10 w-full text-lg border-b-2 pb-1",
+            "h-6 xl:h-10 w-full text-md xl:text-lg border-b-2 pb-1",
             props.errors ? "border-error" : "border-text",
             props.type == "file" ? "cursor-pointer" : "",
           ].join(" ")}
@@ -121,7 +124,7 @@ export function FormField(props: FormFieldProps) {
   return (
     <div className="flex flex-col text-text">
       {props.label && props.type !== "checkbox" && (
-        <label className="text-xl font-bold mb-1" htmlFor={props.id}>
+        <label className="text-md lg:text-xl font-bold mb-1" htmlFor={props.id}>
           {props.label}
         </label>
       )}

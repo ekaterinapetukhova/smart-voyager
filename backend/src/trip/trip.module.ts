@@ -12,6 +12,7 @@ import { CreateControlListItemService } from "./service/control-list-item/create
 import { AddTripMateService } from "./service/add-trip-mate.service";
 import { RemoveTripMateService } from "./service/remove-trip-mate.service";
 import { RemoveTripService } from "./service/remove-trip.service";
+import { FindEventsAroundItemService } from "./service/find-events-around/find-events-around.service";
 
 @Module({
   controllers: [TripController],
@@ -25,6 +26,7 @@ import { RemoveTripService } from "./service/remove-trip.service";
     AddTripMateService,
     RemoveTripMateService,
     RemoveTripService,
+    FindEventsAroundItemService,
   ],
   imports: [PrismaModule, GeoapifyModule, AIModule],
   exports: [CreateTripService, GetTripByIdService, CreateControlListItemService],

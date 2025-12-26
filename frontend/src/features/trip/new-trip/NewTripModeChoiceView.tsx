@@ -7,7 +7,7 @@ export function NewTripModeChoiceView() {
   return (
     <Container childrenContainerClassNames="flex items-center flex-col h-full pt-10">
       <Title>How do you want to plan your trip?</Title>
-      <div className="flex gap-x-10 w-xl m-auto">
+      <div className="flex flex-col sm:flex-row gap-x-10 gap-y-4 w-full sm:w-xl m-auto">
         <ButtonLink
           size="large"
           label="By yourself"

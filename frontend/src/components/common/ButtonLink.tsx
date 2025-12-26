@@ -50,12 +50,12 @@ export function ButtonLink(props: ButtonLinkProps) {
     fontSize: {
       small: "text-xs",
       medium: "text-sm",
-      large: "text-xl",
+      large: "text-md xl:text-xl",
     },
     p: {
       small: "p-0.5",
       medium: "p-1",
-      large: "p-1.5",
+      large: "p-0.5 xl:p-1.5",
     },
   };
 
@@ -94,7 +94,7 @@ export function ButtonLink(props: ButtonLinkProps) {
                   width: `${Math.round(loadingProgress)}%`,
                 }}
               ></div>
-              <span className="z-10 text-text font-semibold">Wait a sec...</span>
+              <span className="z-10 text-text font-semibold"> Thinking...</span>
             </>
           ) : (
             <>

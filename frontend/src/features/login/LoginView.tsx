@@ -29,15 +29,17 @@ export function LoginView() {
 
   return (
     <Container childrenContainerClassNames="flex items-center justify-center gap-x-20 h-full">
-      <Title classNames="w-1/3">
+      <Title classNames="w-1/3 hidden sm:block">
         Unlock Your <span className="text-accent italic font-bold">Next</span> Adventure
       </Title>
 
-      <div className="flex flex-col gap-y-3">
+      <div className="flex flex-col gap-y-5 w-full md:w-auto">
         <Input form={form} type="text" label="Email" fieldKey="email" />
         <Input form={form} type="password" label="Password" fieldKey="password" />
         <form.SubmitError />
-        <form.SubmitButton label="Let's start" size="large" />
+        <div className="mx-auto mt-5">
+          <form.SubmitButton label="Let's start" size="large" />
+        </div>
       </div>
     </Container>
   );

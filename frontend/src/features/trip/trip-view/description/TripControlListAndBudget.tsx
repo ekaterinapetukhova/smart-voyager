@@ -20,7 +20,7 @@ export function TripControlListAndBudget(props: TripControlListProps) {
 
   const items = props.controlListItems.map((item) => {
     return (
-      <li className="flex gap-x-4 w-full">
+      <li className="flex gap-x-4 w-full" key={item.name}>
         <IconArrowBadgeRightFilled className="text-accent" />
         <div className="text-text w-full">
           <div className="flex justify-between w-full">

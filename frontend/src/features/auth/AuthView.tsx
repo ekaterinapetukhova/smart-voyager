@@ -27,13 +27,13 @@ export function AuthView() {
   });
 
   return (
-    <Container childrenContainerClassNames="flex items-center flex-col pt-10 pb-20 h-full">
+    <Container childrenContainerClassNames="flex items-center flex-col pt-10 pb-20 h-full gap-y-6 xl:gap-y-4">
       <Logo />
-      <p className="text-text font-medium text-center w-3/4 text-xl grow">
+      <p className="text-text font-medium text-center w-3/4 text-md xl:text-xl grow">
         Create personalized trips, explore smart routes powered by AI, and connect with travel buddies who share your
         vibe. Easily edit your journeys, track your budget, and turn every idea into a real adventure.
       </p>
-      <ul className="flex flex-col gap-y-5 w-52 ">{authItemsList}</ul>
+      <ul className="flex flex-col gap-y-5 w-40 xl:w-52">{authItemsList}</ul>
     </Container>
   );
 }

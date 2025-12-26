@@ -13,6 +13,7 @@ export interface UseFormInput<T extends FormValues, O = unknown> {
   submit?: {
     fn: (data: T) => Promise<O>;
     onSuccess: (data: O) => void | Promise<void>;
+    onError?: () => void;
   };
 }
 
@@ -149,6 +150,7 @@ export function useForm<T extends FormValues, O = unknown>(input: UseFormInput<T
   const mutation = useMutation({
     mutationFn: input.submit?.fn,
     onSuccess: input.submit?.onSuccess,
+    onError: input.submit?.onError,
   });
 
   const isValid = formErrors.length === 0 && fieldErrors.length === 0;

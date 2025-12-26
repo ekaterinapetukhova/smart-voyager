@@ -38,13 +38,13 @@ export function Button(props: ButtonProps) {
   const sizeStyles = {
     fontSize: {
       small: "text-xs",
-      medium: "text-sm",
-      large: "text-xl",
+      medium: "text-xs md:text-sm",
+      large: "text-md xl:text-xl",
     },
     p: {
       small: "p-0.5",
-      medium: "p-1",
-      large: "p-1.5",
+      medium: "p-0.5 md:p-1",
+      large: "p-0.5 xl:p-5",
     },
   };
 
@@ -53,7 +53,7 @@ export function Button(props: ButtonProps) {
       disabled={props.disabled}
       type={props.type ?? "button"}
       className={[
-        "cursor-pointer relative overflow-hidden bg-button-primary group w-full  flex items-center justify-center",
+        "cursor-pointer relative overflow-hidden h-13 bg-button-primary group w-full flex items-center justify-center",
         props.disabled && "grayscale pointer-events-none",
       ].join(" ")}
       onClick={(e) => {
@@ -72,7 +72,13 @@ export function Button(props: ButtonProps) {
               width: `${Math.round(loadingProgress)}%`,
             }}
           ></div>
-          <span className="z-10 text-text">Thinking...</span>
+          <span
+            className={["z-10 text-text font-bold", sizeStyles.fontSize[props.size], sizeStyles.p[props.size]].join(
+              " "
+            )}
+          >
+            Thinking...
+          </span>
         </>
       ) : (
         <>

@@ -92,7 +92,7 @@ export class TripPlannerAgent {
 
     return {
       tripPoints: tripPoints.filter((x) => !!x),
-      name: `AI generated - ${response.name}`,
+      name: `${response.name} [AI]`,
       isProposal: true,
       description: response.description,
     };

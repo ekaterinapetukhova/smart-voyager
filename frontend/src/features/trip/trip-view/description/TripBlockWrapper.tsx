@@ -5,5 +5,5 @@ interface TripBlockWrapperProps {
 }
 
 export function TripBlockWrapper(props: TripBlockWrapperProps) {
-  return <div className="flex flex-col gap-y-4">{props.children}</div>;
+  return <div className="flex flex-col gap-y-2 md:gap-y-4">{props.children}</div>;
 }

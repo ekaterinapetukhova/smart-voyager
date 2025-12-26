@@ -47,8 +47,6 @@ export function App() {
       void verifyEmail(emailToken);
     }
 
-    console.log(isAuth, token);
-
     if (isAuth) {
       void updateUserStore();
     } else {
@@ -57,7 +55,7 @@ export function App() {
   }, [emailToken, verifyEmail, isAuth, navigate, token, logout]);
 
   return (
-    <div className="flex h-screen overflow-y-auto lg:overflow-hidden print:h-fit print:overflow-auto">
+    <div className="flex-col-reverse md:flex-row flex h-screen overflow-y-auto lg:overflow-hidden print:h-fit print:overflow-auto">
       {isAuth && !isPrint() && <Sidebar />}
       <Routes>
         <Route path="/" element={<Navigate to={isAuth ? RouterEnum.PlannedTrips : RouterEnum.Auth} replace />} />

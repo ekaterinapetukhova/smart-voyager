@@ -16,7 +16,7 @@ interface TripHeaderProps {
 }
 
 export function TripHeader(props: TripHeaderProps) {
-  const { updateTrip, useCreateControlListByAI, useRemoveTrip } = useTripApi();
+  const { updateTrip, useCreateControlListByAI, useRemoveTrip, useFindEventsAroundByAI } = useTripApi();
 
   const [editTitleMode, setEditTitleMode] = useState(false);
   const [newTitle, setNewTitle] = useState(props.trip.name);
@@ -24,6 +24,7 @@ export function TripHeader(props: TripHeaderProps) {
   const navigate = useNavigate();
 
   const createControlListByAI = useCreateControlListByAI();
+  const findEventsAroundByAI = useFindEventsAroundByAI();
 
   const removeTrip = useRemoveTrip(() => void navigate(RouterEnum.PlannedTrips));
 
@@ -42,8 +43,8 @@ export function TripHeader(props: TripHeaderProps) {
   });
 
   return (
-    <div className="flex justify-between items-center gap-x-10">
-      <div className="w-3/4">
+    <div className="flex flex-col gap-y-5 items-center w-full">
+      <div className="w-full">
         {editTitleMode ? (
           <div className="flex">
             <TextInput
@@ -54,7 +55,7 @@ export function TripHeader(props: TripHeaderProps) {
             />
             <IconDeviceFloppy
               stroke={2}
-              className="cursor-pointer text-text inline-block ml-2 size-10 -mt-1 hover:text-accent transition"
+              className="cursor-pointer text-text inline-block ml-2 size-6 md:size-10 -mt-1 hover:text-accent transition"
               onClick={() => {
                 void updateTrip.mutateAsync({ name: newTitle, id: props.trip.id }).then(() => {
                   setEditTitleMode(false);
@@ -63,11 +64,11 @@ export function TripHeader(props: TripHeaderProps) {
             />
           </div>
         ) : (
-          <Title classNames="print:text-center !text-4xl">
+          <Title classNames="print:text-center font-bold !text-accent">
             {props.trip.name}
             <IconEdit
               stroke={2}
-              className="cursor-pointer text-text inline-block ml-2 -mt-2 size-10 hover:text-accent transition print:hidden"
+              className="cursor-pointer text-text inline-block ml-2 -mt-2 size-6 md:size-10 hover:text-accent transition print:hidden"
               onClick={() => {
                 setEditTitleMode(true);
               }}
@@ -75,7 +76,7 @@ export function TripHeader(props: TripHeaderProps) {
           </Title>
         )}
       </div>
-      <div className="flex gap-x-2 h-14 print:hidden">
+      <div className="flex gap-x-4 w-full sm:w-2/5 print:hidden">
         <Button
           label="Get PDF"
           size="medium"
@@ -92,6 +93,16 @@ export function TripHeader(props: TripHeaderProps) {
           }}
           isLoading={createControlListByAI.isPending}
         />
+        {props.trip.event && (
+          <Button
+            label="Find events around"
+            size="medium"
+            onClick={() => {
+              findEventsAroundByAI.mutate(props.trip.id);
+            }}
+            isLoading={findEventsAroundByAI.isPending}
+          />
+        )}
         <Button
           label="Remove trip"
           size="medium"

@@ -29,12 +29,12 @@ export function TripMap(props: TripMapProps) {
     <div
       id="tripMap"
       className={[
-        "h-screen relative w-full flex justify-center print:break-before-page print:break-inside-avoid-page",
-        isPrint() && "flex-col break-before-page ",
+        "h-[80dvh] md:h-screen relative w-full flex justify-center print:break-before-page print:break-inside-avoid-page",
+        isPrint() && "flex-col break-before-page",
       ].join(" ")}
     >
       {showSidebar && (
-        <div className={"absolute left-0 bottom-0 top-0 w-sm bg-background/70 z-10 flex flex-col p-4"}>
+        <div className={"absolute left-0 bottom-0 top-0 w-full md:w-sm bg-background/70 z-10 flex flex-col p-4"}>
           <IconChevronUp
             className="text-accent absolute right-5 top-5 cursor-pointer"
             onClick={() => {
@@ -50,17 +50,17 @@ export function TripMap(props: TripMapProps) {
         </div>
       )}
       {!showSidebar && (
-        <div className="absolute left-0 top-0 h-16 w-sm bg-background/70 z-10 flex flex-col p-4">
+        <div className="absolute left-0 top-0 h-16 w-full sm:w-sm bg-background/70 z-10 flex flex-col p-4">
           <IconChevronDown
             className="text-accent absolute right-5 top-5 cursor-pointer"
             onClick={() => {
               setShowSidebar(true);
             }}
           />
-          <h3 className="font-bold text-2xl text-accent">Your trip places list</h3>
+          <h3 className="font-bold text-lg md:text-2xl text-accent">Your trip places list</h3>
         </div>
       )}
-      <div className="w-24 absolute top-0 z-10 print:hidden">
+      <div className="w-24 absolute top-0 z-10 print:hidden md:flex hidden">
         <Button label="Scroll to description" size="small" onClick={scrollToDescription} />
       </div>
       <Map

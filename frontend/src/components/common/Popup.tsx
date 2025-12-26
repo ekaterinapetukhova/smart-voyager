@@ -28,7 +28,7 @@ export function Popup(props: PopupProps) {
   }, [props, props.closePopup]);
 
   return (
-    <div className="inset-0 fixed bg-black/80 z-100 size-full flex justify-center items-center">
+    <div className="inset-0 fixed bg-black/80 z-1000 size-full flex justify-center items-center">
       <div className={["relative overflow-hidden p-1", props.containerClassName ?? ""].join(" ")} ref={popupRef}>
         <div className="animate-neon-gradient bg-[200%,_200%] absolute inset-0 size-full bg-linear-to-r from-button-primary via-accent to-button-primary-hover"></div>
         <div className="relative z-20 bg-background h-full flex flex-col gap-y-4">{props.children}</div>

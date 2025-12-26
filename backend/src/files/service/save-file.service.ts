@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "node:path";
 import { Injectable } from "@nestjs/common";
 import { config } from "../../config/config";
+import { ServerError } from "../../error/server.error";
 
 @Injectable()
 export class SaveFilesService {
@@ -10,8 +11,8 @@ export class SaveFilesService {
 
     try {
       await fs.writeFile(fileName, buffer);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      throw new ServerError("Failed to save file");
     }
   }
 }

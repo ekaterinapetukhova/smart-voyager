@@ -46,6 +46,7 @@ export class GetPlannedTripsService {
       },
       include: {
         event: true,
+        aroundEvent: true,
         controlList: true,
         user: {
           select: {

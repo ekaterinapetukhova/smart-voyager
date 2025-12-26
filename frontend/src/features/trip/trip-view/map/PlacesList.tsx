@@ -109,7 +109,7 @@ export function PlacesList(props: PlacesListProps) {
 
   return (
     <div className="flex flex-col gap-y-4 h-full max-h-full">
-      <h2 className="font-bold text-2xl text-accent">Your trip places list</h2>
+      <h2 className="font-bold text-lg md:text-2xl text-accent">Your trip places list</h2>
       <div className="relative h-full w-full">
         <ul className="absolute inset-0 overflow-y-scroll flex flex-col">{placeList}</ul>
       </div>

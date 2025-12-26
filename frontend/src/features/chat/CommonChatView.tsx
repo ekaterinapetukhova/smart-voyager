@@ -35,7 +35,7 @@ export function CommonChatView() {
     return (
       <li
         key={chat.id}
-        className="w-full flex gap-x-2 items-center cursor-pointer hover:contrast-25"
+        className="w-full flex gap-x-2 items-center cursor-pointer hover:contrast-25 bg-button-primary/10 px-2 py-1"
         onClick={() => {
           setSelectedChat(chat);
           setSelectedMember(member);
@@ -44,12 +44,12 @@ export function CommonChatView() {
         <div>
           <Avatar src={member.avatar} className="size-16 rounded-full overflow-auto" />
         </div>
-        <div className="flex justify-between w-full">
-          <div className="flex flex-col gap-y-1">
-            <span className="text-accent font-bold text-lg">{member.name}</span>
-            <span className="truncate text-text w-32">{lastMessage.content}</span>
+        <div className="flex justify-between w-full gap-x-2">
+          <div className="flex flex-col justify-between h-full gap-y-4">
+            <span className="text-accent font-bold text-sm xl:text-lg">{member.name}</span>
+            <span className="truncate text-xs xl:text-base text-text max-w-32">{lastMessage.content}</span>
           </div>
-          <span className="flex text-text">{time}</span>
+          <span className="flex text-text text-xs xl:text-base">{time}</span>
         </div>
       </li>
     );
@@ -57,10 +57,22 @@ export function CommonChatView() {
 
   return (
     <Container>
-      <div className="w-full flex flex-col gap-y-10 pt-10">
+      <div className="w-full flex flex-col gap-y-10 md:pt-10 pt-4 pb-2">
         <div className="flex gap-x-4">
-          <ul className="w-1/4 flex flex-col gap-y-4">{chatMembers}</ul>
-          <div className="w-full flex flex-col gap-y-2 h-[88vh] scroll-smooth bg-button-primary-hover/20 p-4">
+          <ul
+            className={[
+              "md:w-1/4 flex-col gap-y-4 divide divide-button-primary",
+              selectedChat ? "hidden md:flex" : "w-full flex",
+            ].join(" ")}
+          >
+            {chatMembers}
+          </ul>
+          <div
+            className={[
+              "w-full md:flex flex-col gap-y-2 md:h-[88vh] scroll-smooth bg-button-primary-hover/20 p-4",
+              selectedChat ? "flex h-[82vh]" : "hidden",
+            ].join(" ")}
+          >
             {selectedChat && selectedMember && (
               <ChatWithUser chatId={selectedChat.id} recipientId={selectedMember.id} />
             )}

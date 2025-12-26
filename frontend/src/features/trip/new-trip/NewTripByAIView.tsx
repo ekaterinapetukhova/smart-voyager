@@ -20,12 +20,10 @@ export function NewTripByAIView() {
     validation: createTripByAISchema,
   });
 
-  // void navigate(`/trip/${response.tripId}`);
-
   return (
     <Container childrenContainerClassNames="flex flex-col items-center pt-10 h-full">
       <Title>Describe your trip wishes</Title>
-      <div className="mt-64 h-full flex flex-col gap-y-5 w-1/2">
+      <div className="h-full flex flex-col gap-y-5 w-full sm:w-3/4 xl:w-1/2 justify-center">
         <Input type="textarea" form={form} fieldKey="content" label="Trip description" />
         <div className="w-1/3 mx-auto">
           <ButtonLink

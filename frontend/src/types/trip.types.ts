@@ -68,6 +68,13 @@ export interface ControlListItem {
   description: string;
 }
 
+export interface EventAroundItem {
+  name: string;
+  place: string;
+  date: string;
+  city: string;
+}
+
 export interface Trip {
   id: string;
   name: string;
@@ -76,6 +83,7 @@ export interface Trip {
   description: string;
   event: TripEvent | null;
   controlList: ControlListItem[];
+  aroundEvent: EventAroundItem[];
   user: {
     id: string;
     name: string;
@@ -90,7 +98,7 @@ export interface Trip {
 
 export type CreateTripDto = Omit<
   Trip,
-  "id" | "createdAt" | "tripPoints" | "event" | "controlList" | "collaborators" | "user"
+  "id" | "createdAt" | "tripPoints" | "event" | "controlList" | "collaborators" | "user" | "aroundEvent"
 >;
 
 export type UpdateTripDto = Partial<CreateTripDto> & Pick<Trip, "id">;

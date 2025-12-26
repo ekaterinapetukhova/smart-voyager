@@ -3,6 +3,7 @@ import { Prisma, Trip, User } from "@prisma/client";
 import { GetUser } from "../auth/user.decorator";
 import { TripPlannerAgent, tripPlannerInputSchema } from "../openai/agents/trip-planner.agent";
 import { ControlListCreatorAgent } from "../openai/agents/control-list-creator.agent";
+import { FindEventsAroundAgent } from "../openai/agents/find-events-around.agent";
 import { CreateTripService } from "./service/create-trip.service";
 import { createTripDtoSchema } from "./dto/create-trip.dto";
 import { GetPlannedTripsService } from "./service/get-planned-trips.service";
@@ -14,6 +15,7 @@ import { CreateControlListItemService } from "./service/control-list-item/create
 import { AddTripMateService } from "./service/add-trip-mate.service";
 import { RemoveTripMateService } from "./service/remove-trip-mate.service";
 import { RemoveTripService } from "./service/remove-trip.service";
+import { FindEventsAroundItemService } from "./service/find-events-around/find-events-around.service";
 
 @Controller("trip")
 export class TripController {
@@ -28,7 +30,9 @@ export class TripController {
     private readonly createControlListItemService: CreateControlListItemService,
     private readonly addTripMateService: AddTripMateService,
     private readonly removeTripMateService: RemoveTripMateService,
-    private readonly removeTripService: RemoveTripService
+    private readonly removeTripService: RemoveTripService,
+    private readonly findEventsAroundAgent: FindEventsAroundAgent,
+    private readonly findEventsAroundItemService: FindEventsAroundItemService
   ) {}
 
   @Post()
@@ -94,6 +98,7 @@ export class TripController {
         tripPoints: true;
         event: true;
         controlList: true;
+        aroundEvent: true;
         user: {
           select: {
             id: true;
@@ -115,6 +120,7 @@ export class TripController {
       ...orderedTripPointsIncludePart,
       event: true,
       controlList: true,
+      aroundEvent: true,
       user: {
         select: {
           id: true,
@@ -175,6 +181,15 @@ export class TripController {
     const items = await this.controlListCreatorAgent.execute(trip);
 
     await this.createControlListItemService.createMany(items.controlList, trip.id);
+  }
+
+  @Post(":id/ai-find-events-around")
+  public async findEventsAround(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
+    const trip = await this.getTripByIdService.execute(id, { tripPoints: true, user: true, event: true });
+
+    const events = await this.findEventsAroundAgent.execute(trip);
+
+    await this.findEventsAroundItemService.createMany(events, trip.id);
   }
 
   @Delete(":id")

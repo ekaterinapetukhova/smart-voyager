@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Agent, run, webSearchTool } from "@openai/agents";
 import z from "zod";
+import { Prisma } from "@prisma/client";
 import { AIExecutionContext } from "../openai.types";
 
 const agentOutputSchema = z.object({
@@ -8,7 +9,7 @@ const agentOutputSchema = z.object({
     z.object({
       name: z.string(),
       place: z.string(),
-      dateTime: z.string(),
+      date: z.date(),
       city: z.string(),
     })
   ),
@@ -34,15 +35,25 @@ export class FindEventsAroundAgent {
   }
 
   // in future, user preferences too
-  public async execute(fullAddress: string, from: Date, to: Date): Promise<FindEventsAroundAgentOutput> {
+  public async execute(
+    trip: Prisma.TripGetPayload<{
+      include: { tripPoints: true; user: true; event: true };
+    }>
+  ): Promise<FindEventsAroundAgentOutput> {
+    const places = trip.tripPoints.map((point) => {
+      return `${point.city}, ${point.fullAddress}`;
+    });
+
     const result = await run(
       this.agent,
       "Find events to attend, visit, go to, between date" +
-        `from ${from.toDateString()} and to ${to.toDateString()} and address ${fullAddress}`,
+        `from ${trip.event?.from.toDateString()} and to ${trip.event?.to.toDateString()} and and places ${places.join(";")}`,
       {
         maxTurns: 5,
       }
     );
+
+    console.log(result.finalOutput);
 
     return result.finalOutput ?? { events: [] };
   }

@@ -112,6 +112,7 @@ model Trip {
   event TripEvent?
 
   controlList ControlListItem[]
+  aroundEvent AroundEventsItem[]
 }
 
 model ControlListItem {
@@ -120,6 +121,18 @@ model ControlListItem {
   name        String
   cost        Int
   description String
+
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  tripId String
+}
+
+model AroundEventsItem {
+  id String @id @default(uuid())
+
+  name  String
+  place String
+  date  DateTime
+  city  String
 
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
   tripId String

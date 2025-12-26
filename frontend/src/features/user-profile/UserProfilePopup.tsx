@@ -202,16 +202,16 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
   );
 
   return (
-    <Popup closePopup={props.onClose} containerClassName="w-2/5 h-4/5">
+    <Popup closePopup={props.onClose} containerClassName="w-3/4 xl:w-2/5 h-4/5">
       <div className="py-4 px-6 overflow-y-scroll flex flex-col gap-y-5">
         <div className="flex flex-col gap-y-4">
           <div className="w-full">
             <SubTitle content="Main" />
             <span className="w-full h-0.5 bg-accent flex mt-1"></span>
           </div>
-          <div className="flex gap-x-10">
-            <div className="flex flex-col gap-y-4 w-1/2">{mainUserInfo}</div>
-            <div className="w-1/2 flex justify-center">
+          <div className="flex flex-col-reverse md:flex-row gap-x-10 gap-y-4">
+            <div className="flex flex-col gap-y-4 md:w-1/2">{mainUserInfo}</div>
+            <div className="sm:w-1/2 flex sm:justify-center">
               <Avatar src={props.user.avatar} className="size-50" />
             </div>
           </div>
@@ -221,7 +221,7 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
           </div>
           <div className="flex flex-col gap-y-4">{tripMateUserInfo}</div>
         </div>
-        <div className="flex flex-col gap-y-2 w-1/3 mx-auto">
+        <div className="flex flex-col gap-y-2 w-1/2 sm:w-1/3 mx-auto">
           <form.SubmitButton label="Set settings" size="medium" />
           <Button label="Log out" size="medium" onClick={logout} />
         </div>

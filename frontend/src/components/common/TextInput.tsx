@@ -15,7 +15,7 @@ export function TextInput(props: TextInputProps) {
       {props.label && <label htmlFor={inputId}>{props.label}</label>}
       <input
         id={inputId}
-        className="h-10 text-sm border-b-2 pb-1 text-text w-fit field-sizing-content min-w-lg"
+        className="h-10 text-sm border-b-2 pb-1 text-text w-full field-sizing-content min-w-lg"
         type="text"
         onChange={props.onChange}
         value={props.value}

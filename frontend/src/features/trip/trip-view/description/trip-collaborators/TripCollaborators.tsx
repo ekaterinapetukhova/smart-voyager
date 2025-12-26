@@ -17,7 +17,7 @@ export function TripCollaborators(props: TripCollaboratorsProps) {
 
   const collaborators = props.trip.collaborators.map((mate) => {
     return (
-      <div className="flex gap-x-2 items-center text-text w-full">
+      <div className="flex gap-x-2 items-center text-text w-full" key={mate.id}>
         <Avatar src={mate.avatar} className="size-14 rounded-full mr-2 overflow-hidden" />
         <span>{mate.name}</span>
         {props.user.id === props.trip.user.id && (

@@ -47,7 +47,7 @@ export function ChatWithUser(props: ChatWithUserProps) {
         <Input type="textarea" form={form} fieldKey="content" />
         <div className="w-1/5 mx-auto">
           <Button
-            label="send"
+            label="Send"
             size="large"
             onClick={async () => {
               if (form.isValid) {

@@ -100,6 +100,19 @@ export const useTripApi = () => {
     });
   };
 
+  const useFindEventsAroundByAI = () => {
+    return useMutation({
+      mutationFn: async (tripId: string) => {
+        const request = authorizedFetch();
+
+        await request({ method: "POST", path: `${path}/${tripId}/ai-find-events-around` });
+      },
+      onSuccess: () => {
+        void queryClient.invalidateQueries({ queryKey: [tripQueryKey] });
+      },
+    });
+  };
+
   const update = useMutation({
     mutationFn: async (tripDto: UpdateTripDto) => {
       const request = authorizedFetch();
@@ -134,6 +147,7 @@ export const useTripApi = () => {
     addTripMate,
     removeTripMate,
     useRemoveTrip,
+    useFindEventsAroundByAI,
   };
 };
 

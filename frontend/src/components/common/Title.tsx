@@ -6,5 +6,5 @@ interface TitleProps {
 }
 
 export function Title(props: TitleProps) {
-  return <h1 className={["text-5xl text-text", props.classNames ?? ""].join(" ")}>{props.children}</h1>;
+  return <h1 className={["text-2xl md:text-4xl text-text", props.classNames ?? ""].join(" ")}>{props.children}</h1>;
 }

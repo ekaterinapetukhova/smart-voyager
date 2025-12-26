@@ -144,7 +144,7 @@ export function TripMatesView() {
   ];
 
   return (
-    <Container childrenContainerClassNames="py-10 w-full flex flex-col gap-y-10">
+    <Container childrenContainerClassNames="sm:pt-10 pt-4 pb-2 w-full flex flex-col gap-y-4 md:gap-y-10">
       <div className="flex flex-col gap-y-4">
         <CheckboxInput
           label="Sort by"
@@ -233,7 +233,9 @@ export function TripMatesView() {
         </div>
       </div>
       <div className="w-full">
-        <ul className="grid grid-cols-[repeat(auto-fit,_16rem)] gap-6">{renderTripMates}</ul>
+        <ul className="grid grid-cols-[repeat(auto-fit,_max)] sm:grid-cols-[repeat(auto-fit,_16rem)] gap-2 sm:gap-6">
+          {renderTripMates}
+        </ul>
       </div>
 
       {showPopup && selectedTripMateId && (
