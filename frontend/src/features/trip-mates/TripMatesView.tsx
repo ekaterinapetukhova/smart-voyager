@@ -13,7 +13,6 @@ import { TripMatesPopup } from "./TripMatesPopup.tsx";
 
 export function TripMatesView() {
   const { data: tripMates } = useTripMates();
-
   const { data: countriesAndCities } = useCountriesAndCities();
 
   const [showPopup, setShowPopup] = useState(false);

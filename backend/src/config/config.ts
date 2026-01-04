@@ -15,6 +15,7 @@ const configSchema = z
     FRONTEND_URL: z.url(),
     UPLOADS_PATH: z.string(),
     OPENAI_API_KEY: z.string(),
+    RESEND_API_KEY: z.string(),
   })
   .transform((data) => {
     return {
@@ -36,6 +37,8 @@ const configSchema = z
       uploadsPath: data.UPLOADS_PATH,
 
       openaiApiKey: data.OPENAI_API_KEY,
+
+      resendApiKey: data.RESEND_API_KEY,
     };
   });
 

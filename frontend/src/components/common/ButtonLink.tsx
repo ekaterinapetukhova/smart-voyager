@@ -94,7 +94,7 @@ export function ButtonLink(props: ButtonLinkProps) {
                   width: `${Math.round(loadingProgress)}%`,
                 }}
               ></div>
-              <span className="z-10 text-text font-semibold"> Thinking...</span>
+              <span className={labelClassNames}> Thinking...</span>
             </>
           ) : (
             <>

@@ -109,6 +109,7 @@ export function FormField(props: FormFieldProps) {
             props.errors ? "border-error" : "border-text",
             props.type == "file" ? "cursor-pointer" : "",
           ].join(" ")}
+          autoComplete="off"
         />
         <span
           className={[

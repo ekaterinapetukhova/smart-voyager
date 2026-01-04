@@ -21,8 +21,10 @@ export function TripsList(props: TripListProps) {
   if (!props.trips.isSuccess) {
     return;
   }
+  
+  const filteredTrips = props.trips.data.filter((x) => x.name.toLowerCase().startsWith(searchedTrip.toLowerCase()));
 
-  const tripItems = props.trips.data.map((trip) => {
+  const tripItems = filteredTrips.map((trip) => {
     let formattedDate: FormattedDate = { from: "", to: "" };
 
     if (trip.event) {

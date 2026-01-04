@@ -41,7 +41,6 @@ export class GeneratePdfService {
         bottom: 0,
       },
       printBackground: false,
-      // format: "A4",
     });
   }
 }

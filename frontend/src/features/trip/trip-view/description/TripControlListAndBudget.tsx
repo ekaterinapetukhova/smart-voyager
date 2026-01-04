@@ -25,7 +25,7 @@ export function TripControlListAndBudget(props: TripControlListProps) {
         <div className="text-text w-full">
           <div className="flex justify-between w-full">
             <span className="font-bold">{item.name}</span>
-            <span className="ml-auto">
+            <span className="ml-auto flex gap-x-1">
               <span className="text-accent">{item.cost}</span> {currency}
             </span>
           </div>

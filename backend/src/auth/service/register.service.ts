@@ -16,7 +16,7 @@ export class RegisterService {
   public async execute(registerDto: CreateUserDto): Promise<void> {
     const existingUser = await this.getUserByEmailService.execute(registerDto.email);
 
-    if (existingUser) {
+    if (existingUser && existingUser.verified) {
       throw new ConflictError("User with such email already exists");
     }
 

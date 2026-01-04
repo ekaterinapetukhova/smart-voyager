@@ -28,7 +28,8 @@ export class ControlListCreatorAgent {
       instructions:
         "You are an agent that searches based on home address and destination addresses" +
         "what necessary things user should prepare or took with themselves and how much it may cost." +
-        "Be brief. Don't ask any questions afterwards, just give the recommendations and that's it.",
+        "Be brief. Don't ask any questions afterwards, just give the recommendations and that's it." +
+        "Provide the answer without mentioning sources, citations, references, footnotes, or any citation markers (e.g. brackets, IDs, links).",
       tools: [webSearchTool()],
       outputType: agentOutputSchema,
     });

@@ -69,6 +69,7 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
         return e.target.checked;
     }
   };
+  
   const castExistingValue = (value: FormValues[string]): { checked?: boolean; value?: string; files?: FileList } => {
     switch (props.type) {
       case "text":

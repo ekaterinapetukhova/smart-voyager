@@ -5,7 +5,7 @@ interface LinkToProps {
   label?: string;
   url: string;
   isActive?: boolean;
-  icon?: Element;
+  icon?: ReactNode;
 }
 
 export function LinkTo(props: LinkToProps) {

@@ -16,7 +16,7 @@ export function TripView() {
   }
 
   return (
-    <Container childrenContainerClassNames="w-full pb-4 flex flex-col gap-y-4 md:gap-y-0">
+    <Container childrenContainerClassNames="w-full flex flex-col gap-y-4 md:gap-y-0">
       <TripInformation trip={trip} />
       <TripMap trip={trip} />
     </Container>

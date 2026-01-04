@@ -1,9 +1,8 @@
 import { Marker, Popup, useMapEvents } from "react-leaflet";
 import { useEffect, useState } from "react";
 import L from "leaflet";
-import { IconDeviceFloppy, IconEdit, IconMapPinPin, IconTrash } from "@tabler/icons-react";
+import { IconCancel, IconDeviceFloppy, IconEdit, IconMapPinPin, IconTrash } from "@tabler/icons-react";
 import { ExistingTripPoint, TripPoint } from "../../types/trip-point.types.ts";
-import { Button } from "../common/Button.tsx";
 import MarkerIcon from "/marker.png";
 import { getPlaceData } from "../../utils/get-place-data.ts";
 import { useTripPointAPI } from "../../hooks/use-trip-point-api.ts";
@@ -12,7 +11,6 @@ import { TextInput } from "../common/TextInput.tsx";
 interface MarkerPopupProps {
   point: ExistingTripPoint;
   onRemove: () => void;
-  // onChangePosition: () => void;
 }
 
 interface PopupContentProps {
@@ -83,8 +81,6 @@ function PopupContent(props: PopupContentProps) {
       if (e.popup.getElement()?.className.includes(props.popupId) && props.isPlaceLocationChanged) {
         const latlng = e.popup.getLatLng();
 
-        console.log({ latlng });
-
         if (!latlng) {
           return null;
         }
@@ -114,6 +110,8 @@ function PopupContent(props: PopupContentProps) {
     });
   }
 
+  const iconsClasses = "text-button-primary cursor-pointer";
+
   return (
     <div className="flex flex-col gap-y-2 items-center">
       <PointName
@@ -123,9 +121,9 @@ function PopupContent(props: PopupContentProps) {
       <div className="flex gap-x-1 w-fit">
         {props.isPlaceLocationChanged && !props.shouldContentBeHidden ? (
           <>
-            <Button
-              label="Save"
-              size="small"
+            <IconDeviceFloppy
+              stroke={2}
+              className={iconsClasses}
               onClick={() => {
                 if (tmpPoint) {
                   void updateTripPoint({ ...tmpPoint, id: props.point.id });
@@ -134,14 +132,12 @@ function PopupContent(props: PopupContentProps) {
                 setTmpPoint(null);
               }}
             />
-            <Button label="Cancel" size="small" onClick={props.onFinish} />
+            <IconCancel stroke={2} className={iconsClasses} onClick={props.onFinish} />
           </>
         ) : (
           <>
-            {/*<Button onClick={props.onChange} label="Change position" size="small" />*/}
-            <IconMapPinPin className="text-button-primary cursor-pointer" onClick={props.onChange} />
-            {/*<Button onClick={props.onRemove} label="Remove point" size="small" />*/}
-            <IconTrash className="text-button-primary cursor-pointer" onClick={props.onRemove} />
+            <IconMapPinPin className={iconsClasses} onClick={props.onChange} />
+            <IconTrash className={iconsClasses} onClick={props.onRemove} />
           </>
         )}
       </div>

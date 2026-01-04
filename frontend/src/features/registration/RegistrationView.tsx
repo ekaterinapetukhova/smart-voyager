@@ -60,7 +60,7 @@ export function RegistrationView() {
 
   return (
     <Container childrenContainerClassNames="flex flex-col md:flex-row items-center justify-center gap-x-20 h-full">
-      <Title classNames="w-1/3 hidden lg:flex">
+      <Title classNames="w-1/3 hidden lg:block">
         From Dreaming to Traveling – <span className="text-accent italic block font-bold">Start Now</span>
       </Title>
       <div className="w-full lg:w-1/4 flex flex-col gap-y-4">
@@ -84,7 +84,7 @@ export function RegistrationView() {
             account
           </span>
         )}
-        {showErrorInfo && (
+        {showErrorInfo && !showEmailInfo && (
           <span className="text-accent text-xs block text-center">
             Sorry, but there are some technical difficulties
           </span>

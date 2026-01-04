@@ -1,15 +1,15 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { TripEvent } from "@prisma/client";
-import { CreateEventService } from "./service/create-event.service";
-import { createEventDtoSchema } from "./dto/create-trip-event.dto";
+import { UpsertEventService } from "./service/upsert-event.service";
+import { tripEventDtoSchema } from "./dto/trip-event.dto";
 
 @Controller("trip-event")
 export class TripEventController {
-  public constructor(private readonly createEventService: CreateEventService) {}
+  public constructor(private readonly createEventService: UpsertEventService) {}
 
   @Post()
   public add(@Body() data: unknown): Promise<TripEvent> {
-    const createEventDto = createEventDtoSchema.parse(data);
+    const createEventDto = tripEventDtoSchema.parse(data);
 
     return this.createEventService.execute(createEventDto);
   }

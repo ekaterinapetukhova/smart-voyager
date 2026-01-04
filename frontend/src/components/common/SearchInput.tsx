@@ -8,13 +8,10 @@ interface SearchInputProps {
 }
 
 export function SearchInput(props: SearchInputProps) {
-  const inputId = `input-${props.placeholder}`;
-
   return (
-    <div className={["w-full md:w-2/3", props.classNames ?? ""].join(" ")}>
+    <div className="w-full md:w-2/3">
       <input
-        id={inputId}
-        className="h-full text-lg border-b-2 border-accent text-accent w-full"
+        className="h-full text-lg border-b-2 border-accent text-accent w-full px-2 placeholder:text-accent/25"
         type="search"
         onInput={props.onChange}
         value={props.value}

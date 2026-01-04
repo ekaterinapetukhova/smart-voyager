@@ -26,7 +26,7 @@ export function AutocompleteSelectInput(props: AutocompleteSelectInputProps) {
   const optionsDivs = filteredOptions.map((option) => {
     return (
       <div
-        className="hover:bg-pink-400 py-1 px-2 text-black bg-text"
+        className="hover:bg-pink-400 py-1 px-2 text-black bg-text cursor-pointer"
         onClick={() => {
           setShowOptions(false);
           setSearch(option.name);

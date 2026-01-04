@@ -27,7 +27,7 @@ export function TripMateCard(props: TripMateCardProps) {
     mapObject(tripInterest, (v, key) => {
       if (props.tripMate.tripInterest.includes(key))
         return (
-          <span key={key} className="px-0.5 text-background bg-accent text-[10px] font-bold">
+          <span key={key} className="px-0.5 text-background bg-button-primary text-[10px] font-bold">
             {v}
           </span>
         );
@@ -42,7 +42,7 @@ export function TripMateCard(props: TripMateCardProps) {
 
       <div className="flex flex-col bg-background transition z-20 size-full p-4 gap-y-2">
         <Avatar src={props.tripMate.avatar} />
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-y-1">
           {goals.length && <div className="flex flex-wrap gap-x-2 gap-y-1">{goals}</div>}
           {interests.length && <div className="flex flex-wrap gap-x-2 gap-y-1">{interests}</div>}
           <div className="flex flex-col gap-y-1">

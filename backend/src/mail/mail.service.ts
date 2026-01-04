@@ -1,25 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import nodemailer from "nodemailer";
 import Jwt from "jsonwebtoken";
+import { Resend } from "resend";
 import { config } from "../config/config";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend;
 
   public constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: config.emailServer,
-      port: config.emailServerPort,
-      secure: true,
-      auth: {
-        user: config.email,
-        pass: config.emailPassword,
-      },
-    });
-
-    void this.verifyConnection();
+    this.resend = new Resend(config.resendApiKey);
   }
 
   public async execute(registerDto: CreateUserDto): Promise<void> {
@@ -28,22 +18,17 @@ export class MailService {
     try {
       const verificationLink = this.generateVerificationToken(userEmail);
 
-      const info = await this.transporter.sendMail({
-        from: config.email,
+      const { data } = await this.resend.emails.send({
+        from: "Smart Voyager <onboarding@resend.dev>",
         to: "ohorat228@gmail.com",
         subject: "Verify your email",
         html: `Please click the following link to verify your email: <a href="${verificationLink}">${verificationLink}</a>`,
       });
 
-      console.log("Message sent: %s", info.messageId);
+      console.log("Message sent: %s", data?.id);
     } catch (err) {
       console.error("Error while sending mail", err);
     }
-  }
-
-  private async verifyConnection(): Promise<void> {
-    await this.transporter.verify();
-    console.log("Server is ready to take our messages");
   }
 
   private generateVerificationToken(userEmail: string): string {

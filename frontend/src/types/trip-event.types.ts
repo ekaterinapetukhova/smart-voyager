@@ -1,7 +1,6 @@
 export interface CreateTripEventDto {
   from: string;
   to: string;
-  userId: string;
   tripId: string;
 }
 

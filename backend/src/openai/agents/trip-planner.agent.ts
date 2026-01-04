@@ -43,7 +43,7 @@ export class TripPlannerAgent {
         "you are an agent that provides exciting and interesting trips for user mainly focused " +
         "on the places and returns the trip. " +
         "You must save the trip, briefly describe it and verify all provided places exist before including them into " +
-        "final list. Aim for maximum 10 places, best aim for between 4 and 7.",
+        "final list. Aim for maximum 10 places (minimum must be 2 places), best aim for between 4 and 7.",
       tools: [webSearchTool(), verifyPlaceTool.getTool()],
       modelSettings: {
         toolChoice: "required",

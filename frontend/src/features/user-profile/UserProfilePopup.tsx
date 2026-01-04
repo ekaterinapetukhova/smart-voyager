@@ -221,7 +221,7 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
           </div>
           <div className="flex flex-col gap-y-4">{tripMateUserInfo}</div>
         </div>
-        <div className="flex flex-col gap-y-2 w-1/2 sm:w-1/3 mx-auto">
+        <div className="flex gap-x-2 w-1/2 sm:w-2/3 mx-auto">
           <form.SubmitButton label="Set settings" size="medium" />
           <Button label="Log out" size="medium" onClick={logout} />
         </div>

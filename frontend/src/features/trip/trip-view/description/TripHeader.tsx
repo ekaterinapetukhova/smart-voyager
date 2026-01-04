@@ -16,7 +16,7 @@ interface TripHeaderProps {
 }
 
 export function TripHeader(props: TripHeaderProps) {
-  const { updateTrip, useCreateControlListByAI, useRemoveTrip, useFindEventsAroundByAI } = useTripApi();
+  const { updateTrip, useCreateControlListByAI, useRemoveTrip } = useTripApi();
 
   const [editTitleMode, setEditTitleMode] = useState(false);
   const [newTitle, setNewTitle] = useState(props.trip.name);
@@ -24,7 +24,6 @@ export function TripHeader(props: TripHeaderProps) {
   const navigate = useNavigate();
 
   const createControlListByAI = useCreateControlListByAI();
-  const findEventsAroundByAI = useFindEventsAroundByAI();
 
   const removeTrip = useRemoveTrip(() => void navigate(RouterEnum.PlannedTrips));
 
@@ -93,16 +92,16 @@ export function TripHeader(props: TripHeaderProps) {
           }}
           isLoading={createControlListByAI.isPending}
         />
-        {props.trip.event && (
-          <Button
-            label="Find events around"
-            size="medium"
-            onClick={() => {
-              findEventsAroundByAI.mutate(props.trip.id);
-            }}
-            isLoading={findEventsAroundByAI.isPending}
-          />
-        )}
+        {/*{props.trip.event && (*/}
+        {/*  <Button*/}
+        {/*    label="Find events around"*/}
+        {/*    size="medium"*/}
+        {/*    onClick={() => {*/}
+        {/*      findEventsAroundByAI.mutate(props.trip.id);*/}
+        {/*    }}*/}
+        {/*    isLoading={findEventsAroundByAI.isPending}*/}
+        {/*  />*/}
+        {/*)}*/}
         <Button
           label="Remove trip"
           size="medium"
