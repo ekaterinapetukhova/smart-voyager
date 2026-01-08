@@ -45,7 +45,7 @@ export function CommonChatView() {
           <Avatar src={member.avatar} className="size-16 rounded-full overflow-auto" />
         </div>
         <div className="flex justify-between w-full gap-x-2">
-          <div className="flex flex-col justify-between h-full gap-y-4">
+          <div className="flex flex-col justify-between h-full gap-y-2">
             <span className="text-accent font-bold text-sm xl:text-lg">{member.name}</span>
             <span className="truncate text-xs xl:text-base text-text max-w-32">{lastMessage.content}</span>
           </div>

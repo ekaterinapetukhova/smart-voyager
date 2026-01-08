@@ -16,7 +16,7 @@ export function Message(props: MessageProps) {
   return (
     <li
       className={[
-        "flex flex-col gap-y-2 rounded max-w-full w-fit px-4 py-2",
+        "flex flex-col gap-y-2 rounded max-w-xl w-fit px-4 py-2",
         props.message.senderId === user?.id ? "ml-auto bg-gray-300" : "bg-amber-100",
       ].join(" ")}
     >

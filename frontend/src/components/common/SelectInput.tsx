@@ -20,7 +20,7 @@ export function SelectInput(props: SelectInputProps) {
         key={option.value}
         className={optionClassName}
         value={option.value}
-        selected={props.value === option.value}
+        defaultValue={props.value === option.value ? props.value : props.initialOptionLabel}
       >
         {option.name}
       </option>
@@ -33,6 +33,7 @@ export function SelectInput(props: SelectInputProps) {
       <select
         className="border-1 border-text p-1 cursor-pointer focus:border-accent"
         onChange={(e) => void props.onChange(e.target.value)}
+        defaultValue={props.value ?? props.initialOptionLabel}
       >
         <option className={optionClassName} value="">
           {props.initialOptionLabel}

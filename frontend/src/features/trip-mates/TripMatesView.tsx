@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "../../components/common/Container.tsx";
 import { useTripMates } from "../../hooks/use-trip-mates.ts";
 import { SelectInput } from "../../components/common/SelectInput.tsx";
@@ -29,16 +29,35 @@ export function TripMatesView() {
 
   const [searchedTripMate, setSearchedTripMate] = useState("");
 
+  useEffect(() => {
+    if (!selectedSortOptions.includes("countryAndCity")) {
+      setSelectedCountry("");
+      setSelectedCity("");
+    }
+
+    if (!selectedSortOptions.includes("tripGoals")) {
+      setSelectedGoals([]);
+    }
+
+    if (!selectedSortOptions.includes("tripInterests")) {
+      setSelectedInterests([]);
+    }
+
+    if (!selectedSortOptions.includes("gender")) {
+      setSelectedGenders([]);
+    }
+  }, [selectedSortOptions]);
+
   if (!tripMates) {
     return;
   }
-
-  console.log(searchedTripMate);
 
   const filteredTripMates = tripMates.filter((tripMate) => {
     if (tripMate.shouldBeVisible) {
       const selectedOptions = [...selectedGoals, ...selectedInterests, ...selectedGenders];
       const tripMateOptions: typeof selectedOptions = [];
+
+      const passed = [];
       if (selectedOptions.length !== 0) {
         if (selectedGoals.length !== 0) {
           for (const goal of tripMate.tripGoals) {
@@ -57,26 +76,24 @@ export function TripMatesView() {
         if (selectedGenders.length !== 0 && selectedGenders.includes(tripMate.gender)) {
           tripMateOptions.push(tripMate.gender);
         }
-        return selectedOptions.length === tripMateOptions.length;
+        passed.push(selectedOptions.length === tripMateOptions.length);
       }
       if (searchedTripMate) {
-        return tripMate.email.toLowerCase().startsWith(searchedTripMate.toLowerCase());
+        passed.push(tripMate.email.toLowerCase().startsWith(searchedTripMate.toLowerCase()));
       }
-      return true;
+      if (selectedCountry) {
+        passed.push(tripMate.country === selectedCountry);
+      }
+      if (selectedCity) {
+        passed.push(tripMate.city === selectedCity);
+      }
+      return passed.length ? passed.every((x) => !!x) : true;
     } else {
       return false;
     }
   });
 
   const renderTripMates = filteredTripMates.map((tripMate) => {
-    if (selectedCountry && tripMate.country !== selectedCountry) {
-      return;
-    }
-
-    if (selectedCity && tripMate.city !== selectedCity) {
-      return;
-    }
-
     return (
       <TripMateCard
         key={tripMate.id}
@@ -168,8 +185,6 @@ export function TripMatesView() {
               options={countriesOptions}
               onChange={(e) => {
                 setSelectedCountry(e);
-
-                if (selectedCountry !==)
               }}
               initialOptionLabel="Select country"
               value={selectedCountry}
@@ -180,6 +195,7 @@ export function TripMatesView() {
                 options={citiesOptions}
                 onChange={(e) => {
                   setSelectedCity(e);
+                  console.log(e);
                 }}
                 initialOptionLabel="Select city"
                 value={selectedCity}
