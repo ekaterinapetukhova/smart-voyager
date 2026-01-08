@@ -11,9 +11,7 @@ import { ServerError } from "../../error/server.error";
 export const tripPlannerInputSchema = zv4.object({
   content: zv4.string().min(1, "Your trip description must have at least one symbol"),
 });
-
 export type TripPlannerInput = zv4.output<typeof tripPlannerInputSchema>;
-
 const tripPlannerOutputSchema = z.object({
   name: z.string(),
   description: z.string(),
@@ -25,7 +23,6 @@ const tripPlannerOutputSchema = z.object({
     })
   ),
 });
-
 export type TripPlannerOutput = z.output<typeof tripPlannerOutputSchema>;
 
 @Injectable()
@@ -43,7 +40,8 @@ export class TripPlannerAgent {
         "you are an agent that provides exciting and interesting trips for user mainly focused " +
         "on the places and returns the trip. " +
         "You must save the trip, briefly describe it and verify all provided places exist before including them into " +
-        "final list. Aim for maximum 10 places (minimum must be 2 places), best aim for between 4 and 7.",
+        "final list. Aim for maximum 10 places (minimum must be 2 places), best aim for between 4 and 7." +
+        "Don't include the information about place existing.",
       tools: [webSearchTool(), verifyPlaceTool.getTool()],
       modelSettings: {
         toolChoice: "required",
@@ -59,12 +57,10 @@ export class TripPlannerAgent {
       } satisfies AIExecutionContext,
       maxTurns: 25,
     });
-
     const initialTrip = result.finalOutput;
     if (!initialTrip) {
       throw new ServerError("Generating trip failed");
     }
-
     return await this.preprocessTrip(initialTrip);
   }
 
@@ -75,7 +71,6 @@ export class TripPlannerAgent {
           const { lat, lng, fullAddress } = await this.geoapifyAutocompleteService.execute(
             `${place.name}, ${place.city}, ${place.country}`
           );
-
           return {
             latitude: lat,
             longitude: lng,
@@ -89,7 +84,6 @@ export class TripPlannerAgent {
         }
       })
     );
-
     return {
       tripPoints: tripPoints.filter((x) => !!x),
       name: `${response.name} [AI]`,

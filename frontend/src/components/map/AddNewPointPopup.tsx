@@ -19,9 +19,9 @@ function NewPointForm(props: NewPointFormProps) {
   const [pointName, setPointName] = useState(props.selectedPoint.name);
 
   return (
-    <div className="flex flex-col items-center gap-y-2 bg-background/90 rounded p-4 -m-3 w-fit relative">
+    <div className="flex flex-col items-center gap-y-4 bg-background/90 rounded p-4 -m-3 w-fit relative">
       <span
-        className={"text-text absolute right-2 top-2 removal-button cursor-pointer"}
+        className="text-text absolute right-2 top-2 removal-button cursor-pointer"
         onClick={() => {
           props.onHide();
         }}

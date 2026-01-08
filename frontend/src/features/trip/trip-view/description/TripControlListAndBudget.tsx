@@ -36,19 +36,17 @@ export function TripControlListAndBudget(props: TripControlListProps) {
   });
 
   return (
-    <div className="h-full overflow-y-scroll relative w-full">
-      <div className="flex justify-between">
-        <SubTitle content="Control list" />
+    <div className="h-full relative w-full print:relative inset-0 top-[1%]">
+      <SubTitle content="Control list" />
+      <div className="absolute print:relative inset-0 top-8 flex flex-col gap-y-2 overflow-y-auto">
         <div className="flex text-text gap-x-2">
           <SubTitle content="Total budget needed:" />
           <span className="flex gap-x-2 text-lg">
             <span className="text-accent">{budget}</span> <span>{currency}</span>
           </span>
         </div>
+        <ul className="flex flex-col gap-y-2 w-full divide pr-4">{items}</ul>
       </div>
-      <ul className="flex flex-col gap-y-2 absolute print:relative inset-0 overflow-y-scroll mt-10 w-full divide pr-4">
-        {items}
-      </ul>
     </div>
   );
 }

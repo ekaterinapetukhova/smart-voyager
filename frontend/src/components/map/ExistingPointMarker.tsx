@@ -39,22 +39,32 @@ function PointName(props: PointNameProps) {
   return (
     <>
       {editMode ? (
-        <>
+        <div className="flex items-center w-min gap-2">
           <TextInput
             value={pointName}
             onChange={(e) => {
               setPointName(e.target.value);
             }}
           />
-          <IconDeviceFloppy
-            stroke={2}
-            className="cursor-pointer text-text inline-block ml-2 size-4 -mt-1 hover:text-accent transition"
-            onClick={() => {
-              props.onSaveName(pointName);
-              setEditMode(false);
-            }}
-          />
-        </>
+          <div className="flex gap-x-1">
+            <IconDeviceFloppy
+              stroke={2}
+              className="cursor-pointer text-text inline-block size-5 hover:text-accent transition"
+              onClick={() => {
+                props.onSaveName(pointName);
+                setEditMode(false);
+              }}
+            />
+            <IconCancel
+              stroke={2}
+              className="cursor-pointer text-text inline-block size-5  hover:text-accent transition"
+              onClick={() => {
+                setPointName(props.pointName);
+                setEditMode(false);
+              }}
+            />
+          </div>
+        </div>
       ) : (
         <h5 className="font-semibold text-text text-center text-sm">
           {pointName}
@@ -168,7 +178,7 @@ export function ExistingPointMarker(props: MarkerPopupProps) {
   return (
     <Marker position={[props.point.latitude, props.point.longitude]} icon={b} draggable={markerDraggable}>
       <Popup
-        className={`bg-background/90 font-font ${popupId}`}
+        className={`bg-background/90 font-font ${popupId} w-max`}
         position={[props.point.latitude, props.point.longitude]}
         autoClose={false}
         closeOnClick={false}

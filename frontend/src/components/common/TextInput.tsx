@@ -5,17 +5,18 @@ interface TextInputProps {
   placeholder?: string;
   value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  inputClassNames?: string;
 }
 
 export function TextInput(props: TextInputProps) {
-  const inputId = `input-${props.label ?? props.placeholder}`;
-
   return (
-    <div className="flex flex-col gap-y-2 overflow-hidden max-w-96">
-      {props.label && <label htmlFor={inputId}>{props.label}</label>}
+    <div className="flex flex-col gap-y-2 overflow-hidden max-w-96 w-full">
+      {props.label && <label className="text-xl font-bold text-text">{props.label}</label>}
       <input
-        id={inputId}
-        className="h-10 text-sm border-b-2 pb-1 text-text w-full field-sizing-content min-w-lg"
+        className={[
+          "h-10 text-sm border-b-2 text-text field-sizing-content w-max min-w-16 px-1",
+          props.inputClassNames,
+        ].join(" ")}
         type="text"
         onChange={props.onChange}
         value={props.value}

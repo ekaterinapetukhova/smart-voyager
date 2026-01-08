@@ -187,9 +187,15 @@ export class TripController {
   public async findEventsAround(@Param("id", ParseUUIDPipe) id: string): Promise<void> {
     const trip = await this.getTripByIdService.execute(id, { tripPoints: true, user: true, event: true });
 
-    const events = await this.findEventsAroundAgent.execute(trip);
+    const items = await this.findEventsAroundAgent.execute(trip);
 
-    await this.findEventsAroundItemService.createMany(events, trip.id);
+    await this.findEventsAroundItemService.createMany(
+      items.events.map((x) => ({
+        ...x,
+        date: new Date(x.date),
+      })),
+      trip.id
+    );
   }
 
   @Delete(":id")

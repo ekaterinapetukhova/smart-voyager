@@ -34,17 +34,17 @@ export function TripCollaborators(props: TripCollaboratorsProps) {
 
   return (
     <TripBlockWrapper>
-      <div className="flex gap-x-3 items-center">
-        <SubTitle content="Mates" />
+      <div className="flex gap-x-2 items-center">
+        <SubTitle content="Mates" />{" "}
+        {props.user.id === props.trip.user.id && (
+          <IconCirclePlus
+            stroke={2}
+            className="cursor-pointer text-text size-6 hover:text-accent"
+            onClick={props.onPopupOpen}
+          />
+        )}
       </div>
       {collaborators}
-      {props.user.id === props.trip.user.id && (
-        <IconCirclePlus
-          stroke={2}
-          className="cursor-pointer text-text size-7 hover:text-accent mx-auto"
-          onClick={props.onPopupOpen}
-        />
-      )}
     </TripBlockWrapper>
   );
 }

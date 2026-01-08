@@ -15,33 +15,26 @@ export class AuthMiddleware implements NestMiddleware {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async use(req: RequestWithUser, _res: any, next: NextFunction): Promise<void> {
     const token = this.extractToken(req);
-
     if (!token) {
       throw new UnauthorizedException({
         errorMessage: "No token provided",
       });
     }
-
     const payload = this.verifyToken(token);
-
     const user = await this.prisma.user.findFirst({
       where: {
         id: payload.id,
       },
     });
-
     if (!user) {
       throw new UnauthorizedException();
     }
-
     req["user"] = user;
-
     next();
   }
 
   private extractToken(req: Request): string | undefined {
     const [type, token] = req.headers["authorization"]?.split(" ") ?? [];
-
     return type === "Bearer" ? token : undefined;
   }
 
@@ -49,9 +42,7 @@ export class AuthMiddleware implements NestMiddleware {
     const payloadSchema = z.object({
       id: z.uuid(),
     });
-
     let payload: Jwt.JwtPayload | string = {};
-
     try {
       payload = Jwt.verify(token, config.secretKey);
     } catch (e) {
@@ -59,13 +50,10 @@ export class AuthMiddleware implements NestMiddleware {
         throw new UnauthorizedException();
       }
     }
-
     const validPayload = payloadSchema.safeParse(payload);
-
     if (!validPayload.success) {
       throw new UnauthorizedException();
     }
-
     return validPayload.data;
   }
 }

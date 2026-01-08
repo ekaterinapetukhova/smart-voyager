@@ -9,9 +9,7 @@ import { Input, useForm } from "../../components/common/form/useForm.tsx";
 
 export function LoginView() {
   const login = useTokenStore((s) => s.login);
-
   const navigate = useNavigate();
-
   const form = useForm({
     initialData: {
       email: "",

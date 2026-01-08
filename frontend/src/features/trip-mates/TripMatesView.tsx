@@ -8,6 +8,7 @@ import { Gender, TripGoals, tripGoals, TripInterest, tripInterest } from "../../
 import { mapObject } from "../../utils/map-object.ts";
 import { CheckboxInput } from "../../components/common/CheckboxInput.tsx";
 import { AutocompleteSelectInput } from "../../components/common/AutocompleteSelectInput.tsx";
+import { SearchInput } from "../../components/common/SearchInput.tsx";
 import { TripMateCard } from "./TripMateCard.tsx";
 import { TripMatesPopup } from "./TripMatesPopup.tsx";
 
@@ -26,15 +27,18 @@ export function TripMatesView() {
   const [selectedInterests, setSelectedInterests] = useState<TripInterest[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<Gender[]>([]);
 
+  const [searchedTripMate, setSearchedTripMate] = useState("");
+
   if (!tripMates) {
     return;
   }
+
+  console.log(searchedTripMate);
 
   const filteredTripMates = tripMates.filter((tripMate) => {
     if (tripMate.shouldBeVisible) {
       const selectedOptions = [...selectedGoals, ...selectedInterests, ...selectedGenders];
       const tripMateOptions: typeof selectedOptions = [];
-
       if (selectedOptions.length !== 0) {
         if (selectedGoals.length !== 0) {
           for (const goal of tripMate.tripGoals) {
@@ -43,7 +47,6 @@ export function TripMatesView() {
             }
           }
         }
-
         if (selectedInterests.length !== 0) {
           for (const interest of tripMate.tripInterest) {
             if (selectedOptions.includes(interest as TripInterest)) {
@@ -51,14 +54,14 @@ export function TripMatesView() {
             }
           }
         }
-
         if (selectedGenders.length !== 0 && selectedGenders.includes(tripMate.gender)) {
           tripMateOptions.push(tripMate.gender);
         }
-
         return selectedOptions.length === tripMateOptions.length;
       }
-
+      if (searchedTripMate) {
+        return tripMate.email.toLowerCase().startsWith(searchedTripMate.toLowerCase());
+      }
       return true;
     } else {
       return false;
@@ -143,7 +146,7 @@ export function TripMatesView() {
   ];
 
   return (
-    <Container childrenContainerClassNames="sm:pt-10 pt-4 pb-2 w-full flex flex-col gap-y-4 md:gap-y-10">
+    <Container childrenContainerClassNames="sm:pt-10 pt-4 pb-2 w-full flex flex-col gap-y-2 md:gap-y-4">
       <div className="flex flex-col gap-y-4">
         <CheckboxInput
           label="Sort by"
@@ -165,6 +168,8 @@ export function TripMatesView() {
               options={countriesOptions}
               onChange={(e) => {
                 setSelectedCountry(e);
+
+                if (selectedCountry !==)
               }}
               initialOptionLabel="Select country"
               value={selectedCountry}
@@ -230,6 +235,16 @@ export function TripMatesView() {
             />
           )}
         </div>
+      </div>
+      <div className="w-full">
+        <SearchInput
+          label="Find by email"
+          value={searchedTripMate}
+          onChange={(e) => {
+            setSearchedTripMate(e.target.value);
+          }}
+          classNames="md:w-3/6"
+        />
       </div>
       <div className="w-full">
         <ul className="grid grid-cols-[repeat(auto-fit,_max)] sm:grid-cols-[repeat(auto-fit,_16rem)] gap-2 sm:gap-6">

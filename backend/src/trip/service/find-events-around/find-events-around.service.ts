@@ -1,13 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { AroundEventsItem } from "@prisma/client";
 import { PrismaService } from "../../../prisma/prisma.service";
-import { FindEventsAroundAgentOutput } from "../../../openai/agents/find-events-around.agent";
+
+interface FindEventsAroundItemInput {
+  name: string;
+  place: string;
+  date: Date;
+  city: string;
+}
 
 @Injectable()
 export class FindEventsAroundItemService {
   public constructor(private readonly prisma: PrismaService) {}
 
-  public async createMany(data: FindEventsAroundAgentOutput, tripId: string): Promise<AroundEventsItem[]> {
+  public async createMany(data: FindEventsAroundItemInput[], tripId: string): Promise<AroundEventsItem[]> {
     await this.prisma.aroundEventsItem.deleteMany({
       where: {
         tripId,
@@ -15,7 +21,7 @@ export class FindEventsAroundItemService {
     });
 
     return this.prisma.aroundEventsItem.createManyAndReturn({
-      data: data.events.map((item) => ({ ...item, tripId })),
+      data: data.map((item) => ({ ...item, tripId })),
     });
   }
 }

@@ -34,18 +34,18 @@ export function Sidebar() {
     },
   };
 
-  const renderMenuItems = Object.values(menuItems).map((value) => {
-    return (
-      <>
+  const renderMenuItems = Object.values(menuItems)
+    .map((value) => {
+      return [
         <li className="hidden md:block" key={`${value.name}-desktop`}>
           <LinkTo label={value.name} url={value.path} isActive={value.path === (location.pathname as RouterEnum)} />
-        </li>
+        </li>,
         <li className="block md:hidden" key={`${value.name}-mobile`}>
           <LinkTo icon={value.icon} url={value.path} isActive={value.path === (location.pathname as RouterEnum)} />
-        </li>
-      </>
-    );
-  });
+        </li>,
+      ];
+    })
+    .flat();
 
   return (
     <div className="py-4 w-full md:w-72 flex md:flex-col items-center justify-between gap-x-8 bg-gradient-to-b from-[#12001F] via-[#1A0B2E] to-[#07060C] px-5 shadow-[1px_1px_10px_rgba(255,9,238,0.4)] h-20 md:h-full relative z-10">

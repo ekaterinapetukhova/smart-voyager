@@ -2,8 +2,12 @@ import { z } from "zod";
 
 export const validEventDataSchema = z
   .object({
-    from: z.date().min(Date.now(), { message: "Trip must start today or later" }),
-    to: z.date().min(Date.now(), { message: "Trip must end today or later" }),
+    from: z
+      .date()
+      .min(new Date(new Date(Date.now()).toISOString().split("T")[0]), { message: "Trip must start today or later" }),
+    to: z
+      .date()
+      .min(new Date(new Date(Date.now()).toISOString().split("T")[0]), { message: "Trip must end today or later" }),
   })
   .check((ctx) => {
     if (ctx.value.from.getTime() > ctx.value.to.getTime()) {

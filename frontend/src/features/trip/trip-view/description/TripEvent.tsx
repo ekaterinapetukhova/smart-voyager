@@ -32,8 +32,8 @@ export function TripEvent(props: TripEventFormProps) {
       "cursor-pointer text-text inline-block ml-2 size-6 -mt-1 hover:text-accent transition print:hidden",
     datesClasses = "text-text";
 
-  let from = new Date().toISOString(),
-    to = new Date().toISOString();
+  let from = form.data.from.toISOString(),
+    to = form.data.to.toISOString();
 
   if (props.trip.event) {
     from = props.trip.event.from;
