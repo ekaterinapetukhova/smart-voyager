@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { ReactNode, useEffect } from "react";
 import { RouterEnum } from "./types/router.types.ts";
-import { updateUserStore, useTokenStore } from "./store/user-store.ts";
+import { updateUserStore, useTokenStore, useUserStore } from "./store/user-store.ts";
 import { TripMatesView } from "./features/trip-mates/TripMatesView.tsx";
 import { NotFoundView } from "./features/not-found/NotFoundView.tsx";
 import { CommonChatView } from "./features/chat/CommonChatView.tsx";
@@ -17,6 +17,8 @@ import { AuthView } from "./features/auth/AuthView.tsx";
 import { RegistrationView } from "./features/registration/RegistrationView.tsx";
 import { LoginView } from "./features/login/LoginView.tsx";
 import { isPrint } from "./utils/is-print.ts";
+import { useApplicationStore } from "./store/application-store.ts";
+import { UserProfilePopup } from "./features/user-profile/UserProfilePopup.tsx";
 
 interface ProtectedRouteProps {
   isAuth: boolean;
@@ -42,6 +44,8 @@ export function App() {
   const logout = useTokenStore((s) => s.logout);
   const isAuth = !!token;
 
+  const { userProfilePopup, updateUserProfilePopup } = useApplicationStore();
+
   useEffect(() => {
     if (emailToken) {
       void verifyEmail(emailToken);
@@ -54,9 +58,21 @@ export function App() {
     }
   }, [emailToken, verifyEmail, isAuth, navigate, token, logout]);
 
+  const { user } = useUserStore();
+
+  console.log(userProfilePopup);
+
   return (
     <div className="flex-col-reverse md:flex-row flex h-screen overflow-y-auto lg:overflow-hidden print:h-fit print:overflow-auto">
       {isAuth && !isPrint() && <Sidebar />}
+      {user && userProfilePopup && (
+        <UserProfilePopup
+          user={user}
+          onClose={() => {
+            updateUserProfilePopup(false);
+          }}
+        />
+      )}
       <Routes>
         <Route path="/" element={<Navigate to={isAuth ? RouterEnum.PlannedTrips : RouterEnum.Auth} replace />} />
 

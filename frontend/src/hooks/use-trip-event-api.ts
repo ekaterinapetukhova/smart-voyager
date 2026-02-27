@@ -19,7 +19,17 @@ export const useTripEventApi = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
 
+  const remove = useMutation({
+    mutationFn: async (tripId: string) => {
+      const request = authorizedFetch();
+
+      await request({ method: "DELETE", path: `${path}/${tripId}` });
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
+  });
+
   return {
     createEvent: add,
+    removeEvent: remove,
   };
 };

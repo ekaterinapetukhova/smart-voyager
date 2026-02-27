@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { validChatMessageSchema } from "../../validation/chat.validation.ts";
 import { useChat, useChatById } from "../../hooks/use-chat.ts";
 import { Input, useForm } from "../../components/common/form/useForm.tsx";
-import { Button } from "../../components/common/Button.tsx";
 import { updateUserStore } from "../../store/user-store.ts";
 import { Message } from "./Message.tsx";
 
@@ -28,6 +27,21 @@ export function ChatWithUser(props: ChatWithUserProps) {
       content: "",
     },
     validation: validChatMessageSchema,
+    submit: {
+      fn: async (data) => {
+        await sendMessage({
+          content: data.content,
+          recipientId: props.recipientId,
+          chatId: props.chatId,
+        });
+
+        data.content = "";
+      },
+      onSuccess: () => {
+        void updateUserStore();
+        scrollToBottom();
+      },
+    },
   });
 
   useEffect(() => {
@@ -45,21 +59,8 @@ export function ChatWithUser(props: ChatWithUserProps) {
       )}
       <div>
         <Input type="textarea" form={form} fieldKey="content" />
-        <div className="w-1/5 mx-auto">
-          <Button
-            label="Send"
-            size="large"
-            onClick={async () => {
-              if (form.isValid) {
-                await sendMessage({ content: form.data.content, recipientId: props.recipientId, chatId: props.chatId });
-
-                void updateUserStore();
-                scrollToBottom();
-              }
-
-              form.data.content = "";
-            }}
-          />
+        <div className="w-1/5 mx-auto mt-2">
+          <form.SubmitButton label="Send" size="large" />
         </div>
       </div>
     </>

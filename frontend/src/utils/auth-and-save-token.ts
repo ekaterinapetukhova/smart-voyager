@@ -6,10 +6,6 @@ interface LoginResponse {
   token: string;
 }
 
-interface LoginError {
-  errorMessage: string;
-}
-
 export const authAndStoreToken = async (data: ValidLogin) => {
   const response = await fetch(`${config.backendUrl}/auth/login`, {
     method: "POST",
@@ -20,8 +16,7 @@ export const authAndStoreToken = async (data: ValidLogin) => {
   });
 
   if (!response.ok) {
-    const err: LoginError = await response.json();
-    throw new UnauthorizedError(err.errorMessage);
+    throw new UnauthorizedError("Incorrect email or password");
   }
 
   const body: LoginResponse = await response.json();

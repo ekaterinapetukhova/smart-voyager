@@ -18,7 +18,7 @@ export function TripEventsAround(props: TripEventsAround) {
     const formattedDate = new Date(item.date).toLocaleString().split(",")[0];
 
     return (
-      <li className="flex gap-x-4 w-full text-text">
+      <li className="flex gap-x-4 w-full text-text" key={item.name}>
         <IconArrowBadgeRightFilled className="text-accent" />
         <div className="text-text w-full">
           <div className="flex flex-col gap-y-1 w-full">
@@ -34,9 +34,13 @@ export function TripEventsAround(props: TripEventsAround) {
   return (
     <div className="h-full relative">
       <SubTitle content="Events in this period" />
-      <ul className="flex flex-col gap-y-2 absolute print:relative inset-0 overflow-y-scroll top-10 w-full divide pr-4">
-        {items}
-      </ul>
+      {props.events.length !== 0 ? (
+        <ul className="flex flex-col gap-y-2 absolute print:relative inset-0 overflow-y-scroll top-10 w-full divide pr-4">
+          {items}
+        </ul>
+      ) : (
+        <p>No events find for now, but you can always try again!</p>
+      )}
     </div>
   );
 }

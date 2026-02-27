@@ -88,6 +88,9 @@ function PopupContent(props: PopupContentProps) {
 
   useMapEvents({
     popupopen: (e) => {
+      setTimeout(() => {
+        e.popup.update();
+      }, 1);
       if (e.popup.getElement()?.className.includes(props.popupId) && props.isPlaceLocationChanged) {
         const latlng = e.popup.getLatLng();
 
@@ -107,6 +110,9 @@ function PopupContent(props: PopupContentProps) {
               country: data.country,
               city: data.city,
             });
+            setTimeout(() => {
+              e.popup.update();
+            }, 1);
           }
         });
       }

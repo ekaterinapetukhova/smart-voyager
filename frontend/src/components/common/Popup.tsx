@@ -37,7 +37,6 @@ export function Popup(props: PopupProps) {
           stroke={2}
           onClick={props.closePopup}
         />
-        s
       </div>
     </div>
   );

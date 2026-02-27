@@ -70,7 +70,7 @@ export const useTripApi = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [tripQueryKey] }),
   });
 
-  const useCreateByAI = (onSuccess: (tripId: string) => void | Promise<void>) =>
+  const useCreateByAI = () =>
     useMutation({
       mutationFn: async (tripDto: CreateTripByAI) => {
         const request = authorizedFetch();
@@ -81,9 +81,8 @@ export const useTripApi = () => {
 
         return tripId;
       },
-      onSuccess: (tripId) => {
+      onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: [tripQueryKey] });
-        void onSuccess(tripId);
       },
     });
 

@@ -9,7 +9,13 @@ export class GetChatByMembersService {
   public async execute(senderId: string, receiverId: string): Promise<Chat | null> {
     const chat = await this.prisma.chat.findFirst({
       where: {
-        AND: [{ members: { some: { id: senderId } } }, { members: { some: { id: receiverId } } }],
+        members: {
+          every: {
+            id: {
+              in: [senderId, receiverId],
+            },
+          },
+        },
       },
       include: {
         members: true,

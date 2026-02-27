@@ -1,4 +1,4 @@
-import { IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
+import { IconCalendarX, IconDeviceFloppy, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTripEventApi } from "../../../../hooks/use-trip-event-api.ts";
 import { Input, useForm } from "../../../../components/common/form/useForm.tsx";
@@ -12,7 +12,7 @@ interface TripEventFormProps {
 }
 
 export function TripEvent(props: TripEventFormProps) {
-  const { createEvent } = useTripEventApi();
+  const { createEvent, removeEvent } = useTripEventApi();
 
   const [editMode, setEditMode] = useState(!props.trip.event);
 
@@ -28,8 +28,7 @@ export function TripEvent(props: TripEventFormProps) {
     return <li className="text-error text-xs">{error}</li>;
   });
 
-  const iconsClasses =
-      "cursor-pointer text-text inline-block ml-2 size-6 -mt-1 hover:text-accent transition print:hidden",
+  const iconsClasses = "cursor-pointer text-text inline-block size-5 hover:text-accent transition print:hidden",
     datesClasses = "text-text";
 
   let from = form.data.from.toISOString(),
@@ -49,7 +48,7 @@ export function TripEvent(props: TripEventFormProps) {
         {editMode ? (
           <IconDeviceFloppy
             stroke={2}
-            className={iconsClasses}
+            className={[iconsClasses, "ml-2"].join(" ")}
             onClick={() => {
               if (form.isValid) {
                 void createEvent
@@ -65,13 +64,24 @@ export function TripEvent(props: TripEventFormProps) {
             }}
           />
         ) : (
-          <IconEdit
-            stroke={2}
-            className={iconsClasses}
-            onClick={() => {
-              setEditMode(true);
-            }}
-          />
+          <div className="flex gap-x-1 ml-2">
+            <IconEdit
+              stroke={2}
+              className={iconsClasses}
+              onClick={() => {
+                setEditMode(true);
+              }}
+            />
+            <IconCalendarX
+              stroke={2}
+              className={iconsClasses}
+              onClick={() => {
+                void removeEvent.mutateAsync(props.trip.id).then(() => {
+                  setEditMode(true);
+                });
+              }}
+            />
+          </div>
         )}
       </div>
       <div className="grid grid-cols-[56px_120px] gap-y-2 items-center">

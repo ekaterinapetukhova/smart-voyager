@@ -10,6 +10,7 @@ interface TripCollaboratorsProps {
   trip: Trip;
   user: User;
   onPopupOpen: () => void;
+  listClassNames?: string;
 }
 
 export function TripCollaborators(props: TripCollaboratorsProps) {
@@ -39,12 +40,14 @@ export function TripCollaborators(props: TripCollaboratorsProps) {
         {props.user.id === props.trip.user.id && (
           <IconCirclePlus
             stroke={2}
-            className="cursor-pointer text-text size-6 hover:text-accent"
+            className="cursor-pointer text-text size-5 hover:text-accent"
             onClick={props.onPopupOpen}
           />
         )}
       </div>
-      {collaborators}
+      <div className={["flex flex-col gap-y-2 overflow-y-auto", props.listClassNames ?? ""].join(" ")}>
+        {collaborators}
+      </div>
     </TripBlockWrapper>
   );
 }

@@ -52,59 +52,62 @@ export function TripMatesView() {
     return;
   }
 
-  const filteredTripMates = tripMates.filter((tripMate) => {
-    if (tripMate.shouldBeVisible) {
-      const selectedOptions = [...selectedGoals, ...selectedInterests, ...selectedGenders];
-      const tripMateOptions: typeof selectedOptions = [];
+  const FilteredTripMates = () => {
+    return tripMates
+      .filter((tripMate) => {
+        if (tripMate.shouldBeVisible) {
+          const selectedOptions = [...selectedGoals, ...selectedInterests, ...selectedGenders];
+          const tripMateOptions: typeof selectedOptions = [];
 
-      const passed = [];
-      if (selectedOptions.length !== 0) {
-        if (selectedGoals.length !== 0) {
-          for (const goal of tripMate.tripGoals) {
-            if (selectedOptions.includes(goal as TripGoals)) {
-              tripMateOptions.push(goal as TripGoals);
+          const passed = [];
+          if (selectedOptions.length !== 0) {
+            if (selectedGoals.length !== 0) {
+              for (const goal of tripMate.tripGoals) {
+                if (selectedOptions.includes(goal as TripGoals)) {
+                  tripMateOptions.push(goal as TripGoals);
+                }
+              }
             }
-          }
-        }
-        if (selectedInterests.length !== 0) {
-          for (const interest of tripMate.tripInterest) {
-            if (selectedOptions.includes(interest as TripInterest)) {
-              tripMateOptions.push(interest as TripInterest);
+            if (selectedInterests.length !== 0) {
+              for (const interest of tripMate.tripInterest) {
+                if (selectedOptions.includes(interest as TripInterest)) {
+                  tripMateOptions.push(interest as TripInterest);
+                }
+              }
             }
+            if (selectedGenders.length !== 0 && selectedGenders.includes(tripMate.gender)) {
+              tripMateOptions.push(tripMate.gender);
+            }
+            passed.push(selectedOptions.length === tripMateOptions.length);
           }
-        }
-        if (selectedGenders.length !== 0 && selectedGenders.includes(tripMate.gender)) {
-          tripMateOptions.push(tripMate.gender);
-        }
-        passed.push(selectedOptions.length === tripMateOptions.length);
-      }
-      if (searchedTripMate) {
-        passed.push(tripMate.email.toLowerCase().startsWith(searchedTripMate.toLowerCase()));
-      }
-      if (selectedCountry) {
-        passed.push(tripMate.country === selectedCountry);
-      }
-      if (selectedCity) {
-        passed.push(tripMate.city === selectedCity);
-      }
-      return passed.length ? passed.every((x) => !!x) : true;
-    } else {
-      return false;
-    }
-  });
+          if (searchedTripMate) {
+            passed.push(tripMate.email.toLowerCase().startsWith(searchedTripMate.toLowerCase()));
+          }
+          if (selectedCountry) {
+            passed.push(tripMate.country === selectedCountry);
+          }
+          if (selectedCity) {
+            passed.push(tripMate.city === selectedCity);
+          }
 
-  const renderTripMates = filteredTripMates.map((tripMate) => {
-    return (
-      <TripMateCard
-        key={tripMate.id}
-        tripMate={tripMate}
-        onClick={() => {
-          setShowPopup(true);
-          setSelectedTripMateId(tripMate.id);
-        }}
-      />
-    );
-  });
+          return passed.length ? passed.every((x) => !!x) : true;
+        } else {
+          return false;
+        }
+      })
+      .map((tripMate) => {
+        return (
+          <TripMateCard
+            key={tripMate.id}
+            tripMate={tripMate}
+            onClick={() => {
+              setShowPopup(true);
+              setSelectedTripMateId(tripMate.id);
+            }}
+          />
+        );
+      });
+  };
 
   if (!countriesAndCities) {
     return;
@@ -195,7 +198,6 @@ export function TripMatesView() {
                 options={citiesOptions}
                 onChange={(e) => {
                   setSelectedCity(e);
-                  console.log(e);
                 }}
                 initialOptionLabel="Select city"
                 value={selectedCity}
@@ -264,7 +266,7 @@ export function TripMatesView() {
       </div>
       <div className="w-full">
         <ul className="grid grid-cols-[repeat(auto-fit,_max)] sm:grid-cols-[repeat(auto-fit,_16rem)] gap-2 sm:gap-6">
-          {renderTripMates}
+          <FilteredTripMates />
         </ul>
       </div>
 

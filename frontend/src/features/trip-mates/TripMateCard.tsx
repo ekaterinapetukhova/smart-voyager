@@ -12,6 +12,8 @@ interface TripMateCardProps {
 export function TripMateCard(props: TripMateCardProps) {
   const { data: chat } = useChatByMembers(props.tripMate.id);
 
+  console.log(chat);
+
   const goals = Object.values(
     mapObject(tripGoals, (v, key) => {
       if (props.tripMate.tripGoals.includes(key))
@@ -37,7 +39,10 @@ export function TripMateCard(props: TripMateCardProps) {
   const spanCommonClasses = "text-sm";
 
   return (
-    <li key={props.tripMate.id} className={chat ? "hidden" : "text-text relative p-1 transition group cursor-pointer"}>
+    <li
+      key={props.tripMate.id}
+      className={chat ? "hidden" : "text-text relative p-1 transition group cursor-pointer"}
+    >
       <div className="animate-neon-gradient bg-[200%,_200%] absolute inset-0 size-0 group-hover:size-full transition-all -z-10 bg-linear-to-r from-button-primary via-accent to-button-primary-hover"></div>
 
       <div className="flex flex-col bg-background transition z-20 size-full p-4 gap-y-2">

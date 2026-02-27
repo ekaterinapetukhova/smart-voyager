@@ -20,7 +20,7 @@ export function TripDescription(props: TripDescriptionProps) {
     <TripBlockWrapper>
       <SubTitle content="Description" />
       {!editMode ? (
-        <p className="text-sm md:text-base text-text print:text-justify leading-7">
+        <p className="text-sm md:text-base text-text print:text-justify leading-7 max-h-30 overflow-y-auto">
           {props.description.trim()}
           <IconEdit
             stroke={2}
@@ -31,7 +31,7 @@ export function TripDescription(props: TripDescriptionProps) {
           />
         </p>
       ) : (
-        <div className="flex">
+        <div className="flex max-h-48 overflow-y-auto">
           <Textarea
             value={newDescription}
             onChange={(e) => {

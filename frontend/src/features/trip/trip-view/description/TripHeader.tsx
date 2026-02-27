@@ -76,7 +76,7 @@ export function TripHeader(props: TripHeaderProps) {
           </Title>
         )}
       </div>
-      <div className="flex gap-x-4 w-full sm:w-2/5 print:hidden">
+      <div className="flex gap-x-4 w-full sm:w-3/5 print:hidden">
         <Button
           label="Get PDF"
           size="medium"

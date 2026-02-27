@@ -42,8 +42,6 @@ export class GeoapifyAutocompleteService {
   public constructor(private readonly geopifyApiClient: GeoapifyApiClient) {}
 
   public async execute(fullAddress: string): Promise<GeoapifyAutocompleteServiceResult> {
-    console.log(fullAddress);
-
     const input = {
       text: fullAddress,
       format: "json",

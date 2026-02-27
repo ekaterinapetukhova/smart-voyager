@@ -12,8 +12,8 @@ export interface UseFormInput<T extends FormValues, O = unknown> {
   validation: ZodObject;
   submit?: {
     fn: (data: T) => Promise<O>;
-    onSuccess: (data: O) => void | Promise<void>;
-    onError?: () => void;
+    onSuccess?: (data: O) => void | Promise<void>;
+    onError?: (err: Error) => void;
   };
 }
 
@@ -46,8 +46,6 @@ export const Input = <T extends FormValues>(props: FieldProps<T>): ReactElement 
         return e.target.value;
       case "date": {
         const date = new Date(e.target.value);
-
-        console.log(date);
 
         if (!isNaN(date.getTime())) {
           return date;
@@ -117,6 +115,8 @@ export function useForm<T extends FormValues, O = unknown>(input: UseFormInput<T
   const [fieldErrors, setFieldErrors] = useState<{ field: keyof T; error: string }[]>([]);
   const [formErrors, setFormErrors] = useState<string[]>([]);
 
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+
   const update = useCallback(
     (newData: Partial<T>) => {
       const merged = {
@@ -142,13 +142,17 @@ export function useForm<T extends FormValues, O = unknown>(input: UseFormInput<T
 
         setFieldErrors(newFieldErrors);
         setFormErrors(newFormErrors);
+        setButtonDisabled(true);
       } else {
         setFieldErrors([]);
         setFormErrors([]);
+        setButtonDisabled(false);
       }
     },
     [data, input.validation]
   );
+
+  const isValid = formErrors.length === 0 && fieldErrors.length === 0;
 
   const mutation = useMutation({
     mutationFn: input.submit?.fn,
@@ -156,18 +160,19 @@ export function useForm<T extends FormValues, O = unknown>(input: UseFormInput<T
     onError: input.submit?.onError,
   });
 
-  const isValid = formErrors.length === 0 && fieldErrors.length === 0;
-
   const SubmitButton = (props: Omit<ButtonProps, "isLoading" | "onClick">) =>
     input.submit ? (
       <Button
         {...props}
-        disabled={!isValid}
+        disabled={buttonDisabled}
         isLoading={mutation.isPending}
         onClick={() => {
           if (isValid) {
             mutation.mutate(data);
+            return;
           }
+
+          setButtonDisabled(true);
         }}
       />
     ) : (

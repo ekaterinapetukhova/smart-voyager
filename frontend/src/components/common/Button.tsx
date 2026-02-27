@@ -53,7 +53,7 @@ export function Button(props: ButtonProps) {
       disabled={props.disabled}
       type={props.type ?? "button"}
       className={[
-        "cursor-pointer relative overflow-hidden h-13 bg-button-primary group w-full flex items-center justify-center",
+        "cursor-pointer relative overflow-hidden h-13 bg-button-primary group w-full flex items-center justify-center px-2",
         props.disabled && "grayscale pointer-events-none",
       ].join(" ")}
       onClick={(e) => {

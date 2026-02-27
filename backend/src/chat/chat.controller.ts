@@ -30,7 +30,7 @@ export class ChatController {
     return this.getChatByIdService.execute(id);
   }
 
-  @Get(":receiverId")
+  @Get("by-receiver/:receiverId")
   public async getByMembers(
     @Param("receiverId", ParseUUIDPipe) receiverId: string,
     @GetUser() sender: User

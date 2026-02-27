@@ -35,7 +35,7 @@ export function LoginView() {
         <Input form={form} type="text" label="Email" fieldKey="email" />
         <Input form={form} type="password" label="Password" fieldKey="password" />
         <form.SubmitError />
-        <div className="mx-auto mt-5">
+        <div className="mx-auto">
           <form.SubmitButton label="Let's start" size="large" />
         </div>
       </div>

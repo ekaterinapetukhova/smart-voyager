@@ -15,6 +15,7 @@ import { useCountriesAndCities } from "../../hooks/use-countries-and-cities.ts";
 import { FormAutocompleteSelect } from "../../components/common/form/FormAutocompleteSelect.tsx";
 import { Button } from "../../components/common/Button.tsx";
 import { SubTitle } from "../../components/common/SubTitle.tsx";
+import { useApplicationStore } from "../../store/application-store.ts";
 
 interface UserProfilePopupProps {
   user: User;
@@ -24,11 +25,13 @@ interface UserProfilePopupProps {
 export function UserProfilePopup(props: UserProfilePopupProps) {
   const { logout } = useTokenStore();
 
-  const user = props.user;
-
   const queryClient = useQueryClient();
 
   const { data: countriesAndCities } = useCountriesAndCities();
+
+  const { updateUserProfilePopup } = useApplicationStore();
+
+  const user = props.user;
 
   const tripGoalsForm = useForm<Record<TripGoals, boolean>>({
     initialData: mapObject(tripGoals, (_, k) => user.tripGoals.includes(k)),
@@ -57,12 +60,12 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
       .pick({
         name: true,
         birthDate: true,
-        gender: true, //
-        city: true, //
-        country: true, //
+        gender: true,
+        city: true,
+        country: true,
         shouldBeVisible: true,
-        languages: true, //
-        description: true, //
+        languages: true,
+        description: true,
         currency: true,
       })
       .check((ctx) => {
@@ -202,7 +205,12 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
   );
 
   return (
-    <Popup closePopup={props.onClose} containerClassName="w-3/4 xl:w-2/5 h-4/5">
+    <Popup
+      closePopup={() => {
+        props.onClose();
+      }}
+      containerClassName="w-3/4 xl:w-2/5 h-4/5"
+    >
       <div className="py-4 px-6 overflow-y-scroll flex flex-col gap-y-5">
         <div className="flex flex-col gap-y-4">
           <div className="w-full">
@@ -223,7 +231,15 @@ export function UserProfilePopup(props: UserProfilePopupProps) {
         </div>
         <div className="flex gap-x-2 w-1/2 sm:w-2/3 mx-auto">
           <form.SubmitButton label="Set settings" size="medium" />
-          <Button label="Log out" size="medium" onClick={logout} />
+          <Button
+            label="Log out"
+            size="medium"
+            onClick={() => {
+              logout();
+              updateUserProfilePopup(false);
+            }}
+          />
+          +9
         </div>
       </div>
     </Popup>

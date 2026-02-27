@@ -68,6 +68,7 @@ export function TripInformation(props: TripDescriptionProps) {
                 }}
                 trip={props.trip}
                 user={user}
+                listClassNames={showBoth ? "max-h-30" : ""}
               />
             </div>
           </div>
